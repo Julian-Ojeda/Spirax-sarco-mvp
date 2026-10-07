@@ -1,0 +1,2263 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e31c24">
+<meta name="color-scheme" content="light dark">
+<title>Almacén — Tablero</title>
+
+<!-- Manifest embebido: permite "Agregar a pantalla de inicio" y que abra
+     sin barra de navegador, como una app. No requiere archivos extra. -->
+<link rel="manifest" href='data:application/manifest+json,{"name":"Almac%C3%A9n","short_name":"Almac%C3%A9n","start_url":".","display":"standalone","background_color":"%23eaedf0","theme_color":"%23e31c24","icons":[{"src":"data:image/svg%2Bxml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 192 192%27%3E%3Crect width=%27192%27 height=%27192%27 rx=%2734%27 fill=%27%23e31c24%27/%3E%3Crect x=%2740%27 y=%2796%27 width=%2722%27 height=%2756%27 rx=%274%27 fill=%27white%27/%3E%3Crect x=%2785%27 y=%2764%27 width=%2722%27 height=%2788%27 rx=%274%27 fill=%27white%27/%3E%3Crect x=%27130%27 y=%2740%27 width=%2722%27 height=%27112%27 rx=%274%27 fill=%27white%27/%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"}]}'>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%23e31c24'/%3E%3Crect x='40' y='96' width='22' height='56' rx='4' fill='white'/%3E%3Crect x='85' y='64' width='22' height='88' rx='4' fill='white'/%3E%3Crect x='130' y='40' width='22' height='112' rx='4' fill='white'/%3E%3C/svg%3E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Almacén">
+
+<style>
+  :root {
+    color-scheme: light;
+    --page:      #eaedf0;
+    --surface:   #fbfcfd;
+    --sunken:    #f1f4f6;
+    --ink:       #0e1417;
+    --ink-2:     #48535b;
+    --muted:     #7d888f;
+    --grid:      #e0e5e9;
+    --rule:      #ccd4da;
+    --hairline:  rgba(14,20,23,.10);
+
+    --brand:     #e31c24;
+
+    --s1: #2a78d6;
+    --s2: #eb6834;
+    --s3: #1baf7a;
+    --s4: #eda100;
+    --s5: #e87ba4;
+
+    --good:     #0ca30c;
+    --good-ink: #006300;
+    --warning:  #fab219;
+    --critical: #d03b3b;
+
+    --shadow: 0 1px 2px rgba(14,20,23,.05), 0 1px 8px rgba(14,20,23,.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page:      #0a0d0f;
+      --surface:   #161a1d;
+      --sunken:    #1e2427;
+      --ink:       #ffffff;
+      --ink-2:     #c2cad0;
+      --muted:     #8b959c;
+      --grid:      #262c31;
+      --rule:      #333b41;
+      --hairline:  rgba(255,255,255,.10);
+
+      --brand:     #e31c24;
+
+      --s1: #3987e5;
+      --s2: #d95926;
+      --s3: #199e70;
+      --s4: #c98500;
+      --s5: #d55181;
+
+      --good:     #0ca30c;
+      --good-ink: #0ca30c;
+      --warning:  #fab219;
+      --critical: #d03b3b;
+
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 8px rgba(0,0,0,.3);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page:      #0a0d0f;
+    --surface:   #161a1d;
+    --sunken:    #1e2427;
+    --ink:       #ffffff;
+    --ink-2:     #c2cad0;
+    --muted:     #8b959c;
+    --grid:      #262c31;
+    --rule:      #333b41;
+    --hairline:  rgba(255,255,255,.10);
+
+    --brand:     #e31c24;
+
+    --s1: #3987e5;
+    --s2: #d95926;
+    --s3: #199e70;
+    --s4: #c98500;
+    --s5: #d55181;
+
+    --good:     #0ca30c;
+    --good-ink: #0ca30c;
+    --warning:  #fab219;
+    --critical: #d03b3b;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 8px rgba(0,0,0,.3);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px 64px; }
+
+  /* ---------- barra superior ---------- */
+
+  .topbar {
+    position: sticky; top: 0; z-index: 40;
+    background: var(--surface);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .topbar-in {
+    max-width: 1180px; margin: 0 auto; padding: 0 20px;
+    display: flex; align-items: center; gap: 18px;
+    min-height: 60px;
+  }
+  .brand { display: flex; align-items: center; gap: 11px; margin-right: auto; }
+  .brand-mark { width: 5px; height: 26px; border-radius: 1px; background: var(--brand); flex: none; }
+  .brand-name { font-size: 16px; font-weight: 700; letter-spacing: -.015em; }
+
+  .tabs { display: flex; gap: 2px; background: var(--sunken); padding: 3px; border-radius: 9px; }
+  .tab {
+    appearance: none; border: 0; background: transparent; cursor: pointer;
+    font: inherit; font-size: 13.5px; font-weight: 600; color: var(--ink-2);
+    padding: 7px 15px; border-radius: 7px; transition: background .12s, color .12s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+  .tab:focus-visible { outline: 2px solid var(--s1); outline-offset: 1px; }
+
+  .btn-export {
+    appearance: none; cursor: pointer; font: inherit;
+    font-size: 12.5px; font-weight: 650; color: var(--ink-2);
+    background: transparent; border: 1px solid var(--rule);
+    padding: 6px 13px; border-radius: 8px; white-space: nowrap;
+    transition: color .12s, border-color .12s;
+  }
+  .btn-export:hover { color: var(--ink); border-color: var(--ink-2); }
+  .btn-export:focus-visible { outline: 2px solid var(--s1); outline-offset: 1px; }
+
+  .stamp {
+    font-size: 12.5px; color: var(--muted); font-weight: 600;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+
+  /* ---------- genéricos ---------- */
+
+  .eyebrow {
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .1em;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+  }
+
+  .card-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+  .card-title { font-size: 15px; font-weight: 650; letter-spacing: -.01em; margin: 0; }
+  .card-note { font-size: 12.5px; color: var(--muted); margin: 3px 0 0; line-height: 1.45; }
+
+  section { margin-top: 26px; }
+  .sec-head {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin: 0 0 12px; padding-bottom: 9px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .sec-head h2 { font-size: 13px; font-weight: 700; margin: 0; }
+  .sec-head .hint { font-size: 12px; color: var(--muted); margin-left: auto; min-width: 0; }
+
+  .wrap, .card, .hero-main, .hero-side, .sec-head, .cause, .fld { min-width: 0; }
+
+  /* ---------- encabezado de día ---------- */
+
+  .day-head {
+    display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap;
+    margin-top: 22px;
+  }
+  .day-head h1 { font-size: 24px; font-weight: 700; margin: 4px 0 0; letter-spacing: -.025em; }
+  .day-head .sub { font-size: 13px; color: var(--muted); margin: 3px 0 0; }
+
+  /* ---------- stat tiles ---------- */
+
+  .tiles { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-top: 16px; }
+  .tile { padding: 15px 16px 14px; }
+  .tile-lab {
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .09em;
+  }
+  .tile-val { font-size: 34px; font-weight: 700; letter-spacing: -.03em; line-height: 1.05; margin-top: 7px; }
+  .tile-sub { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+
+  /* ---------- KPI row (mensual) ---------- */
+
+  .kpis { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; }
+  .kpi { padding: 14px 15px 13px; }
+  .kpi-lab {
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .09em;
+  }
+  .kpi-q { display: flex; align-items: baseline; gap: 7px; margin-top: 9px; }
+  .kpi-val { font-size: 27px; font-weight: 700; letter-spacing: -.025em; line-height: 1; }
+  .kpi-name { font-size: 11.5px; color: var(--ink-2); margin-top: 3px; font-weight: 550; }
+  .kpi-sep { height: 1px; background: var(--grid); margin: 11px 0 10px; }
+  .kpi-speed { display: flex; align-items: baseline; gap: 6px; }
+  .kpi-speed b { font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .kpi-speed span { font-size: 11.5px; color: var(--muted); }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 700; padding: 2px 7px 2px 5px;
+    border-radius: 20px; white-space: nowrap;
+  }
+  .pill i { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .pill[data-s="good"]     { color: var(--good-ink); background: color-mix(in srgb, var(--good) 13%, transparent); }
+  .pill[data-s="good"] i     { background: var(--good); }
+  .pill[data-s="warning"]  { color: var(--ink);      background: color-mix(in srgb, var(--warning) 22%, transparent); }
+  .pill[data-s="warning"] i  { background: var(--warning); }
+  .pill[data-s="critical"] { color: var(--critical); background: color-mix(in srgb, var(--critical) 13%, transparent); }
+  .pill[data-s="critical"] i { background: var(--critical); }
+
+  /* ---------- hero (mensual) ---------- */
+
+  .hero {
+    margin-top: 22px;
+    display: grid; grid-template-columns: minmax(0,1.05fr) minmax(0,1fr);
+    gap: 0; overflow: hidden; padding: 0;
+  }
+  .hero-main { padding: 22px 24px 20px; }
+  .hero-side {
+    padding: 22px 24px 20px;
+    border-left: 1px solid var(--hairline);
+    background: var(--sunken);
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .hero-fig { font-size: 60px; font-weight: 700; letter-spacing: -.035em; line-height: 1; margin: 10px 0 0; }
+  .hero-fig span { font-size: 28px; font-weight: 650; letter-spacing: -.02em; color: var(--ink-2); }
+  .hero-delta {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 650; color: var(--good-ink); margin-top: 9px;
+  }
+  .hero-delta em { font-style: normal; color: var(--muted); font-weight: 550; }
+
+  .goalbar-track { position: relative; height: 9px; border-radius: 5px; background: var(--grid); }
+  .goalbar-fill { position: absolute; inset: 0 auto 0 0; border-radius: 5px; background: var(--s1); }
+  .goalbar-tick { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink); border-radius: 1px; }
+  .goalbar-scale {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--muted); margin-top: 7px;
+    font-variant-numeric: tabular-nums;
+  }
+  .milestones { display: flex; gap: 7px; }
+  .ms { flex: 1; padding: 8px 9px; border-radius: 8px; background: var(--surface); border: 1px solid var(--hairline); }
+  .ms-q { font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+  .ms-v { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 1px; }
+  .ms[data-state="done"] .ms-v { color: var(--good-ink); }
+  .ms[data-state="now"] { border-color: var(--s1); box-shadow: inset 0 0 0 1px var(--s1); }
+
+  /* ---------- grillas ---------- */
+
+  .g2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 14px; }
+  .g-pasillos { display: grid; grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); gap: 14px; }
+  .g-pasillos > .card { display: flex; flex-direction: column; }
+
+  /* ---------- gráficos ---------- */
+
+  .chart-host { position: relative; margin-top: 14px; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  /* Un donut a ancho completo de tarjeta se vuelve gigante: se le pone techo. */
+  .chart-host.donut svg { max-width: 300px; margin-inline: auto; }
+  .ax { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+  .gridline { stroke: var(--grid); stroke-width: 1; }
+  .baseline { stroke: var(--rule); stroke-width: 1; }
+
+  .tip {
+    position: absolute; pointer-events: none; z-index: 30;
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 9px; box-shadow: 0 4px 18px rgba(14,20,23,.14);
+    padding: 9px 11px; min-width: 132px; opacity: 0; transition: opacity .1s;
+  }
+  .tip[data-on="1"] { opacity: 1; }
+  .tip-k { font-size: 11px; color: var(--muted); font-weight: 650; margin-bottom: 5px; }
+  .tip-row { display: flex; align-items: center; gap: 7px; }
+  .tip-key { width: 11px; height: 2.5px; border-radius: 2px; flex: none; }
+  .tip-v { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .tip-n { font-size: 11.5px; color: var(--ink-2); margin-left: auto; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 14px; }
+  .lg { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-2); }
+  .lg i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+  .lg b { font-weight: 650; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .lg span { color: var(--muted); font-size: 11.5px; }
+
+  /* ---------- barras de fila ---------- */
+
+  .rows { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; flex: 1; justify-content: space-evenly; }
+  .row-h { display: flex; align-items: baseline; gap: 8px; margin-bottom: 5px; }
+  .row-lab { font-size: 13px; font-weight: 600; }
+  .row-who { font-size: 11.5px; color: var(--muted); }
+  .row-val { margin-left: auto; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .row-track { height: 10px; border-radius: 5px; background: var(--sunken); position: relative; overflow: hidden; }
+  .row-fill { position: absolute; inset: 0 auto 0 0; border-radius: 5px; }
+  .row-goal { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); opacity: .55; border-radius: 1px; }
+
+  /* ---------- estado de pasillos (diaria) ---------- */
+
+  /* Un pasillo por columna: la fila se lee como el mapa del almacén. */
+  .aisles { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 12px; }
+  .aisle { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+  .aisle-bar { height: 5px; flex: none; }
+  .aisle-in { padding: 15px 16px 16px; display: flex; flex-direction: column; flex: 1; }
+  .aisle-top { display: flex; align-items: center; gap: 9px; }
+  .aisle-cod { font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+  .aisle-nom { font-size: 12.5px; color: var(--ink-2); }
+  .aisle-who { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .aisle-state { margin-top: 11px; }
+  .devs { margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--grid); display: flex; flex-direction: column; gap: 7px; }
+  .dev { display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; }
+  .dev-q {
+    font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap;
+    padding: 1px 6px; border-radius: 5px; font-size: 11.5px; flex: none;
+  }
+  .dev-q[data-t="falta"] { color: var(--critical); background: color-mix(in srgb, var(--critical) 12%, transparent); }
+  .dev-q[data-t="sobra"] { color: var(--ink);      background: color-mix(in srgb, var(--warning) 22%, transparent); }
+  .dev-item { color: var(--ink-2); }
+  .devs-ok { margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--grid); font-size: 12.5px; color: var(--muted); }
+
+  /* ---------- tabla ---------- */
+
+  .tbl-toggle {
+    appearance: none; background: transparent; border: 1px solid var(--rule);
+    color: var(--ink-2); font: inherit; font-size: 11.5px; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px; cursor: pointer; margin-left: auto;
+  }
+  .tbl-toggle:hover { color: var(--ink); border-color: var(--ink-2); }
+  .tbl-toggle:focus-visible { outline: 2px solid var(--s1); outline-offset: 1px; }
+  .tbl-wrap { overflow-x: auto; margin-top: 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  th, td { text-align: right; padding: 6px 10px; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--muted); border-bottom: 1px solid var(--rule); font-weight: 700;
+  }
+  tbody td { border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+  tbody tr:last-child td { border-bottom: 0; }
+  [hidden] { display: none !important; }
+
+  /* ---------- causas ---------- */
+
+  .cause { display: flex; align-items: center; gap: 11px; }
+  .cause + .cause { margin-top: 9px; }
+  .cause-lab { font-size: 13px; width: 168px; flex: none; }
+  .cause-track { flex: 1; height: 20px; background: var(--sunken); border-radius: 4px; overflow: hidden; }
+  .cause-fill { height: 100%; border-radius: 3px 4px 4px 3px; background: var(--s1); }
+  .cause-val { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; width: 62px; text-align: right; flex: none; }
+  .cause-n { font-size: 11.5px; color: var(--muted); width: 46px; text-align: right; flex: none; }
+
+  /* ---------- flujo de despacho ---------- */
+
+  /* El circuito se lee de izquierda a derecha como se camina el almacén:
+     R → pasillo → expo → salida de camiones. */
+  .pipe { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+  .pipe-card { padding: 0; display: flex; flex-direction: column; position: relative; }
+  .pipe-card::after {
+    content: "→"; position: absolute; right: -15px; top: 50%;
+    transform: translateY(-50%); z-index: 2;
+    font-size: 16px; line-height: 1; color: var(--muted);
+  }
+  .pipe-card:last-child::after { content: none; }
+  .pipe-bar { height: 5px; flex: none; border-radius: 12px 12px 0 0; }
+  .pipe-in { padding: 14px 16px 16px; display: flex; flex-direction: column; flex: 1; }
+  .pipe-cola { font-size: 14px; font-weight: 700; letter-spacing: -.01em; }
+  .pipe-nota { font-size: 11.5px; color: var(--muted); margin-top: 4px; line-height: 1.4; flex: 1; }
+  .pipe-q { display: flex; align-items: baseline; gap: 8px; margin: 13px 0 2px; }
+  .pipe-q input {
+    width: 76px; font-size: 25px; font-weight: 700; text-align: right;
+    padding: 3px 8px; letter-spacing: -.02em;
+  }
+  .pipe-q span { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+  .pipe-next {
+    margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--grid);
+    display: flex; align-items: baseline; gap: 5px; font-size: 12px; color: var(--ink-2);
+  }
+  .pipe-next em { font-style: normal; color: var(--muted); }
+  .pipe-next b { margin-left: auto; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); }
+
+  /* ---------- plan de horas ---------- */
+
+  .cfg { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; font-size: 12.5px; color: var(--ink-2); }
+  .cfg span { display: inline-flex; align-items: center; gap: 7px; }
+  .cfg label { font-weight: 600; }
+  .cfg input { width: 72px; text-align: right; padding: 5px 8px; }
+  .cfg-note { color: var(--muted); }
+  input.cell { width: 72px; text-align: right; padding: 4px 7px; font-size: 12.5px; }
+  tfoot td {
+    border-top: 1px solid var(--rule); padding-top: 9px;
+    font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- compromisos de salida ---------- */
+
+  input[type="datetime-local"] {
+    font: inherit; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--rule); border-radius: 8px; padding: 7px 10px;
+  }
+  .cmp-add { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .cmp-add input[type="text"] { width: 132px; }
+  .cmp-add input[type="number"] { width: 92px; }
+  .cmp-list { margin-top: 6px; display: flex; flex-direction: column; }
+  .cmp { padding: 13px 0; border-bottom: 1px solid var(--grid); }
+  .cmp:last-child { border-bottom: 0; }
+  .cmp[data-cerrado="1"] { opacity: .58; }
+  .cmp-l1 { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 13px; }
+  .cmp-l2 { display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap; margin-top: 9px; }
+  .cmp-ord { font-weight: 650; font-variant-numeric: tabular-nums; }
+  .cmp-sub { font-size: 12px; color: var(--muted); }
+  .cmp-when { margin-left: auto; font-variant-numeric: tabular-nums; }
+  .cmp select { font-size: 12px; padding: 4px 7px; }
+  .cmp-hrs { margin-left: auto; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .cmp-acc { display: flex; gap: 6px; }
+  .cmp-empty { font-size: 12.5px; color: var(--muted); padding: 14px 0; }
+  .btn-xs {
+    appearance: none; cursor: pointer; font: inherit; font-size: 11.5px; font-weight: 650;
+    padding: 4px 10px; border-radius: 6px; background: transparent;
+    color: var(--ink-2); border: 1px solid var(--rule); white-space: nowrap;
+  }
+  .btn-xs:hover { color: var(--ink); border-color: var(--ink-2); }
+  .btn-xs:focus-visible { outline: 2px solid var(--s1); outline-offset: 1px; }
+
+  @media (max-width: 1040px) {
+    .pipe { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    /* Apiladas, las flechas apuntarían a cualquier lado. */
+    .pipe-card::after { content: none; }
+  }
+  @media (max-width: 560px) {
+    .pipe { grid-template-columns: minmax(0,1fr); }
+    .cmp-when, .cmp-hrs { margin-left: 0; }
+  }
+  @media print {
+    body .pipe { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .pipe-card::after { content: none; }
+    .pipe-card, .cmp { break-inside: avoid; }
+    /* Los campos editables se imprimen como texto, sin cajas ni flechitas. */
+    input, select { appearance: none; -webkit-appearance: none;
+      border-color: transparent !important; background: transparent !important; }
+    /* El alta de compromisos y los botones de cada fila son de pantalla. */
+    .cmp-add, .cmp-acc, .btn-xs { display: none !important; }
+  }
+
+  /* ---------- carga ---------- */
+
+  .load-head {
+    display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+    margin-top: 22px; padding-bottom: 14px; border-bottom: 1px solid var(--rule);
+  }
+  .load-head h1 { font-size: 21px; font-weight: 700; margin: 4px 0 0; letter-spacing: -.02em; }
+  .load-head p { font-size: 13px; color: var(--muted); margin: 5px 0 0; max-width: 46ch; }
+
+  .load-date { display: flex; align-items: center; gap: 9px; margin-top: 18px; }
+  .load-date label { font-size: 12.5px; font-weight: 650; color: var(--ink-2); }
+
+  input[type="date"], input[type="number"], input[type="text"], select {
+    font: inherit; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--rule); border-radius: 8px; padding: 7px 10px;
+  }
+  input[type="number"] { font-variant-numeric: tabular-nums; }
+  input:focus-visible, select:focus-visible { outline: 2px solid var(--s1); outline-offset: 1px; border-color: var(--s1); }
+
+  .blocks { display: grid; grid-template-columns: repeat(auto-fit, minmax(208px,1fr)); gap: 12px; margin-top: 16px; }
+  .blocks > .card { display: flex; flex-direction: column; padding: 16px 15px; }
+  .blk-top { display: flex; align-items: center; gap: 9px; margin-bottom: 13px; }
+  .blk-dot { width: 9px; height: 9px; border-radius: 3px; flex: none; }
+  .blk-name { font-size: 13.5px; font-weight: 700; }
+  .fld { display: flex; align-items: center; gap: 10px; }
+  .fld + .fld { margin-top: 8px; }
+  .fld label { font-size: 12px; color: var(--ink-2); flex: 1; line-height: 1.3; }
+  .fld input { width: 66px; text-align: right; padding: 6px 8px; flex: none; }
+  .fld:last-of-type { margin-bottom: 11px; }
+  .calc {
+    margin-top: auto; padding-top: 10px; border-top: 1px solid var(--grid);
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .calc-lab { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+  .calc-val { margin-left: auto; font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .adj-add { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+  .adj-add input[type="text"] { width: 128px; }
+  .btn {
+    appearance: none; border: 0; cursor: pointer; font: inherit;
+    font-size: 13px; font-weight: 650; padding: 8px 16px; border-radius: 8px;
+    background: var(--ink); color: var(--surface); transition: opacity .12s;
+  }
+  .btn:hover { opacity: .86; }
+  .btn:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
+  .btn-brand { background: var(--brand); color: #fff; }
+  .btn-ghost { background: transparent; color: var(--ink-2); border: 1px solid var(--rule); }
+
+  .adj-list { margin-top: 13px; display: flex; flex-direction: column; }
+  .adj-item { display: flex; align-items: center; gap: 11px; padding: 8px 0; border-bottom: 1px solid var(--grid); font-size: 13px; }
+  .adj-sku { font-weight: 650; font-variant-numeric: tabular-nums; width: 108px; flex: none; }
+  .adj-why { color: var(--ink-2); flex: 1; }
+  .adj-qty { font-variant-numeric: tabular-nums; font-weight: 650; }
+  .adj-del {
+    appearance: none; background: transparent; border: 0; cursor: pointer;
+    color: var(--muted); font: inherit; font-size: 16px; line-height: 1;
+    padding: 2px 6px; border-radius: 5px;
+  }
+  .adj-del:hover { color: var(--critical); background: var(--sunken); }
+  .adj-empty { font-size: 12.5px; color: var(--muted); padding: 12px 0; }
+
+  .save-bar { margin-top: 22px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .save-msg { font-size: 12.5px; color: var(--good-ink); font-weight: 650; opacity: 0; transition: opacity .15s; }
+  .save-msg[data-on="1"] { opacity: 1; }
+
+  .print-head { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width: 1040px) { .aisles { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+
+  @media (max-width: 900px) {
+    .hero, .g2, .g-pasillos { grid-template-columns: minmax(0,1fr); }
+    .aisles { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .hero-side { border-left: 0; border-top: 1px solid var(--hairline); }
+    .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .tiles { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .topbar-in { flex-wrap: wrap; gap: 10px 14px; padding-top: 10px; padding-bottom: 10px; min-height: 0; }
+    .brand { width: 100%; margin-right: 0; }
+    .tabs { order: 2; flex: 1 1 auto; }
+    .tab { flex: 1; }
+    .btn-export { order: 3; }
+    .stamp { order: 4; }
+    .cause-lab { width: 108px; font-size: 12px; }
+    .cause-n { display: none; }
+  }
+  @media (max-width: 560px) {
+    .kpis, .tiles, .aisles { grid-template-columns: minmax(0,1fr); }
+    .hero-fig { font-size: 50px; }
+    .hero-main, .hero-side { padding: 18px 16px; }
+    .card { padding: 16px; }
+    .milestones { flex-wrap: wrap; }
+    .ms { flex: 1 1 calc(50% - 4px); }
+    .goalbar-scale { font-size: 10px; }
+    .stamp { width: 100%; }
+    .sec-head .hint { display: none; }
+    .row-who { display: none; }
+  }
+
+  /* ---------- impresión / PDF ---------- */
+
+  @media print {
+    :root, :root[data-theme="dark"] {
+      --page: #ffffff; --surface: #ffffff; --sunken: #f4f6f8;
+      --ink: #0e1417; --ink-2: #48535b; --muted: #6d777e;
+      --grid: #dfe4e8; --rule: #c2cbd1; --hairline: rgba(14,20,23,.18);
+      --shadow: none;
+    }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    @page { size: A4 portrait; margin: 13mm; }
+
+    body { background: #fff; font-size: 10.5pt; }
+    .topbar, .btn-export, .tbl-toggle { display: none !important; }
+    .wrap { max-width: none; padding: 0; }
+
+    .print-head {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding-bottom: 12px; margin-bottom: 6px;
+      border-bottom: 2px solid var(--brand);
+    }
+    .print-head .ph-bar { width: 5px; align-self: stretch; background: var(--brand); border-radius: 1px; }
+    .print-head h1 { font-size: 16pt; margin: 0; letter-spacing: -.02em; }
+    .print-head p { font-size: 9pt; color: var(--muted); margin: 3px 0 0; }
+
+    section { margin-top: 14px; break-inside: avoid; }
+    .card, .kpi, .tile, .hero, .aisle { break-inside: avoid; box-shadow: none; border: 1px solid var(--hairline); }
+    .sec-head { break-after: avoid; }
+    .hero-fig { font-size: 40pt; }
+    /* Con `body` para ganarle al breakpoint de 900px, que también aplica a una A4. */
+    body .kpis { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    body .tiles { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    body .g2, body .g-pasillos { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    body .row-who { display: inline; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div class="brand-name">Almacén</div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true"  data-view="diaria">Diaria</button>
+      <button class="tab" role="tab" aria-selected="false" data-view="flujo">Flujo</button>
+      <button class="tab" role="tab" aria-selected="false" data-view="mensual">Mensual</button>
+      <button class="tab" role="tab" aria-selected="false" data-view="carga">Carga del día</button>
+    </div>
+    <button class="btn-export" id="btnExport" title="Abre el diálogo de impresión: elegí «Guardar como PDF»">
+      Exportar PDF
+    </button>
+    <div class="stamp" id="stamp"></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- Sólo aparece en el PDF -->
+  <div class="print-head">
+    <div class="ph-bar"></div>
+    <div>
+      <h1>Almacén</h1>
+      <p><span id="phVista"></span> · <span id="phFecha"></span></p>
+    </div>
+  </div>
+
+  <!-- ================= VISTA DIARIA ================= -->
+  <div id="view-diaria">
+
+    <div class="day-head">
+      <div>
+        <div class="eyebrow">Jornada</div>
+        <h1 id="diaTitulo"></h1>
+        <p class="sub">Movimiento del día y estado de cada pasillo</p>
+      </div>
+    </div>
+
+    <div class="tiles" id="tilesDia"></div>
+
+    <section>
+      <div class="sec-head">
+        <h2>Despachos del día</h2>
+        <div class="hint">Exportación vs. nacional</div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-head">
+            <h3 class="card-title">Pallets</h3>
+            <button class="tbl-toggle" data-tbl="tblPallets">Ver tabla</button>
+          </div>
+          <div class="chart-host donut">
+            <svg id="svgPallets" viewBox="0 0 300 270" role="img" aria-label="Pallets despachados por destino"></svg>
+          </div>
+          <div class="legend" id="lgPallets"></div>
+          <div class="tbl-wrap" id="tblPallets" hidden></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <h3 class="card-title">Bultos</h3>
+            <button class="tbl-toggle" data-tbl="tblBoxes">Ver tabla</button>
+          </div>
+          <div class="chart-host donut">
+            <svg id="svgBoxes" viewBox="0 0 300 270" role="img" aria-label="Bultos despachados por destino"></svg>
+          </div>
+          <div class="legend" id="lgBoxes"></div>
+          <div class="tbl-wrap" id="tblBoxes" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <h2>Estado de los pasillos</h2>
+        <div class="hint">Verde sin desvíos · Amarillo desvío leve · Rojo desvío importante</div>
+      </div>
+      <div class="aisles" id="aisles"></div>
+    </section>
+  </div>
+
+  <!-- ================= VISTA FLUJO ================= -->
+  <div id="view-flujo" hidden>
+
+    <div class="day-head">
+      <div>
+        <div class="eyebrow">Despacho</div>
+        <h1>Flujo y carga de trabajo</h1>
+        <p class="sub">Dónde está parado cada pallet, cuántas horas hombre falta meterle y quién nos está atrasando</p>
+      </div>
+    </div>
+
+    <div class="tiles" id="tilesFlujo"></div>
+
+    <section>
+      <div class="sec-head">
+        <h2>El circuito</h2>
+        <div class="hint">Cada cola espera una tarea · los pallets se editan acá mismo</div>
+      </div>
+      <div class="pipe" id="pipe"></div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <h2>Plan de horas del turno</h2>
+        <div class="hint">Cuánta gente hace falta en cada tarea</div>
+      </div>
+      <div class="card">
+        <div class="cfg">
+          <span><label for="cfgIni">Turno de</label><input type="number" id="cfgIni" min="0" max="24" step="0.5"> h</span>
+          <span><label for="cfgFin">a</label><input type="number" id="cfgFin" min="0" max="24" step="0.5"> h</span>
+          <span><label for="cfgMez">Exportación</label><input type="number" id="cfgMez" min="0" max="100" step="5"> %</span>
+          <span class="cfg-note">Sólo se cuentan estas horas, de lunes a viernes. La mezcla reparte el packing entre sus dos puestos.</span>
+        </div>
+        <div class="tbl-wrap" id="tblPlan"></div>
+        <p class="card-note" id="planNota"></p>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <h2>Compromisos de salida</h2>
+        <div class="hint">Atraso = horas hombre que pide el pallet − horas hábiles que quedan hasta el camión</div>
+      </div>
+      <div class="card">
+        <div class="cmp-add">
+          <input type="text" id="cmpOrden" placeholder="Nº de orden" aria-label="Número de orden">
+          <select id="cmpDestino" aria-label="Destino">
+            <option>Exportación</option>
+            <option>Nacional</option>
+          </select>
+          <input type="number" id="cmpPallets" min="1" step="1" placeholder="Pallets" aria-label="Pallets comprometidos">
+          <input type="datetime-local" id="cmpSalida" aria-label="Salida comprometida">
+          <select id="cmpEtapa" aria-label="Etapa actual"></select>
+          <select id="cmpResp" aria-label="De quién depende si llega tarde"></select>
+          <button class="btn btn-ghost" id="cmpAdd">Agregar</button>
+        </div>
+        <div class="cmp-list" id="compList"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= VISTA MENSUAL ================= -->
+  <div id="view-mensual" hidden>
+
+    <div class="card hero">
+      <div class="hero-main">
+        <div class="eyebrow">Precisión de stock — absoluta por ubicación</div>
+        <div class="hero-fig">87,4<span>%</span></div>
+        <div class="hero-delta">▲ +7,4 pts <em>desde el arranque (80,0%)</em></div>
+        <div style="height:20px"></div>
+        <div class="goalbar-track">
+          <div class="goalbar-fill" id="goalFill"></div>
+          <div class="goalbar-tick" id="goalTick"></div>
+        </div>
+        <div class="goalbar-scale">
+          <span>80% inicio</span><span>Meta trim. 90%</span><span>95% objetivo</span>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="eyebrow">Hitos trimestrales</div>
+        <div class="milestones">
+          <div class="ms" data-state="done"><div class="ms-q">T1</div><div class="ms-v">85%</div></div>
+          <div class="ms" data-state="now"><div class="ms-q">T2 · actual</div><div class="ms-v">90%</div></div>
+          <div class="ms"><div class="ms-q">T3</div><div class="ms-v">93%</div></div>
+          <div class="ms"><div class="ms-q">T4</div><div class="ms-v">95%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <section>
+      <div class="sec-head">
+        <h2>Evolución de la precisión de stock</h2>
+        <div class="hint">Últimos 8 meses</div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <h3 class="card-title">De 80,0% a 87,4%</h3>
+          <button class="tbl-toggle" data-tbl="tblPrecision">Ver tabla</button>
+        </div>
+        <div class="chart-host" id="hostPrecision">
+          <svg id="svgPrecision" viewBox="0 0 760 250" role="img" aria-label="Evolución mensual de la precisión de stock"></svg>
+          <div class="tip" id="tipPrecision"></div>
+        </div>
+        <div class="tbl-wrap" id="tblPrecision" hidden></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head"><h2>Por sector</h2></div>
+      <div class="kpis" id="kpis"></div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <h2>Despacho — pallets por día</h2>
+        <div class="hint">Últimos 20 días hábiles</div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <h3 class="card-title">Volumen despachado</h3>
+          <button class="tbl-toggle" data-tbl="tblDespacho">Ver tabla</button>
+        </div>
+        <p class="card-note">Promedio del período: <b id="despProm"></b> pallets/día.</p>
+        <div class="chart-host" id="hostDespacho">
+          <svg id="svgDespacho" viewBox="0 0 760 225" role="img" aria-label="Pallets despachados por día"></svg>
+          <div class="tip" id="tipDespacho"></div>
+        </div>
+        <div class="tbl-wrap" id="tblDespacho" hidden></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <h2>Pasillos</h2>
+        <div class="hint">Participación en el error y precisión de cada uno</div>
+      </div>
+      <div class="g-pasillos">
+        <div class="card">
+          <div class="card-head"><h3 class="card-title">De dónde salen los errores</h3></div>
+          <div class="chart-host donut">
+            <svg id="svgTorta" viewBox="0 0 300 300" role="img" aria-label="Participación de cada pasillo en el total de errores"></svg>
+          </div>
+          <div class="legend" id="lgTorta"></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <h3 class="card-title">Precisión por pasillo</h3>
+            <button class="tbl-toggle" data-tbl="tblPasillos">Ver tabla</button>
+          </div>
+          <p class="card-note">La marca vertical es la meta del trimestre (90%).</p>
+          <div class="rows" id="rowsPasillos"></div>
+          <div class="tbl-wrap" id="tblPasillos" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <h2>Picking</h2>
+        <div class="hint">Un eje por gráfico</div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-head"><h3 class="card-title">Precisión de picking</h3></div>
+          <p class="card-note">% de líneas sin error.</p>
+          <div class="chart-host" id="hostPickCal">
+            <svg id="svgPickCal" viewBox="0 0 380 190" role="img" aria-label="Precisión de picking por día"></svg>
+            <div class="tip" id="tipPickCal"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3 class="card-title">Líneas por hora</h3></div>
+          <p class="card-note">Productividad.</p>
+          <div class="chart-host" id="hostPickVel">
+            <svg id="svgPickVel" viewBox="0 0 380 190" role="img" aria-label="Líneas pickeadas por hora"></svg>
+            <div class="tip" id="tipPickVel"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <h2>Causas de los ajustes</h2>
+        <div class="hint">214 ajustes en el mes</div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <h3 class="card-title">Por qué se ajustó</h3>
+          <button class="tbl-toggle" data-tbl="tblCausas">Ver tabla</button>
+        </div>
+        <div style="margin-top:16px" id="causas"></div>
+        <div class="tbl-wrap" id="tblCausas" hidden></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <h2>Atrasos — horas hombre que nos costaron</h2>
+        <div class="hint" id="atrHint"></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <h3 class="card-title">Quién nos llegó tarde</h3>
+          <button class="tbl-toggle" data-tbl="tblAtrasos">Ver tabla</button>
+        </div>
+        <p class="card-note">Horas hombre que faltaron para llegar al camión a horario, agrupadas
+          por el área que entregó tarde. Sale de los compromisos cargados en <b>Flujo</b>, del mes en curso.</p>
+        <div style="margin-top:16px" id="atrasos"></div>
+        <div class="tbl-wrap" id="tblAtrasos" hidden></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= VISTA CARGA ================= -->
+  <div id="view-carga" hidden>
+
+    <div class="load-head">
+      <div>
+        <div class="eyebrow">Cierre de jornada</div>
+        <h1>Carga del día</h1>
+        <p>Solo los números que salen de las planillas de papel. Los porcentajes se calculan solos.</p>
+      </div>
+    </div>
+
+    <div class="load-date">
+      <label for="fecha">Fecha de la jornada</label>
+      <input type="date" id="fecha">
+    </div>
+
+    <div class="blocks" id="blocks"></div>
+
+    <section>
+      <div class="sec-head">
+        <h2>Ajustes de inventario del día</h2>
+        <div class="hint">Qué producto y por qué</div>
+      </div>
+      <div class="card">
+        <div class="adj-add">
+          <input type="text" id="adjSku" placeholder="Producto / código" aria-label="Producto o código">
+          <select id="adjWhy" aria-label="Motivo del ajuste">
+            <option>Unidad de medida</option>
+            <option>Movimiento sin registrar</option>
+            <option>Error de recepción</option>
+            <option>Devolución no procesada</option>
+            <option>Rotura / descarte</option>
+            <option>Error de picking</option>
+            <option>Sin identificar</option>
+          </select>
+          <input type="number" id="adjQty" placeholder="Cant." step="1" style="width:88px" aria-label="Cantidad ajustada">
+          <button class="btn btn-ghost" id="adjAdd">Agregar</button>
+        </div>
+        <div class="adj-list" id="adjList"></div>
+      </div>
+    </section>
+
+    <div class="save-bar">
+      <button class="btn btn-brand" id="btnSave">Guardar jornada</button>
+      <div class="save-msg" id="saveMsg">Guardado ✓</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  /* ================= DATOS =================
+     Todos los números de ejemplo viven acá. Para pasar a datos reales,
+     reemplazar estos valores (ver instrucciones.md). */
+
+  // --- Diaria ---
+  const DIA = {
+    pickeados:   14,
+    embalados:   12,
+    despachados: 11,
+    pallets: { exportacion: 6,  nacional: 3  },
+    boxes:   { exportacion: 24, nacional: 41 }
+  };
+
+  // estado: "ok" | "leve" | "grave"  ·  tipo del desvío: "falta" | "sobra"
+  const PASILLOS_HOY = [
+    { cod:"A", nom:"Válvulas de control", quien:"M.G.",         estado:"ok",    desvios:[] },
+    { cod:"B", nom:"Trampas de vapor",    quien:"R.S.",         estado:"leve",  desvios:[
+        { item:"Trampa TD-52 DN15", cant:2, tipo:"sobra" } ] },
+    { cod:"C", nom:"Reguladores",         quien:"L.F.",         estado:"ok",    desvios:[] },
+    { cod:"D", nom:"Repuestos",           quien:"D.I.",         estado:"grave", desvios:[
+        { item:"Bridas DN50",            cant:3, tipo:"falta" },
+        { item:"Kit reparación BM-34",   cant:1, tipo:"sobra" } ] },
+    { cod:"E", nom:"Instrumentación",     quien:"C.M.",         estado:"leve",  desvios:[
+        { item:"Manómetro 0-10 bar", cant:1, tipo:"falta" } ] }
+  ];
+
+  // --- Mensual ---
+  const SECTORES = [
+    { id:"recepcion", nom:"Recepción", qLab:"sin diferencia",     qVal:94.2, sVal:38,   sUnit:"líneas/h",  color:"--s2" },
+    { id:"pasillos",  nom:"Pasillos",  qLab:"precisión stock",    qVal:87.4, sVal:null, sUnit:"—",         color:"--s1" },
+    { id:"picking",   nom:"Picking",   qLab:"líneas sin error",   qVal:99.4, sVal:42,   sUnit:"líneas/h",  color:"--s3" },
+    { id:"packing",   nom:"Packing",   qLab:"sin observación",    qVal:91.5, sVal:6.4,  sUnit:"pedidos/h", color:"--s4" },
+    { id:"despacho",  nom:"Despacho",  qLab:"dentro del cut-off", qVal:88.9, sVal:1.1,  sUnit:"pallets/h", color:"--s5" }
+  ];
+
+  const PASILLOS = [
+    { cod:"A", nom:"Válvulas de control", quien:"M.G.",         prec:92.1, err:31 },
+    { cod:"B", nom:"Trampas de vapor",    quien:"R.S.",         prec:84.3, err:58 },
+    { cod:"C", nom:"Reguladores",         quien:"L.F.",         prec:89.7, err:39 },
+    { cod:"D", nom:"Repuestos",           quien:"D.I.",         prec:78.2, err:72 },
+    { cod:"E", nom:"Instrumentación",     quien:"C.M.",         prec:93.5, err:14 }
+  ];
+
+  const CAUSAS = [
+    { nom:"Unidad de medida",         n:62 },
+    { nom:"Movimiento sin registrar", n:54 },
+    { nom:"Error de recepción",       n:43 },
+    { nom:"Devolución no procesada",  n:28 },
+    { nom:"Rotura / descarte",        n:15 },
+    { nom:"Sin identificar",          n:7  },
+    { nom:"Error de picking",         n:5  }
+  ];
+
+  const MESES      = ["Dic","Ene","Feb","Mar","Abr","May","Jun","Jul"];
+  const PRECISION  = [80.0, 80.6, 81.9, 83.4, 84.8, 85.9, 86.7, 87.4];
+  const HITO_DUENO = 2; // Feb: arranca "cada uno responsable de su pasillo"
+
+  const DIAS = ["04/07","07/07","08/07","09/07","10/07","11/07","14/07","15/07","16/07","17/07",
+                "18/07","21/07","22/07","23/07","24/07","25/07","28/07","29/07","30/07","31/07"];
+  const DESPACHO = [7,9,8,11,6,12,10,9,7,10,11,10,8,9,11,10,7,12,9,9];
+  const PICK_CAL = [98.7,98.9,99.1,98.8,99.2,99.0,99.3,99.1,99.4,99.2,99.5,99.3,99.6,99.4,99.2,99.5,99.3,99.6,99.5,99.4];
+  const PICK_VEL = [38,40,39,42,37,44,45,41,39,43,47,44,40,42,46,43,38,48,44,42];
+
+  // --- Flujo de despacho (el circuito real, como se registra en JD Edwards) ---
+  /* Armado deja los productos en la ubicación lógica R. Guardado les asigna una
+     ubicación real en el pasillo y los sube a JD. Picking los baja contra la
+     orden y los deja en las ubicaciones de expo con su número. Packing embala y
+     manda a la salida de camiones, donde esperan al transporte.
+
+     Estas son las COLAS: dónde está parado el pallet y qué está esperando. */
+  const ETAPAS = [
+    { id:"R",       cola:"En R",            falta:"guardado", color:"--s2",
+      nota:"Armado ya los dejó. Falta asignarles ubicación en el pasillo y subirlos a JD." },
+    { id:"pasillo", cola:"En pasillo",      falta:"picking",  color:"--s1",
+      nota:"Guardados en su ubicación real. Falta pickearlos contra la orden." },
+    { id:"expo",    cola:"En expo",         falta:"packing",  color:"--s3",
+      nota:"Pickeados y en la ubicación de expo con su número de orden. Falta embalar." },
+    { id:"salida",  cola:"Salida camiones", falta:"despacho", color:"--s4",
+      nota:"Embalados y esperando que llegue el transporte." }
+  ];
+
+  /* Y estas son las TAREAS: los puestos a los que se les asigna gente. No son
+     lo mismo que las colas. El packing son dos puestos, uno de local y uno de
+     exportación, que se refuerzan según el volumen del día — por eso van
+     separados, si no el plan diría "packing: 1 persona" y no se parecería a
+     cómo se reparte el trabajo de verdad.
+
+     `cola` es desde qué cola esa tarea ya tiene trabajo por delante, y `dest`
+     la limita a un destino. Un pallet pasa por UN solo packing, así que de
+     punta a punta le toca 0,25 + 0,50 + 0,25 + 0,12 = 1,12 h: el estándar que
+     usa hoy el líder de despacho. El reparto entre tareas es una estimación y
+     se ajusta desde la propia vista Flujo. */
+  const TAREAS = [
+    { id:"guardado", cola:"R",       nom:"Guardado",      hpp:0.25, dest:null },
+    { id:"picking",  cola:"pasillo", nom:"Picking",       hpp:0.50, dest:null },
+    { id:"packLoc",  cola:"expo",    nom:"Packing local", hpp:0.25, dest:"Nacional" },
+    { id:"packExp",  cola:"expo",    nom:"Packing expo",  hpp:0.25, dest:"Exportación" },
+    { id:"despacho", cola:"salida",  nom:"Despacho",      hpp:0.12, dest:null }
+  ];
+
+  /* Qué parte del circuito va a exportación, en %. Es lo que reparte el trabajo
+     entre los dos puestos de packing. Cada compromiso sí sabe su destino y usa
+     el suyo; esta mezcla se usa sólo para los pallets del circuito, que están
+     contados en bloque. */
+  const MEZCLA_EXPO = 50;
+
+  // "sin" es el pallet que todavía no nos entregaron: le falta el circuito entero.
+  const ETAPA_OPC = [{ id:"sin", nom:"Sin entregar (armado)" }]
+    .concat(ETAPAS.map(e => ({ id:e.id, nom:e.cola })));
+
+  // De quién depende que un pallet nos llegue tarde a las manos.
+  const RESPONSABLES = ["Armado", "Coordinación de envíos", "Revisión de calidad",
+                        "Transporte", "Almacén", "Otro"];
+
+  // Ventana del turno, en horas. Sólo estas horas cuentan, y de lunes a viernes.
+  const TURNO = { ini: 7, fin: 15 };
+
+  // Compromisos de ejemplo. `dias` son días hábiles desde hoy (negativo = pasado)
+  // y las fechas se arman al abrir, así el ejemplo se entiende cualquier día.
+  const COMP_DEMO = [
+    { orden:"SO-40182", destino:"Exportación", pallets:9, dias: 0, hora:15, etapa:"sin",     resp:"Armado" },
+    { orden:"SO-40195", destino:"Nacional",    pallets:2, dias: 1, hora:11, etapa:"R",       resp:"Armado" },
+    { orden:"SO-40151", destino:"Nacional",    pallets:4, dias: 0, hora:15, etapa:"expo",    resp:"Revisión de calidad" },
+    { orden:"SO-40166", destino:"Exportación", pallets:5, dias: 3, hora:14, etapa:"pasillo", resp:"Coordinación de envíos" },
+    { orden:"SO-40120", destino:"Exportación", pallets:4, dias:-2, hora:14, etapa:"salida",
+      resp:"Revisión de calidad",     cerrado:true, atrasoFinal:3.4 },
+    { orden:"SO-40098", destino:"Nacional",    pallets:3, dias:-4, hora:11, etapa:"salida",
+      resp:"Armado",                  cerrado:true, atrasoFinal:5.2 },
+    { orden:"SO-40077", destino:"Exportación", pallets:6, dias:-5, hora:14, etapa:"salida",
+      resp:"Coordinación de envíos",  cerrado:true, atrasoFinal:2.1 }
+  ];
+
+  /* ================= HELPERS ================= */
+
+  const CSS = getComputedStyle(document.documentElement);
+  const v = n => CSS.getPropertyValue(n).trim();
+  const SLOTS = ["--s1","--s2","--s3","--s4","--s5"];
+  const nf = (x, d=1) => x.toLocaleString("es-AR", { minimumFractionDigits:d, maximumFractionDigits:d });
+
+  const estado = p => p >= 90 ? "good" : p >= 85 ? "warning" : "critical";
+  const estadoTxt = { good:"en meta", warning:"cerca", critical:"fuera de meta" };
+
+  // Un rótulo dentro de un relleno de color elige blanco o tinta según la
+  // luminancia del relleno, para que nunca quede bajo contraste.
+  function lumin(hex) {
+    const h = hex.replace("#","").trim();
+    const c = i => {
+      const s = parseInt(h.substr(i*2,2),16) / 255;
+      return s <= 0.04045 ? s/12.92 : Math.pow((s+0.055)/1.055, 2.4);
+    };
+    return 0.2126*c(0) + 0.7152*c(1) + 0.0722*c(2);
+  }
+  const tintaSobre = hex => lumin(hex) > 0.22 ? "#0e1417" : "#ffffff";
+
+  const hoy = new Date();
+  const fechaCorta = hoy.toLocaleDateString("es-AR", { day:"2-digit", month:"2-digit", year:"numeric" });
+  const fechaLarga = hoy.toLocaleDateString("es-AR", { weekday:"long", day:"2-digit", month:"long", year:"numeric" });
+  document.getElementById("stamp").textContent = "Datos al " + fechaCorta;
+  document.getElementById("phFecha").textContent = "Emitido el " + fechaCorta;
+  document.getElementById("diaTitulo").textContent =
+    fechaLarga.charAt(0).toUpperCase() + fechaLarga.slice(1);
+
+  /* ================= VISTA DIARIA ================= */
+
+  const TILES = [
+    { lab:"Pickeados",   val:DIA.pickeados,   sub:"pedidos armados" },
+    { lab:"Embalados",   val:DIA.embalados,   sub:"pedidos embalados" },
+    { lab:"Despachados", val:DIA.despachados, sub:"pedidos despachados" },
+    { lab:"Pallets",     val:DIA.pallets.exportacion + DIA.pallets.nacional, sub:"pallets despachados" }
+  ];
+  document.getElementById("tilesDia").innerHTML = TILES.map(t =>
+    `<div class="card tile">
+       <div class="tile-lab">${t.lab}</div>
+       <div class="tile-val">${t.val}</div>
+       <div class="tile-sub">${t.sub}</div>
+     </div>`).join("");
+
+  const EST = {
+    ok:    { color:"--good",     txt:"Sin desvíos",       pill:"good" },
+    leve:  { color:"--warning",  txt:"Desvío leve",       pill:"warning" },
+    grave: { color:"--critical", txt:"Desvío importante", pill:"critical" }
+  };
+
+  function pintarPasillosHoy() {
+    const cont = document.getElementById("aisles");
+    cont.innerHTML = "";
+    PASILLOS_HOY.forEach(p => {
+      const e = EST[p.estado];
+      const card = document.createElement("div");
+      card.className = "card aisle";
+
+      const bar = document.createElement("div");
+      bar.className = "aisle-bar";
+      bar.style.background = v(e.color);
+
+      const inner = document.createElement("div");
+      inner.className = "aisle-in";
+
+      const top = document.createElement("div");
+      top.className = "aisle-top";
+      const cod = document.createElement("span");
+      cod.className = "aisle-cod"; cod.textContent = "Pasillo " + p.cod;
+      const nom = document.createElement("span");
+      nom.className = "aisle-nom"; nom.textContent = p.nom;
+      top.append(cod, nom);
+
+      const who = document.createElement("div");
+      who.className = "aisle-who"; who.textContent = p.quien;
+
+      const st = document.createElement("div");
+      st.className = "aisle-state";
+      st.innerHTML = `<span class="pill" data-s="${e.pill}"><i></i>${e.txt}</span>`;
+
+      inner.append(top, who, st);
+
+      if (p.desvios.length) {
+        const devs = document.createElement("div");
+        devs.className = "devs";
+        p.desvios.forEach(d => {
+          const row = document.createElement("div");
+          row.className = "dev";
+          const q = document.createElement("span");
+          q.className = "dev-q";
+          q.dataset.t = d.tipo;
+          q.textContent = (d.tipo === "falta" ? "Faltan " : "Sobran ") + d.cant;
+          const it = document.createElement("span");
+          it.className = "dev-item";
+          it.textContent = d.item;           // dato editable: nunca por innerHTML
+          row.append(q, it);
+          devs.appendChild(row);
+        });
+        inner.appendChild(devs);
+      } else {
+        const ok = document.createElement("div");
+        ok.className = "devs-ok";
+        ok.textContent = "Todo en su ubicación.";
+        inner.appendChild(ok);
+      }
+
+      card.append(bar, inner);
+      cont.appendChild(card);
+    });
+  }
+
+  /* ================= DONUT ================= */
+
+  function donut(svgId, legendId, items, slots, unidad) {
+    const svg = document.getElementById(svgId);
+    const W = svg.viewBox.baseVal.width, H = svg.viewBox.baseVal.height;
+    const total = items.reduce((a, it) => a + it.val, 0);
+    const cx = W / 2, cy = H / 2 - 6, R = Math.min(W, H) / 2 - 42, r0 = R * 0.55;
+    let ang = -Math.PI / 2, out = "";
+    const pt = (a, rad) => [cx + Math.cos(a) * rad, cy + Math.sin(a) * rad];
+
+    items.forEach((it, i) => {
+      const frac = total ? it.val / total : 0, span = frac * Math.PI * 2;
+      const a0 = ang, a1 = ang + span;
+      const [x0,y0] = pt(a0,R), [x1,y1] = pt(a1,R);
+      const [x2,y2] = pt(a1,r0), [x3,y3] = pt(a0,r0);
+      const big = span > Math.PI ? 1 : 0;
+      const col = v(slots[i % slots.length]);
+      out += `<path d="M ${x0.toFixed(2)} ${y0.toFixed(2)}
+                       A ${R} ${R} 0 ${big} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}
+                       L ${x2.toFixed(2)} ${y2.toFixed(2)}
+                       A ${r0} ${r0} 0 ${big} 0 ${x3.toFixed(2)} ${y3.toFixed(2)} Z"
+                fill="${col}" stroke="${v("--surface")}" stroke-width="2"/>`;
+      const am = a0 + span / 2, [lx, ly] = pt(am, (R + r0) / 2);
+      if (frac > 0.07) {
+        out += `<text x="${lx.toFixed(1)}" y="${(ly+6).toFixed(1)}" text-anchor="middle"
+                 style="font-size:17px;font-weight:700;fill:${tintaSobre(col)}">${Math.round(frac*100)}%</text>`;
+      }
+      ang = a1;
+    });
+
+    out += `<text x="${cx}" y="${cy-2}" text-anchor="middle"
+             style="font-size:31px;font-weight:700;fill:${v("--ink")}">${total}</text>`;
+    out += `<text x="${cx}" y="${cy+18}" text-anchor="middle"
+             style="font-size:11px;font-weight:650;fill:${v("--muted")};letter-spacing:.06em">${unidad}</text>`;
+    svg.innerHTML = out;
+
+    if (legendId) {
+      document.getElementById(legendId).innerHTML = items.map((it, i) =>
+        `<div class="lg"><i style="background:${v(slots[i % slots.length])}"></i>
+           ${it.nom} <b>${total ? Math.round(it.val/total*100) : 0}%</b>
+           <span>${it.val}</span></div>`).join("");
+    }
+  }
+
+  /* ================= SERIES TEMPORALES ================= */
+
+  function tipShow(tip, host, x, y, titulo, filas) {
+    tip.innerHTML = "";
+    const k = document.createElement("div");
+    k.className = "tip-k"; k.textContent = titulo;
+    tip.appendChild(k);
+    filas.forEach(f => {
+      const r = document.createElement("div");
+      r.className = "tip-row";
+      const key = document.createElement("div");
+      key.className = "tip-key"; key.style.background = f.color;
+      const val = document.createElement("div");
+      val.className = "tip-v"; val.textContent = f.val;
+      const nm = document.createElement("div");
+      nm.className = "tip-n"; nm.textContent = f.nom;
+      r.append(key, val, nm);
+      tip.appendChild(r);
+    });
+    tip.dataset.on = "1";
+    const hw = host.clientWidth, tw = tip.offsetWidth || 150;
+    tip.style.left = Math.max(0, Math.min(hw - tw, x - tw / 2)) + "px";
+    tip.style.top  = Math.max(0, y - tip.offsetHeight - 12) + "px";
+  }
+  const tipHide = tip => tip.dataset.on = "0";
+
+  function lineChart(opts) {
+    const { svg, host, tip, labels, data, unidad, decimales = 0, yMin, yMax,
+            media, ticks = 4, meta, hito } = opts;
+    const W = svg.viewBox.baseVal.width, H = svg.viewBox.baseVal.height;
+    const M = { t: 14, r: 14, b: 30, l: 44 };
+    const pw = W - M.l - M.r, ph = H - M.t - M.b;
+
+    const lo = yMin !== undefined ? yMin : Math.min(...data);
+    const hi = yMax !== undefined ? yMax : Math.max(...data);
+    const X = i => M.l + (data.length === 1 ? pw / 2 : (i / (data.length - 1)) * pw);
+    const Y = val => M.t + ph - ((val - lo) / (hi - lo)) * ph;
+
+    let out = "";
+    for (let i = 0; i <= ticks; i++) {
+      const val = lo + (hi - lo) * (i / ticks), y = Y(val);
+      out += `<line class="gridline" x1="${M.l}" y1="${y.toFixed(1)}" x2="${W-M.r}" y2="${y.toFixed(1)}"/>`;
+      out += `<text class="ax" x="${M.l-9}" y="${(y+4).toFixed(1)}" text-anchor="end">${nf(val, decimales)}</text>`;
+    }
+
+    // Línea de meta: acá el punteado sí comunica —marca un umbral, no una grilla—.
+    if (meta) {
+      const ym = Y(meta.valor).toFixed(1);
+      out += `<line x1="${M.l}" y1="${ym}" x2="${W-M.r}" y2="${ym}"
+               stroke="${v("--ink-2")}" stroke-width="1.5" stroke-dasharray="5 4" opacity=".5"/>`;
+      out += `<text class="ax" x="${W-M.r}" y="${(Y(meta.valor)-7).toFixed(1)}" text-anchor="end"
+               style="font-weight:700;fill:${v("--ink-2")}">${meta.label}</text>`;
+    }
+    if (hito) {
+      const xh = X(hito.idx).toFixed(1);
+      out += `<line x1="${xh}" y1="${M.t}" x2="${xh}" y2="${M.t+ph}"
+               stroke="${v("--ink-2")}" stroke-width="1.5" opacity=".45"/>`;
+      out += `<circle cx="${xh}" cy="${M.t}" r="3" fill="${v("--ink-2")}"/>`;
+      out += `<text x="${(X(hito.idx)+8).toFixed(1)}" y="${M.t+12}"
+               style="font-size:11.5px;font-weight:700;fill:${v("--ink")}">${hito.label}</text>`;
+    }
+
+    if (media) {
+      const mPts = media.map((m, i) => `${X(i).toFixed(1)},${Y(m).toFixed(1)}`).join(" ");
+      out += `<polyline points="${mPts}" fill="none" stroke="${v("--rule")}" stroke-width="6"
+               stroke-linejoin="round" stroke-linecap="round" opacity=".5"/>`;
+    }
+
+    const pts = data.map((d, i) => `${X(i).toFixed(1)},${Y(d).toFixed(1)}`);
+    // El relleno de área sólo es honesto si el eje arranca en cero.
+    if (lo === 0) {
+      out += `<path d="M ${X(0).toFixed(1)},${(M.t+ph).toFixed(1)} L ${pts.join(" L ")} L ${X(data.length-1).toFixed(1)},${(M.t+ph).toFixed(1)} Z"
+               fill="${v("--s1")}" opacity=".10"/>`;
+    }
+    out += `<polyline points="${pts.join(" ")}" fill="none" stroke="${v("--s1")}"
+             stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    out += `<line class="baseline" x1="${M.l}" y1="${M.t+ph}" x2="${W-M.r}" y2="${M.t+ph}"/>`;
+
+    // El último rótulo sólo entra si no queda pegado al múltiplo anterior.
+    const paso = Math.ceil(labels.length / (W < 500 ? 4 : 8));
+    const ultimo = labels.length - 1;
+    const ultMult = Math.floor(ultimo / paso) * paso;
+    const cabeUltimo = (ultimo - ultMult) >= paso * 0.6;
+    labels.forEach((l, i) => {
+      if (i % paso === 0 || (i === ultimo && cabeUltimo))
+        out += `<text class="ax" x="${X(i).toFixed(1)}" y="${H-10}" text-anchor="middle">${l}</text>`;
+    });
+
+    out += `<circle cx="${X(ultimo).toFixed(1)}" cy="${Y(data[ultimo]).toFixed(1)}" r="4.5"
+             fill="${v("--s1")}" stroke="${v("--surface")}" stroke-width="2"/>`;
+    out += `<text class="ax" x="${(X(ultimo)-8).toFixed(1)}" y="${(Y(data[ultimo])-11).toFixed(1)}"
+             text-anchor="end" style="font-weight:700;fill:${v("--ink")}">${nf(data[ultimo], decimales)}</text>`;
+
+    out += `<line id="${svg.id}-cross" x1="0" y1="${M.t}" x2="0" y2="${M.t+ph}"
+             stroke="${v("--ink-2")}" stroke-width="1" opacity="0"/>`;
+    out += `<circle id="${svg.id}-hov" r="5" fill="${v("--s1")}" stroke="${v("--surface")}"
+             stroke-width="2" opacity="0"/>`;
+    out += `<rect x="${M.l}" y="${M.t}" width="${pw}" height="${ph}" fill="transparent"
+             id="${svg.id}-hit" style="cursor:crosshair"/>`;
+
+    svg.innerHTML = out;
+
+    const cross = svg.querySelector("#" + svg.id + "-cross");
+    const hov   = svg.querySelector("#" + svg.id + "-hov");
+    const hit   = svg.querySelector("#" + svg.id + "-hit");
+
+    hit.addEventListener("pointermove", ev => {
+      const r = svg.getBoundingClientRect();
+      const sx = (ev.clientX - r.left) * (W / r.width);
+      let idx = Math.round(((sx - M.l) / pw) * (data.length - 1));
+      idx = Math.max(0, Math.min(data.length - 1, idx));
+      const px = X(idx), py = Y(data[idx]);
+      cross.setAttribute("x1", px); cross.setAttribute("x2", px); cross.setAttribute("opacity", ".35");
+      hov.setAttribute("cx", px); hov.setAttribute("cy", py); hov.setAttribute("opacity", "1");
+      tipShow(tip, host, px * (r.width / W), py * (r.width / W),
+        labels[idx], [{ color: v("--s1"), val: nf(data[idx], decimales), nom: unidad }]);
+    });
+    hit.addEventListener("pointerleave", () => {
+      cross.setAttribute("opacity", "0");
+      hov.setAttribute("opacity", "0");
+      tipHide(tip);
+    });
+  }
+
+  const mmovil = (arr, n) => arr.map((_, i) => {
+    const t = arr.slice(Math.max(0, i - n + 1), i + 1);
+    return t.reduce((a, b) => a + b, 0) / t.length;
+  });
+
+  /* ================= MENSUAL: estáticos ================= */
+
+  const PREC = 87.4;
+  document.getElementById("goalFill").style.width = (((PREC - 80) / 15) * 100) + "%";
+  document.getElementById("goalTick").style.left = (((90 - 80) / 15) * 100) + "%";
+  document.getElementById("despProm").textContent =
+    nf(DESPACHO.reduce((a, b) => a + b, 0) / DESPACHO.length, 1);
+
+  document.getElementById("kpis").innerHTML = SECTORES.map(s => {
+    const st = estado(s.qVal);
+    const vel = s.sVal === null
+      ? `<div class="kpi-speed"><span>sin métrica de velocidad propia</span></div>`
+      : `<div class="kpi-speed"><b>${nf(s.sVal, s.sVal % 1 ? 1 : 0)}</b><span>${s.sUnit}</span></div>`;
+    return `<div class="card kpi">
+      <div class="kpi-lab">${s.nom}</div>
+      <div class="kpi-q">
+        <div class="kpi-val">${nf(s.qVal)}%</div>
+        <span class="pill" data-s="${st}"><i></i>${estadoTxt[st]}</span>
+      </div>
+      <div class="kpi-name">${s.qLab}</div>
+      <div class="kpi-sep"></div>
+      ${vel}
+    </div>`;
+  }).join("");
+
+  const META = 90;
+  document.getElementById("rowsPasillos").innerHTML = PASILLOS.map(p => {
+    const st = estado(p.prec);
+    const col = st === "good" ? v("--good") : st === "warning" ? v("--warning") : v("--critical");
+    return `<div>
+      <div class="row-h">
+        <span class="row-lab">Pasillo ${p.cod} · ${p.nom}</span>
+        <span class="row-who">${p.quien}</span>
+        <span class="row-val">${nf(p.prec)}%</span>
+      </div>
+      <div class="row-track">
+        <div class="row-fill" style="width:${((p.prec-70)/30*100).toFixed(1)}%;background:${col}"></div>
+        <div class="row-goal" style="left:${((META-70)/30*100).toFixed(1)}%"></div>
+      </div>
+    </div>`;
+  }).join("");
+
+  const totalC = CAUSAS.reduce((a, c) => a + c.n, 0);
+  const maxC = Math.max(...CAUSAS.map(c => c.n));
+  document.getElementById("causas").innerHTML = CAUSAS.map(c =>
+    `<div class="cause">
+      <div class="cause-lab">${c.nom}</div>
+      <div class="cause-track"><div class="cause-fill" style="width:${(c.n/maxC*100).toFixed(1)}%"></div></div>
+      <div class="cause-val">${Math.round(c.n/totalC*100)}%</div>
+      <div class="cause-n">${c.n}</div>
+    </div>`).join("");
+
+  /* ================= TABLAS ================= */
+
+  function tabla(cabeceras, filas) {
+    const th = cabeceras.map(h => `<th>${h}</th>`).join("");
+    const tb = filas.map(f => `<tr>${f.map(c => `<td>${c}</td>`).join("")}</tr>`).join("");
+    return `<table><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table>`;
+  }
+
+  const totPal = DIA.pallets.exportacion + DIA.pallets.nacional;
+  const totBox = DIA.boxes.exportacion + DIA.boxes.nacional;
+  document.getElementById("tblPallets").innerHTML = tabla(["Destino","Pallets","%"], [
+    ["Exportación", DIA.pallets.exportacion, Math.round(DIA.pallets.exportacion/totPal*100) + "%"],
+    ["Nacional",    DIA.pallets.nacional,    Math.round(DIA.pallets.nacional/totPal*100) + "%"],
+    ["Total",       totPal, "100%"]
+  ]);
+  document.getElementById("tblBoxes").innerHTML = tabla(["Destino","Bultos","%"], [
+    ["Exportación", DIA.boxes.exportacion, Math.round(DIA.boxes.exportacion/totBox*100) + "%"],
+    ["Nacional",    DIA.boxes.nacional,    Math.round(DIA.boxes.nacional/totBox*100) + "%"],
+    ["Total",       totBox, "100%"]
+  ]);
+  document.getElementById("tblPrecision").innerHTML =
+    tabla(["Mes","Precisión","Variación"], MESES.map((m, i) => [
+      m, nf(PRECISION[i]) + "%",
+      i === 0 ? "—" : (PRECISION[i]-PRECISION[i-1] >= 0 ? "+" : "") + nf(PRECISION[i]-PRECISION[i-1]) + " pts"
+    ]));
+  document.getElementById("tblDespacho").innerHTML =
+    tabla(["Día","Pallets"], DIAS.map((d, i) => [d, DESPACHO[i]]));
+  document.getElementById("tblPasillos").innerHTML =
+    tabla(["Pasillo","Responsable","Precisión","Errores"],
+      PASILLOS.map(p => [`${p.cod} · ${p.nom}`, p.quien, nf(p.prec) + "%", p.err]));
+  document.getElementById("tblCausas").innerHTML =
+    tabla(["Motivo","Ajustes","Participación"],
+      CAUSAS.map(c => [c.nom, c.n, Math.round(c.n/totalC*100) + "%"]));
+
+  document.querySelectorAll(".tbl-toggle").forEach(b => {
+    b.addEventListener("click", () => {
+      const t = document.getElementById(b.dataset.tbl);
+      const abierto = !t.hidden;
+      t.hidden = abierto;
+      b.textContent = abierto ? "Ver tabla" : "Ocultar tabla";
+    });
+  });
+
+  /* ================= VISTA CARGA ================= */
+
+  const pct = (a, b) => (b > 0 && a >= 0) ? nf(a/b*100) + "%" : "—";
+  // Los rótulos son cortos a propósito: la tarjeta ya dice de qué sector se habla.
+  const CAMPOS = {
+    recepcion: [["recLin","Líneas recibidas"],["recDif","Con diferencia"],["recHs","Horas"]],
+    pasillos:  [["pasUbi","Ubicaciones contadas"],["pasDif","Con diferencia"]],
+    picking:   [["picLin","Pedidos armados"],["picErr","Con error"],["picHs","Horas"]],
+    packing:   [["pakPed","Pedidos embalados"],["pakObs","Con observación"],["pakHs","Horas"]],
+    despacho:  [["desPal","Pallets despachados"],["desTot","Pedidos despachados"],["desOk","Dentro del cut-off"],["desHs","Horas"]]
+  };
+  const CALC = {
+    recepcion: ["Sin diferencia",     d => pct(d.recLin - d.recDif, d.recLin)],
+    pasillos:  ["Precisión",          d => pct(d.pasUbi - d.pasDif, d.pasUbi)],
+    picking:   ["Sin error",          d => pct(d.picLin - d.picErr, d.picLin)],
+    packing:   ["Sin observación",    d => pct(d.pakPed - d.pakObs, d.pakPed)],
+    despacho:  ["Dentro del cut-off", d => pct(d.desOk, d.desTot)]
+  };
+
+  document.getElementById("blocks").innerHTML = SECTORES.map(s => {
+    const flds = CAMPOS[s.id].map(([id, lab]) =>
+      `<div class="fld"><label for="${id}">${lab}</label>
+        <input type="number" id="${id}" min="0" step="1" inputmode="numeric"></div>`).join("");
+    return `<div class="card">
+      <div class="blk-top">
+        <div class="blk-dot" style="background:${v(s.color)}"></div>
+        <div class="blk-name">${s.nom}</div>
+      </div>
+      ${flds}
+      <div class="calc">
+        <span class="calc-lab">${CALC[s.id][0]}</span>
+        <span class="calc-val" id="calc-${s.id}">—</span>
+      </div>
+    </div>`;
+  }).join("");
+
+  function recalcular() {
+    const d = {};
+    Object.values(CAMPOS).flat().forEach(([id]) => {
+      const el = document.getElementById(id);
+      d[id] = el.value === "" ? NaN : Number(el.value);
+    });
+    Object.keys(CALC).forEach(k => {
+      let r = "—";
+      try { r = CALC[k][1](d); } catch (e) { r = "—"; }
+      document.getElementById("calc-" + k).textContent = (typeof r === "string") ? r : "—";
+    });
+  }
+  Object.values(CAMPOS).flat().forEach(([id]) =>
+    document.getElementById(id).addEventListener("input", recalcular));
+
+  let ajustes = [];
+  function pintarAjustes() {
+    const cont = document.getElementById("adjList");
+    cont.innerHTML = "";
+    if (!ajustes.length) {
+      const e = document.createElement("div");
+      e.className = "adj-empty";
+      e.textContent = "Sin ajustes cargados para esta jornada.";
+      cont.appendChild(e);
+      return;
+    }
+    ajustes.forEach((a, i) => {
+      const row = document.createElement("div");
+      row.className = "adj-item";
+      const sku = document.createElement("div");
+      sku.className = "adj-sku"; sku.textContent = a.sku;
+      const why = document.createElement("div");
+      why.className = "adj-why"; why.textContent = a.why;
+      const qty = document.createElement("div");
+      qty.className = "adj-qty"; qty.textContent = a.qty > 0 ? "+" + a.qty : String(a.qty);
+      const del = document.createElement("button");
+      del.className = "adj-del"; del.textContent = "×";
+      del.setAttribute("aria-label", "Quitar ajuste de " + a.sku);
+      del.addEventListener("click", () => { ajustes.splice(i, 1); pintarAjustes(); });
+      row.append(sku, why, qty, del);
+      cont.appendChild(row);
+    });
+  }
+  pintarAjustes();
+
+  document.getElementById("adjAdd").addEventListener("click", () => {
+    const sku = document.getElementById("adjSku").value.trim();
+    const why = document.getElementById("adjWhy").value;
+    const qty = Number(document.getElementById("adjQty").value);
+    if (!sku || !Number.isFinite(qty) || qty === 0) return;
+    ajustes.push({ sku, why, qty });
+    document.getElementById("adjSku").value = "";
+    document.getElementById("adjQty").value = "";
+    document.getElementById("adjSku").focus();
+    pintarAjustes();
+  });
+
+  const KEY = "tablero-almacen-v1";
+  const fechaEl = document.getElementById("fecha");
+  fechaEl.value = new Date().toISOString().slice(0, 10);
+
+  document.getElementById("btnSave").addEventListener("click", () => {
+    const jornada = { fecha: fechaEl.value, ajustes, campos: {} };
+    Object.values(CAMPOS).flat().forEach(([id]) => {
+      jornada.campos[id] = document.getElementById(id).value;
+    });
+    let todo = [];
+    try { todo = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { todo = []; }
+    todo = todo.filter(j => j.fecha !== jornada.fecha);
+    todo.push(jornada);
+    try { localStorage.setItem(KEY, JSON.stringify(todo)); } catch (e) {}
+    const m = document.getElementById("saveMsg");
+    m.dataset.on = "1";
+    setTimeout(() => m.dataset.on = "0", 2200);
+  });
+
+  /* ================= FLUJO DE DESPACHO ================= */
+
+  /* La vista del líder de despacho: dónde está parado cada pallet, cuántas
+     horas hombre falta meterle, cuánta gente hace falta en cada puesto y quién
+     nos está atrasando. Se guarda en el navegador igual que la carga del día. */
+
+  const KEY_FLUJO = "tablero-almacen-flujo-v2";
+  const IDX_COLA = Object.fromEntries(ETAPAS.map((e, i) => [e.id, i]));
+  const esHabil = d => d.getDay() !== 0 && d.getDay() !== 6;
+  const numT = x => { const n = Number(x); return Number.isFinite(n) && n > 0 ? n : 0; };
+
+  const isoLocal = d => {
+    const p = n => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+  };
+
+  // Corre n días hábiles desde hoy y deja la hora pedida. n negativo va al pasado.
+  function habilMas(n, hora) {
+    const d = new Date();
+    d.setHours(Math.floor(hora), Math.round((hora % 1) * 60), 0, 0);
+    const paso = n < 0 ? -1 : 1;
+    let c = 0;
+    while (c < Math.abs(n)) { d.setDate(d.getDate() + paso); if (esHabil(d)) c++; }
+    while (!esHabil(d)) d.setDate(d.getDate() + paso);
+    return d;
+  }
+
+  let seq = 0;
+  const nuevoId = () => "c" + Date.now().toString(36) + (seq++).toString(36);
+
+  const flujoDemo = () => ({
+    cola:   { R:8, pasillo:5, expo:6, salida:3 },
+    hpp:    Object.fromEntries(TAREAS.map(t => [t.id, t.hpp])),
+    asign:  { guardado:1, picking:2, packLoc:1, packExp:1, despacho:1 },
+    turno:  { ini:TURNO.ini, fin:TURNO.fin },
+    mezcla: MEZCLA_EXPO,
+    comp:   COMP_DEMO.map(c => ({
+      id: nuevoId(), orden: c.orden, destino: c.destino, pallets: c.pallets,
+      salida: isoLocal(habilMas(c.dias, c.hora)), etapa: c.etapa, resp: c.resp,
+      cerrado: !!c.cerrado, atrasoFinal: c.atrasoFinal || 0
+    }))
+  });
+
+  /* Lo guardado pisa al ejemplo campo por campo: si mañana se agrega un puesto
+     nuevo, un tablero ya cargado no se queda sin ese valor. */
+  const F = (() => {
+    const d = flujoDemo();
+    let g = null;
+    try { g = JSON.parse(localStorage.getItem(KEY_FLUJO) || "null"); } catch (e) { g = null; }
+    if (!g || typeof g !== "object") return d;
+    return {
+      cola:   Object.assign(d.cola,  g.cola),
+      hpp:    Object.assign(d.hpp,   g.hpp),
+      asign:  Object.assign(d.asign, g.asign),
+      turno:  Object.assign(d.turno, g.turno),
+      mezcla: g.mezcla === undefined ? d.mezcla : g.mezcla,
+      comp:   Array.isArray(g.comp) ? g.comp : d.comp
+    };
+  })();
+
+  const guardarFlujo = () => {
+    try { localStorage.setItem(KEY_FLUJO, JSON.stringify(F)); } catch (e) {}
+  };
+
+  const turnoHs = () => Math.max(0, numT(F.turno.fin) - numT(F.turno.ini));
+  const mezcla  = () => Math.min(1, numT(F.mezcla) / 100);
+
+  // Qué parte del trabajo de un puesto le toca: el packing expo sólo embala
+  // exportación, el local sólo lo nacional, y el resto se lo come todo.
+  const parte = t => !t.dest ? 1 : (t.dest === "Exportación" ? mezcla() : 1 - mezcla());
+
+  /* Horas hábiles entre dos momentos: sólo la ventana del turno, y de lunes a
+     viernes. Contar horas de reloj daría un número mentiroso — entre el lunes a
+     la tarde y el martes a la mañana no trabaja nadie, y el pallet no avanza. */
+  function horasHabiles(desde, hasta) {
+    const ini = numT(F.turno.ini), fin = numT(F.turno.fin);
+    if (!(desde < hasta) || !(fin > ini)) return 0;
+    const enDia = (base, h) => {
+      const x = new Date(base); x.setHours(0, 0, 0, 0);
+      return new Date(x.getTime() + h * 3600000);
+    };
+    let total = 0, guarda = 0;
+    const cur = new Date(desde); cur.setHours(0, 0, 0, 0);
+    // Un compromiso a más de un año vista es un error de carga, no un plan.
+    while (cur <= hasta && guarda++ < 400) {
+      if (esHabil(cur)) {
+        const a = enDia(cur, ini), b = enDia(cur, fin);
+        const d0 = desde > a ? desde : a;
+        const d1 = hasta < b ? hasta : b;
+        if (d1 > d0) total += (d1 - d0) / 3600000;
+      }
+      cur.setDate(cur.getDate() + 1);
+    }
+    return total;
+  }
+
+  /* Lo que le falta a un pallet parado en esa cola, de ahí hasta el camión.
+     Si se sabe el destino se usa el packing que le toca; si no —como pasa con
+     los pallets del circuito, que están contados en bloque— se pondera por la
+     mezcla, porque un pallet pasa por un solo puesto de packing, no por los dos. */
+  function horasRestantes(colaId, destino) {
+    const i = colaId === "sin" ? 0 : IDX_COLA[colaId];
+    if (i === undefined) return 0;
+    return TAREAS.reduce((a, t) => {
+      if (IDX_COLA[t.cola] < i) return a;              // esa tarea ya se la hicieron
+      if (!t.dest) return a + numT(F.hpp[t.id]);
+      if (destino) return a + (t.dest === destino ? numT(F.hpp[t.id]) : 0);
+      return a + numT(F.hpp[t.id]) * parte(t);
+    }, 0);
+  }
+
+  /* A un pallet en la cola i le faltan las tareas de la cola i en adelante.
+     Entonces un puesto tiene por delante todo lo que esté parado desde su cola
+     hacia atrás: el picking también va a tener que pickear lo que sigue en R. */
+  function porTarea(t) {
+    const hasta = IDX_COLA[t.cola];
+    let pallets = 0;
+    for (let i = 0; i <= hasta; i++) pallets += numT(F.cola[ETAPAS[i].id]);
+    pallets *= parte(t);
+    return { pallets, horas: pallets * numT(F.hpp[t.id]) };
+  }
+
+  // Lo que pide la próxima tarea sobre lo que está parado en esa cola.
+  const horasProxima = colaId =>
+    TAREAS.reduce((a, t) => t.cola !== colaId
+      ? a : a + numT(F.cola[colaId]) * parte(t) * numT(F.hpp[t.id]), 0);
+
+  const pendienteTotal = () =>
+    ETAPAS.reduce((a, e) => a + numT(F.cola[e.id]) * horasRestantes(e.id), 0);
+
+  /* El número que pidió el líder: cuántas horas hombre nos falta para llegar.
+     Trabajo que pide el pallet menos tiempo hábil que queda hasta la salida. */
+  function calcComp(c) {
+    const salida = new Date(c.salida);
+    if (isNaN(salida.getTime())) return null;
+    const ahora = new Date();
+    const req  = numT(c.pallets) * horasRestantes(c.etapa, c.destino);
+    const disp = horasHabiles(ahora, salida);
+    return { salida, req, disp, atraso: Math.max(0, req - disp), vencido: salida <= ahora };
+  }
+  const atrasoDe = c => c.cerrado ? numT(c.atrasoFinal) : (calcComp(c) || { atraso:0 }).atraso;
+
+  /* Estructura y números van por separado: los bloques se arman una sola vez y
+     `refrescar()` reescribe sólo el texto calculado. Repintar todo en cada
+     tecleo le sacaría el foco al campo que se está editando. */
+  const refPipe = [], refPlan = [], refComp = [];
+
+  function refrescar() {
+    refPipe.forEach(f => f());
+    refPlan.forEach(f => f());
+    refComp.forEach(f => f());
+    pintarTilesFlujo();
+    pintarAtrasos();
+  }
+
+  /* ---- tarjetas de arriba ---- */
+
+  function pintarTilesFlujo() {
+    const pend = pendienteTotal(), t = turnoHs();
+    const pallets = ETAPAS.reduce((a, e) => a + numT(F.cola[e.id]), 0);
+    const abierto = F.comp.reduce((a, c) => a + (c.cerrado ? 0 : atrasoDe(c)), 0);
+    const tiles = [
+      { lab:"En circuito",  val:pallets,              sub:"pallets entre R y la salida" },
+      { lab:"Horas hombre", val:nf(pend),             sub:"trabajo pendiente del circuito" },
+      { lab:"Personas",     val:t ? nf(pend/t) : "—", sub:`para vaciarlo en un turno de ${nf(t)} h` },
+      { lab:"Atraso",       val:nf(abierto),          sub:"horas hombre de compromisos abiertos" }
+    ];
+    document.getElementById("tilesFlujo").innerHTML = tiles.map(x =>
+      `<div class="card tile">
+         <div class="tile-lab">${x.lab}</div>
+         <div class="tile-val">${x.val}</div>
+         <div class="tile-sub">${x.sub}</div>
+       </div>`).join("");
+  }
+
+  /* ---- el circuito ---- */
+
+  function construirPipe() {
+    const cont = document.getElementById("pipe");
+    cont.innerHTML = "";
+    refPipe.length = 0;
+
+    ETAPAS.forEach(e => {
+      const card = document.createElement("div");
+      card.className = "card pipe-card";
+
+      const bar = document.createElement("div");
+      bar.className = "pipe-bar";
+      bar.style.background = v(e.color);
+
+      const inner = document.createElement("div");
+      inner.className = "pipe-in";
+
+      const tit = document.createElement("div");
+      tit.className = "pipe-cola"; tit.textContent = e.cola;
+      const nota = document.createElement("div");
+      nota.className = "pipe-nota"; nota.textContent = e.nota;
+
+      const q = document.createElement("div");
+      q.className = "pipe-q";
+      const inp = document.createElement("input");
+      inp.type = "number"; inp.min = "0"; inp.step = "1"; inp.inputMode = "numeric";
+      inp.value = numT(F.cola[e.id]);
+      inp.setAttribute("aria-label", "Pallets en " + e.cola);
+      const uni = document.createElement("span");
+      uni.textContent = "pallets";
+      q.append(inp, uni);
+
+      const nx = document.createElement("div");
+      nx.className = "pipe-next";
+      const nxE = document.createElement("em");
+      nxE.textContent = "Falta";
+      const nxT = document.createElement("span");
+      nxT.textContent = e.falta;
+      const nxB = document.createElement("b");
+      nx.append(nxE, nxT, nxB);
+
+      inp.addEventListener("input", () => {
+        F.cola[e.id] = inp.value === "" ? 0 : Math.max(0, Number(inp.value));
+        guardarFlujo();
+        refrescar();
+      });
+
+      refPipe.push(() => { nxB.textContent = nf(horasProxima(e.id)) + " h"; });
+
+      inner.append(tit, nota, q, nx);
+      card.append(bar, inner);
+      cont.appendChild(card);
+    });
+  }
+
+  /* ---- plan de horas ---- */
+
+  function construirCfg() {
+    const campos = [
+      [document.getElementById("cfgIni"), () => numT(F.turno.ini), x => F.turno.ini = x],
+      [document.getElementById("cfgFin"), () => numT(F.turno.fin), x => F.turno.fin = x],
+      [document.getElementById("cfgMez"), () => numT(F.mezcla),    x => F.mezcla    = x]
+    ];
+    campos.forEach(([el, leer, escribir]) => {
+      el.value = leer();
+      el.addEventListener("input", () => {
+        escribir(el.value === "" ? 0 : Number(el.value));
+        guardarFlujo();
+        refrescar();
+      });
+    });
+  }
+
+  function construirPlan() {
+    refPlan.length = 0;
+
+    const cuerpo = TAREAS.map(t => `<tr>
+        <td>${t.nom}</td>
+        <td id="pl-pal-${t.id}"></td>
+        <td><input class="cell" type="number" min="0" step="0.01" id="pl-hpp-${t.id}"
+             value="${numT(F.hpp[t.id])}" aria-label="Horas por pallet de ${t.nom}"></td>
+        <td id="pl-hs-${t.id}"></td>
+        <td id="pl-nec-${t.id}"></td>
+        <td><input class="cell" type="number" min="0" step="1" id="pl-as-${t.id}"
+             value="${numT(F.asign[t.id])}" aria-label="Personas asignadas a ${t.nom}"></td>
+        <td id="pl-est-${t.id}"></td>
+      </tr>`).join("");
+
+    document.getElementById("tblPlan").innerHTML = `<table>
+      <thead><tr>
+        <th>Puesto</th><th>Pallets por hacer</th><th>h/pallet</th>
+        <th>Horas hombre</th><th>Personas</th><th>Asignadas</th><th></th>
+      </tr></thead>
+      <tbody>${cuerpo}</tbody>
+      <tfoot><tr>
+        <td>Total</td><td>—</td><td></td>
+        <td id="pl-hs-tot"></td><td id="pl-nec-tot"></td><td id="pl-as-tot"></td><td></td>
+      </tr></tfoot>
+    </table>`;
+
+    TAREAS.forEach(t => {
+      const hpp = document.getElementById("pl-hpp-" + t.id);
+      const asg = document.getElementById("pl-as-" + t.id);
+      hpp.addEventListener("input", () => {
+        F.hpp[t.id] = hpp.value === "" ? 0 : Math.max(0, Number(hpp.value));
+        guardarFlujo(); refrescar();
+      });
+      asg.addEventListener("input", () => {
+        F.asign[t.id] = asg.value === "" ? 0 : Math.max(0, Number(asg.value));
+        guardarFlujo(); refrescar();
+      });
+
+      const cPal = document.getElementById("pl-pal-" + t.id);
+      const cHs  = document.getElementById("pl-hs-"  + t.id);
+      const cNec = document.getElementById("pl-nec-" + t.id);
+      const cEst = document.getElementById("pl-est-" + t.id);
+      refPlan.push(() => {
+        const { pallets, horas } = porTarea(t);
+        const tu = turnoHs();
+        const nec = tu ? horas / tu : 0;
+        const falta = nec - numT(F.asign[t.id]);
+        cPal.textContent = nf(pallets, 0);
+        cHs.textContent  = nf(horas);
+        cNec.textContent = tu ? nf(nec) : "—";
+        // Media persona de más no es un problema; una es un pallet que no sale.
+        cEst.innerHTML = falta > 0.2
+          ? `<span class="pill" data-s="critical"><i></i>faltan ${nf(falta)}</span>`
+          : `<span class="pill" data-s="good"><i></i>alcanza</span>`;
+      });
+    });
+
+    const tHs  = document.getElementById("pl-hs-tot");
+    const tNec = document.getElementById("pl-nec-tot");
+    const tAs  = document.getElementById("pl-as-tot");
+    const nota = document.getElementById("planNota");
+    refPlan.push(() => {
+      const tu = turnoHs(), horas = pendienteTotal();
+      const asig = TAREAS.reduce((a, t) => a + numT(F.asign[t.id]), 0);
+      tHs.textContent  = nf(horas);
+      tNec.textContent = tu ? nf(horas / tu) : "—";
+      tAs.textContent  = asig;
+      if (!tu) {
+        nota.textContent = "Cargá la ventana del turno para poder calcular cuánta gente hace falta.";
+        return;
+      }
+      const cap = asig * tu, dif = cap - horas;
+      const abierto = F.comp.reduce((a, c) => a + (c.cerrado ? 0 : atrasoDe(c)), 0);
+      nota.textContent =
+        `Turno de ${nf(tu)} h. Con ${asig} personas tenés ${nf(cap)} horas hombre y el circuito pendiente pide ${nf(horas)}. ` +
+        (dif >= 0 ? `Sobran ${nf(dif)} h.` : `Faltan ${nf(-dif)} h — son ${nf(-dif / tu)} personas más.`) +
+        /* Que sobre turno no salva al compromiso: el pallet que todavía no nos
+           entregaron no se adelanta por mucha gente que se le ponga. */
+        (abierto > 0
+          ? ` Aparte hay ${nf(abierto)} h hombre de atraso en compromisos abiertos, y eso no se arregla poniendo más gente en el turno.`
+          : "");
+    });
+  }
+
+  /* ---- compromisos de salida ---- */
+
+  function filaComp(c) {
+    const row = document.createElement("div");
+    row.className = "cmp";
+
+    const l1 = document.createElement("div");
+    l1.className = "cmp-l1";
+    const ord = document.createElement("span");
+    ord.className = "cmp-ord"; ord.textContent = c.orden;   // dato cargado: nunca por innerHTML
+    const sub = document.createElement("span");
+    sub.className = "cmp-sub";
+    sub.textContent = `${c.destino} · ${numT(c.pallets)} pallet${numT(c.pallets) === 1 ? "" : "s"}`;
+    const cuando = document.createElement("span");
+    cuando.className = "cmp-sub cmp-when";
+    const pill = document.createElement("span");
+    pill.className = "pill";
+    l1.append(ord, sub, cuando, pill);
+
+    const l2 = document.createElement("div");
+    l2.className = "cmp-l2";
+
+    const selEt = document.createElement("select");
+    selEt.setAttribute("aria-label", "Etapa de " + c.orden);
+    ETAPA_OPC.forEach(o => {
+      const op = document.createElement("option");
+      op.value = o.id; op.textContent = o.nom;
+      selEt.appendChild(op);
+    });
+    selEt.value = c.etapa;
+    selEt.addEventListener("change", () => { c.etapa = selEt.value; guardarFlujo(); refrescar(); });
+
+    const selRe = document.createElement("select");
+    selRe.setAttribute("aria-label", "De quién depende el atraso de " + c.orden);
+    RESPONSABLES.forEach(r => {
+      const op = document.createElement("option");
+      op.value = r; op.textContent = r;
+      selRe.appendChild(op);
+    });
+    selRe.value = RESPONSABLES.indexOf(c.resp) >= 0 ? c.resp : "Otro";
+    selRe.addEventListener("change", () => { c.resp = selRe.value; guardarFlujo(); refrescar(); });
+
+    const cuentas = document.createElement("span");
+    cuentas.className = "cmp-hrs";
+
+    const acc = document.createElement("div");
+    acc.className = "cmp-acc";
+    const bOk = document.createElement("button");
+    bOk.className = "btn-xs";
+    bOk.addEventListener("click", () => {
+      /* Al despacharlo el atraso se congela: después de que salió el camión el
+         reloj sigue corriendo y el número se iría a cualquier lado. */
+      if (c.cerrado) { c.cerrado = false; c.atrasoFinal = 0; }
+      else { c.cerrado = true; c.atrasoFinal = atrasoDe(c); }
+      guardarFlujo(); construirComp(); refrescar();
+    });
+    const bDel = document.createElement("button");
+    bDel.className = "btn-xs"; bDel.textContent = "Quitar";
+    bDel.setAttribute("aria-label", "Quitar el compromiso " + c.orden);
+    bDel.addEventListener("click", () => {
+      F.comp = F.comp.filter(x => x.id !== c.id);
+      guardarFlujo(); construirComp(); refrescar();
+    });
+    acc.append(bOk, bDel);
+
+    l2.append(selEt, selRe, cuentas, acc);
+    row.append(l1, l2);
+
+    refComp.push(() => {
+      row.dataset.cerrado = c.cerrado ? "1" : "0";
+      selEt.disabled = !!c.cerrado;
+      bOk.textContent = c.cerrado ? "Reabrir" : "Despachado";
+
+      const r = calcComp(c);
+      if (!r) {
+        cuando.textContent = "sin fecha de salida";
+        pill.dataset.s = "warning";
+        pill.innerHTML = "<i></i>revisar la fecha";
+        cuentas.textContent = "";
+        return;
+      }
+      cuando.textContent = "sale " + r.salida.toLocaleString("es-AR",
+        { weekday:"short", day:"2-digit", month:"2-digit",
+          hour:"2-digit", minute:"2-digit", hour12:false });
+
+      const h = atrasoDe(c);
+      if (c.cerrado) {
+        pill.dataset.s = h > 0 ? "warning" : "good";
+        pill.innerHTML = h > 0
+          ? `<i></i>despachado · ${nf(h)} h de atraso`
+          : "<i></i>despachado en hora";
+        cuentas.textContent = "cerrado";
+      } else if (r.vencido) {
+        pill.dataset.s = "critical";
+        pill.innerHTML = "<i></i>vencido";
+        cuentas.textContent = `pedía ${nf(r.req)} h hombre · ya no queda turno`;
+      } else {
+        const enHora = h <= 0;
+        pill.dataset.s = enHora ? "good" : "critical";
+        pill.innerHTML = enHora ? "<i></i>en hora" : `<i></i>atraso ${nf(h)} h hombre`;
+        cuentas.textContent = `pide ${nf(r.req)} h · quedan ${nf(r.disp)} h hábiles`;
+      }
+    });
+
+    return row;
+  }
+
+  function construirComp() {
+    refComp.length = 0;
+    const cont = document.getElementById("compList");
+    cont.innerHTML = "";
+
+    if (!F.comp.length) {
+      const e = document.createElement("div");
+      e.className = "cmp-empty";
+      e.textContent = "Sin compromisos cargados. Agregá los pallets que ya tienen fecha de salida.";
+      cont.appendChild(e);
+      return;
+    }
+    // Primero lo que sigue abierto, y de eso lo que sale antes.
+    F.comp.slice()
+      .sort((a, b) => (a.cerrado - b.cerrado) || (new Date(a.salida) - new Date(b.salida)))
+      .forEach(c => cont.appendChild(filaComp(c)));
+  }
+
+  function armarFormComp() {
+    const selEt = document.getElementById("cmpEtapa");
+    ETAPA_OPC.forEach(o => {
+      const op = document.createElement("option");
+      op.value = o.id; op.textContent = o.nom;
+      selEt.appendChild(op);
+    });
+    const selRe = document.getElementById("cmpResp");
+    RESPONSABLES.forEach(r => {
+      const op = document.createElement("option");
+      op.value = r; op.textContent = r;
+      selRe.appendChild(op);
+    });
+
+    const orden   = document.getElementById("cmpOrden");
+    const pallets = document.getElementById("cmpPallets");
+    const fecha   = document.getElementById("cmpSalida");
+    // Lo más común es comprometer para el próximo día hábil, al cierre del turno.
+    const porDefecto = () => isoLocal(habilMas(1, numT(F.turno.fin) || 15));
+    fecha.value = porDefecto();
+
+    document.getElementById("cmpAdd").addEventListener("click", () => {
+      const o = orden.value.trim(), p = Number(pallets.value);
+      if (!o || !Number.isFinite(p) || p <= 0 || !fecha.value) return;
+      F.comp.push({
+        id: nuevoId(), orden: o, destino: document.getElementById("cmpDestino").value,
+        pallets: p, salida: fecha.value, etapa: selEt.value, resp: selRe.value,
+        cerrado: false, atrasoFinal: 0
+      });
+      guardarFlujo();
+      orden.value = ""; pallets.value = ""; fecha.value = porDefecto();
+      orden.focus();
+      construirComp(); refrescar();
+    });
+  }
+
+  /* ---- mensual: las horas hombre que costaron los atrasos ---- */
+
+  function pintarAtrasos() {
+    const ahora = new Date(), mes = ahora.getMonth(), anio = ahora.getFullYear();
+    const acc = new Map();
+    let total = 0, n = 0;
+
+    F.comp.forEach(c => {
+      const s = new Date(c.salida);
+      if (isNaN(s.getTime()) || s.getMonth() !== mes || s.getFullYear() !== anio) return;
+      const h = atrasoDe(c);
+      if (h <= 0) return;
+      const k = RESPONSABLES.indexOf(c.resp) >= 0 ? c.resp : "Otro";
+      acc.set(k, (acc.get(k) || 0) + h);
+      total += h; n++;
+    });
+
+    const filas = [...acc.entries()].sort((a, b) => b[1] - a[1]);
+    const cont = document.getElementById("atrasos");
+    const hint = document.getElementById("atrHint");
+    const tbl  = document.getElementById("tblAtrasos");
+
+    if (!filas.length) {
+      hint.textContent = "Sin atrasos este mes";
+      cont.innerHTML = `<p class="card-note">Ningún compromiso del mes tiene atraso.</p>`;
+      tbl.innerHTML = "";
+      return;
+    }
+
+    hint.textContent = `${nf(total)} horas hombre en ${n} compromiso${n === 1 ? "" : "s"}`;
+    const max = filas[0][1];
+    cont.innerHTML = filas.map(([k, h]) =>
+      `<div class="cause">
+        <div class="cause-lab">${k}</div>
+        <div class="cause-track"><div class="cause-fill" style="width:${(h/max*100).toFixed(1)}%"></div></div>
+        <div class="cause-val">${nf(h)} h</div>
+        <div class="cause-n">${Math.round(h/total*100)}%</div>
+      </div>`).join("");
+    tbl.innerHTML = tabla(["Responsable","Horas hombre","Participación"],
+      filas.map(([k, h]) => [k, nf(h), Math.round(h/total*100) + "%"])
+           .concat([["Total", nf(total), "100%"]]));
+  }
+
+  /* ---- arranque del módulo ---- */
+
+  construirCfg();
+  construirPipe();
+  construirPlan();
+  armarFormComp();
+  construirComp();
+  refrescar();
+
+  /* El atraso se mide contra el reloj, así que se recalcula cada tanto mientras
+     la pestaña está a la vista — si no, el número envejece sin avisar. */
+  const pintarFlujo = () => refrescar();
+  setInterval(() => {
+    if (!document.getElementById("view-flujo").hidden) refrescar();
+  }, 60000);
+
+  /* ================= PINTAR GRÁFICOS ================= */
+
+  function pintarCharts() {
+    // En pantalla angosta el viewBox se hace más alto: un lienzo ancho
+    // escalado al ancho del celular achata el gráfico y encoge los ejes.
+    const chico = window.innerWidth < 700;
+    document.getElementById("svgDespacho")
+      .setAttribute("viewBox", chico ? "0 0 380 250" : "0 0 760 225");
+    document.getElementById("svgPrecision")
+      .setAttribute("viewBox", chico ? "0 0 380 260" : "0 0 760 250");
+    ["svgPickCal","svgPickVel"].forEach(id => document.getElementById(id)
+      .setAttribute("viewBox", chico ? "0 0 380 215" : "0 0 380 190"));
+
+    donut("svgPallets", "lgPallets", [
+      { nom:"Exportación", val:DIA.pallets.exportacion },
+      { nom:"Nacional",    val:DIA.pallets.nacional }
+    ], ["--s1","--s2"], "PALLETS");
+
+    donut("svgBoxes", "lgBoxes", [
+      { nom:"Exportación", val:DIA.boxes.exportacion },
+      { nom:"Nacional",    val:DIA.boxes.nacional }
+    ], ["--s1","--s2"], "BULTOS");
+
+    donut("svgTorta", "lgTorta",
+      PASILLOS.map(p => ({ nom: "Pasillo " + p.cod, val: p.err })), SLOTS, "ERRORES");
+
+    lineChart({
+      svg: document.getElementById("svgPrecision"),
+      host: document.getElementById("hostPrecision"),
+      tip: document.getElementById("tipPrecision"),
+      labels: MESES, data: PRECISION, unidad: "% precisión", decimales: 1,
+      yMin: 76, yMax: 92, ticks: 4,
+      meta: { valor: 90, label: "Meta trimestre 90%" },
+      hito: { idx: HITO_DUENO, label: chico ? "Dueño x pasillo" : "Dueño por pasillo" }
+    });
+    lineChart({
+      svg: document.getElementById("svgDespacho"),
+      host: document.getElementById("hostDespacho"),
+      tip: document.getElementById("tipDespacho"),
+      labels: DIAS, data: DESPACHO, unidad: "pallets", decimales: 0,
+      yMin: 0, yMax: 16, ticks: 4, media: mmovil(DESPACHO, 5)
+    });
+    lineChart({
+      svg: document.getElementById("svgPickCal"),
+      host: document.getElementById("hostPickCal"),
+      tip: document.getElementById("tipPickCal"),
+      labels: DIAS, data: PICK_CAL, unidad: "% sin error", decimales: 1,
+      yMin: 98, yMax: 100, ticks: 4
+    });
+    lineChart({
+      svg: document.getElementById("svgPickVel"),
+      host: document.getElementById("hostPickVel"),
+      tip: document.getElementById("tipPickVel"),
+      labels: DIAS, data: PICK_VEL, unidad: "líneas/h", decimales: 0,
+      yMin: 30, yMax: 50, ticks: 4
+    });
+    pintarPasillosHoy();
+    // Las barras del circuito también llevan color inline.
+    document.querySelectorAll("#pipe .pipe-bar").forEach((el, i) => {
+      if (ETAPAS[i]) el.style.background = v(ETAPAS[i].color);
+    });
+  }
+
+  /* ================= EXPORTAR PDF ================= */
+
+  // Los colores de los SVG se escriben inline al pintar, así que si el tablero
+  // está en modo oscuro hay que repintarlo en claro antes de mandar a imprimir.
+  document.getElementById("btnExport").addEventListener("click", () => {
+    const previo = document.documentElement.getAttribute("data-theme");
+    document.documentElement.setAttribute("data-theme", "light");
+    pintarCharts();
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => {
+        if (previo) document.documentElement.setAttribute("data-theme", previo);
+        else document.documentElement.removeAttribute("data-theme");
+        pintarCharts();
+      }, 400);
+    }, 180);
+  });
+
+  /* ================= NAVEGACIÓN ================= */
+
+  const VISTAS = { diaria:"Reporte diario", flujo:"Flujo y carga de trabajo",
+                   mensual:"Reporte mensual", carga:"Carga del día" };
+
+  function mostrar(vista, scroll) {
+    if (!VISTAS[vista]) vista = "diaria";
+    document.querySelectorAll(".tab").forEach(o =>
+      o.setAttribute("aria-selected", String(o.dataset.view === vista)));
+    Object.keys(VISTAS).forEach(k =>
+      document.getElementById("view-" + k).hidden = (k !== vista));
+    // Exportar sólo tiene sentido sobre un tablero, no sobre el formulario.
+    document.getElementById("btnExport").hidden = (vista === "carga");
+    document.getElementById("phVista").textContent = VISTAS[vista];
+    // El atraso se mide contra el reloj: al abrir la pestaña hay que recalcularlo.
+    if (vista === "flujo") pintarFlujo();
+    if (scroll) window.scrollTo(0, 0);
+  }
+
+  document.querySelectorAll(".tab").forEach(t => {
+    t.addEventListener("click", () => {
+      location.hash = t.dataset.view;
+      mostrar(t.dataset.view, true);
+    });
+  });
+  window.addEventListener("hashchange", () => mostrar(location.hash.slice(1), true));
+  mostrar(location.hash.slice(1), false);
+
+  /* ================= ARRANQUE ================= */
+
+  pintarCharts();
+
+  window.matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => setTimeout(pintarCharts, 40));
+  new MutationObserver(() => setTimeout(pintarCharts, 40))
+    .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  window.addEventListener("resize", () => {
+    clearTimeout(window.__rz);
+    window.__rz = setTimeout(pintarCharts, 180);
+  });
+})();
+</script>
+</body>
+</html>
