@@ -607,6 +607,65 @@
     .subtabs, .drop-all, .toast, .page-head .btn { display: none !important; }
   }
 
+  /* ---------- guía y avisos ---------- */
+
+  .aviso-demo {
+    display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-top: 16px;
+    padding: 12px 16px; border-radius: 10px; font-size: 13px; line-height: 1.5; color: var(--ink);
+    background: color-mix(in srgb, var(--warning) 14%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--warning) 50%, transparent);
+  }
+  .aviso-demo > div { flex: 1; min-width: 240px; }
+  .aviso-ic { font-size: 16px; line-height: 1.3; }
+  .aviso-acc { display: flex; gap: 6px; flex: none; }
+  a.btn-xs { text-decoration: none; display: inline-block; }
+  .pill-demo {
+    display: inline-block; vertical-align: middle; margin-left: 6px; padding: 0 7px; border-radius: 9px;
+    font-size: 10px; font-weight: 700; line-height: 17px; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--ink-2); background: var(--sunken); border: 1px dashed var(--rule);
+  }
+  .page-head h1 .pill-demo { position: relative; top: -3px; }
+  .ayuda {
+    font-size: 12.5px; font-weight: 600; color: var(--ink-2); text-decoration: none; white-space: nowrap;
+    padding: 6px 2px; border-bottom: 1px dotted var(--rule);
+  }
+  .ayuda:hover { color: var(--ink); border-bottom-color: var(--ink-2); }
+
+  .guia { max-width: 860px; }
+  .guia .card p, .guia .card li { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); }
+  .guia .card p { margin-top: 6px; margin-bottom: 6px; }
+  .guia .card b { color: var(--ink); }
+  .guia ul, .guia ol { margin: 4px 0; padding-left: 20px; }
+  .guia li + li { margin-top: 4px; }
+  .guia code { font-size: 12.5px; background: var(--sunken); padding: 1px 5px; border-radius: 4px; }
+  .guia-aviso { border-color: color-mix(in srgb, var(--warning) 55%, transparent);
+    background: color-mix(in srgb, var(--warning) 10%, var(--surface)); }
+  .guia details { margin-top: 10px; padding: 0; }
+  .guia details:first-child { margin-top: 18px; }
+  .guia summary {
+    cursor: pointer; list-style: none; padding: 15px 20px; font-size: 15px; font-weight: 650;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .guia summary::-webkit-details-marker { display: none; }
+  .guia summary::after { content: "+"; margin-left: auto; font-size: 18px; color: var(--muted); font-weight: 400; }
+  .guia details[open] summary::after { content: "−"; }
+  .guia details[open] summary { border-bottom: 1px solid var(--grid); }
+  .guia details > :not(summary) { margin-left: 20px; margin-right: 20px; }
+  .guia details > :last-child { margin-bottom: 18px; }
+  .guia h4 {
+    font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .09em;
+    margin-top: 16px; margin-bottom: 2px;
+  }
+  .guia ul.lim li::marker { color: var(--critical); }
+  .guia table td { white-space: normal; vertical-align: top; font-size: 13px; }
+  .pasos-guia li { padding-left: 4px; }
+  .pasos-guia li + li { margin-top: 8px !important; }
+
+  @media print {
+    .aviso-demo, .ayuda { display: none !important; }
+    .guia details { break-inside: avoid; }
+  }
+
   /* ---------- órdenes JDE ---------- */
 
   .drop {
@@ -807,6 +866,7 @@
       <a class="tab" href="#costos"  data-view="costos">Costos</a>
       <a class="tab" href="#mensual" data-view="mensual">Mensual</a>
       <a class="tab" href="#carga"   data-view="carga">Cargar</a>
+      <a class="tab" href="#guia"    data-view="guia">Guía</a>
     </nav>
     <button class="btn-export" id="btnExport" title="Abre el diálogo de impresión: elegí «Guardar como PDF»">
       Exportar PDF
@@ -825,6 +885,18 @@
     </div>
   </div>
 
+  <!-- Hasta que alguien lo cierre, deja claro que los números que trae no son reales -->
+  <div class="aviso-demo" id="avisoDemo" hidden>
+    <span class="aviso-ic" aria-hidden="true">⚠</span>
+    <div><b>Prototipo con datos inventados.</b> Pasillos, flujo, el reporte mensual y los stocks, proveedores, costos y
+      reglas de insumos son de ejemplo, para mostrar cómo funciona. Lo que cargues vos (archivos de JD, cierres,
+      mediciones) sí es real.</div>
+    <span class="aviso-acc">
+      <a class="btn-xs" href="#guia/avisos">Qué es real y qué no</a>
+      <button class="btn-xs" id="avisoOk">Entendido</button>
+    </span>
+  </div>
+
   <!-- Se ve mientras se arrastra un archivo sobre cualquier página -->
   <div class="drop-all" id="dropAll" hidden><div>Soltá el archivo de JD para actualizar las órdenes</div></div>
   <div class="toast" id="toast" role="status" hidden></div>
@@ -839,6 +911,7 @@
         <h1 id="diaTitulo"></h1>
         <p class="sub" id="hoyJD"></p>
       </div>
+      <a class="ayuda" href="#guia/paginas" data-guia="diaria">¿Cómo funciona?</a>
       <button class="btn btn-ghost" data-accion="jd">Cargar archivo de JD</button>
     </div>
 
@@ -874,7 +947,7 @@
 
     <section>
       <div class="sec-head">
-        <h2>Estado de los pasillos</h2>
+        <h2>Estado de los pasillos <span class="pill-demo">ejemplo</span></h2>
         <div class="hint">Verde sin desvíos · Amarillo leve · Rojo importante</div>
       </div>
       <div class="aisles" id="aisles"></div>
@@ -890,6 +963,7 @@
         <h1>Órdenes de <span id="jdeRango"></span></h1>
         <p class="sub" id="jdeUltima"></p>
       </div>
+      <a class="ayuda" href="#guia/paginas" data-guia="ordenes">¿Cómo funciona?</a>
       <button class="btn btn-brand" data-accion="jd">Cargar archivo de JD</button>
     </div>
 
@@ -954,9 +1028,10 @@
     <div class="page-head">
       <div>
         <div class="eyebrow">Despacho</div>
-        <h1>Flujo y carga de trabajo</h1>
+        <h1>Flujo y carga de trabajo <span class="pill-demo">ejemplo</span></h1>
         <p class="sub">Dónde está parado cada pallet, cuánta gente hace falta y quién nos está atrasando</p>
       </div>
+      <a class="ayuda" href="#guia/paginas" data-guia="flujo">¿Cómo funciona?</a>
     </div>
 
     <nav class="subtabs" aria-label="Secciones del flujo">
@@ -1020,6 +1095,7 @@
         <h1>Insumos</h1>
         <p class="sub">Stock de embalaje contra lo que piden las SJ abiertas</p>
       </div>
+      <a class="ayuda" href="#guia/paginas" data-guia="insumos">¿Cómo funciona?</a>
     </div>
 
     <nav class="subtabs" aria-label="Secciones de insumos">
@@ -1058,7 +1134,7 @@
     <div class="sub" data-sub="reglas" hidden>
       <section>
         <div class="sec-head">
-          <h2>Insumos y proveedores</h2>
+          <h2>Insumos y proveedores <span class="pill-demo">ejemplo</span></h2>
           <div class="hint">Plazo en días hábiles · lote = múltiplo en que vende el proveedor</div>
         </div>
         <div class="card">
@@ -1072,7 +1148,7 @@
 
       <section>
         <div class="sec-head">
-          <h2>Clases de artículo</h2>
+          <h2>Clases de artículo <span class="pill-demo">ejemplo</span></h2>
           <div class="hint">Patrones que se buscan en el código y la descripción · gana la primera</div>
         </div>
         <div class="card">
@@ -1085,7 +1161,7 @@
       </section>
 
       <section>
-        <div class="sec-head"><h2>Reglas de consumo</h2></div>
+        <div class="sec-head"><h2>Reglas de consumo <span class="pill-demo">ejemplo</span></h2></div>
         <div class="card">
           <div class="cfg">
             <span><label for="insEtapa">Se consume al llegar a</label><select id="insEtapa"></select></span>
@@ -1106,6 +1182,7 @@
         <h1>Costos y consumos</h1>
         <p class="sub">Lo que cuesta mover la mercadería</p>
       </div>
+      <a class="ayuda" href="#guia/paginas" data-guia="costos">¿Cómo funciona?</a>
       <div class="head-ctl"><label for="cosMes">Mes</label><input type="month" id="cosMes"></div>
     </div>
 
@@ -1185,7 +1262,7 @@
     <div class="sub" data-sub="variables" hidden>
       <section>
         <div class="sec-head">
-          <h2>Variables que se miden</h2>
+          <h2>Variables que se miden <span class="pill-demo">costos de ejemplo</span></h2>
           <div class="hint">Cualquier cosa que se pueda contar y tenga costo</div>
         </div>
         <div class="card">
@@ -1220,9 +1297,10 @@
     <div class="page-head">
       <div>
         <div class="eyebrow">Reporte mensual</div>
-        <h1>El mes</h1>
+        <h1>El mes <span class="pill-demo">ejemplo</span></h1>
         <p class="sub">Precisión de stock, operación y atrasos</p>
       </div>
+      <a class="ayuda" href="#guia/paginas" data-guia="mensual">¿Cómo funciona?</a>
     </div>
 
     <nav class="subtabs" aria-label="Secciones del mensual">
@@ -1387,6 +1465,7 @@
         <h1>Lo que se carga a mano</h1>
         <p class="sub">Todo en un solo lugar. Lo demás sale solo del archivo de JD.</p>
       </div>
+      <a class="ayuda" href="#guia/paginas" data-guia="carga">¿Cómo funciona?</a>
     </div>
 
     <nav class="subtabs" aria-label="Qué cargar">
@@ -1543,6 +1622,394 @@
             <input type="file" id="bkFile" accept=".json,application/json" hidden>
             <span class="card-note" id="bkMsg" style="margin:0"></span>
           </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ================= GUÍA ================= -->
+  <div id="view-guia" class="view" hidden>
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Guía de uso</div>
+        <h1>Cómo se usa el tablero</h1>
+        <p class="sub">Qué hace cada página, cómo calcula, para qué puede servir y qué no hace</p>
+      </div>
+    </div>
+
+    <nav class="subtabs" aria-label="Secciones de la guía">
+      <a href="#guia/empezar" data-sub="empezar">Empezar</a>
+      <a href="#guia/paginas" data-sub="paginas">Página por página</a>
+      <a href="#guia/avisos" data-sub="avisos">Avisos y límites</a>
+    </nav>
+
+    <!-- empezar -->
+    <div class="sub guia" data-sub="empezar">
+      <section>
+        <div class="card guia-aviso">
+          <h3 class="card-title">⚠ Es un prototipo y los datos que trae son inventados</h3>
+          <p>Los pasillos, el flujo de despacho, todo el reporte mensual, los stocks, mínimos, proveedores y costos
+            de los insumos, las clases de artículo y las reglas de consumo son <b>de ejemplo</b>: están para mostrar
+            cómo funciona, no para tomar decisiones. Lo que sí es real es lo que cargues vos: los archivos de JD, los
+            cierres del día y las mediciones de relleno. El detalle está en <a href="#guia/avisos">Avisos y límites</a>.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>Qué es</h2></div>
+        <div class="card">
+          <p>Un tablero para el almacén y logística que sigue las SJ de JD Edwards desde el control de stock (535)
+            hasta el envío (580), calcula qué insumos de embalaje van a hacer falta y sugiere qué pedir, mide cuánto
+            cuesta mover la mercadería y cuánto relleno reciclado se usa, y junta en una portada lo que hay que atender
+            en el día.</p>
+          <p>La idea de fondo es <b>cargar lo menos posible</b>: casi todo sale del archivo que se baja de JD. A mano
+            quedan las horas y la energía del cierre, pesar el relleno de algunas cajas de vez en cuando y corregir el
+            stock después de un conteo.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>En cinco pasos</h2></div>
+        <div class="card">
+          <ol class="pasos-guia">
+            <li><b>Bajá de JD el listado de líneas de las SJ</b>, filtrado de 535 a 580, en CSV o Excel, y
+              <b>soltalo en cualquier página</b> del tablero (o tocá <i>Cargar archivo de JD</i>). Abajo aparece un aviso con
+              lo que cambió.</li>
+            <li><b>Mirá <a href="#diaria">Hoy</a> → Para atender.</b> Ahí está todo lo que pide acción: SJ atrasadas,
+              sin stock, insumos para pedir, el archivo de JD viejo, el cierre pendiente.</li>
+            <li><b>Si hay insumos para pedir</b>, en <a href="#insumos/pedir">Insumos → Qué pedir</a> copiá el pedido
+              para mandarlo al proveedor y registralo como pedido. Cuando llegue, marcalo como recibido.</li>
+            <li><b>Al cierre</b>, en <a href="#carga/cierre">Cargar → Cierre del día</a>: revisá lo que vino de JD (en
+              azul), completá horas hombre y energía, y guardá.</li>
+            <li><b>De vez en cuando</b>: pesá el relleno de algunas cajas en <a href="#carga/relleno">Cargar → Medir
+              relleno</a>, corregí el stock después de un conteo y bajá una <a href="#carga/respaldo">copia de
+              seguridad</a>.</li>
+          </ol>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>Rutina sugerida</h2></div>
+        <div class="card">
+          <ul>
+            <li><b>Al llegar:</b> cargar el archivo de JD y mirar <i>Hoy</i>.</li>
+            <li><b>Al mediodía:</b> cargar otro archivo. Los tiempos por etapa son tan precisos como la frecuencia de
+              carga: con una carga por día sólo se sabe que algo pasó "entre ayer y hoy".</li>
+            <li><b>Antes del cierre:</b> último archivo de JD y cierre del día.</li>
+            <li><b>Una vez por semana:</b> copia de seguridad.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>Moverse por el tablero</h2></div>
+        <div class="card">
+          <ul>
+            <li>Arriba están las páginas y, adentro de cada una, sus secciones.</li>
+            <li>Cada pantalla tiene su dirección (por ejemplo <code>#insumos/stock</code>): se puede guardar como
+              favorito o como acceso directo en el celular.</li>
+            <li>En cada página, <i>¿Cómo funciona?</i> lleva a su explicación en esta guía.</li>
+            <li><b>Para probarlo sin datos reales:</b> en la carpeta <code>ejemplos/</code> del proyecto hay dos listados
+              inventados de JD. Cargá primero <code>jde-ordenes-1.csv</code> y después <code>jde-ordenes-2.csv</code> para
+              ver cómo avanzan las órdenes entre una carga y otra.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <!-- página por página -->
+    <div class="sub guia" data-sub="paginas" hidden>
+
+      <details class="card" id="g-diaria">
+        <summary>Hoy</summary>
+        <h4>Para qué</h4>
+        <p>La portada del día y de la reunión de las 9: qué se hizo, qué hay que atender y cómo están los pasillos.</p>
+        <h4>Cómo se usa</h4>
+        <ul>
+          <li>Arriba: SJ pickeadas, embaladas y enviadas hoy, y cajas usadas.</li>
+          <li><b>Para atender</b>: cada aviso es un link a donde se resuelve.</li>
+          <li><b>Embalaje del día</b>: cajas y relleno usados hoy, por tipo.</li>
+          <li><b>Estado de los pasillos</b>: verde sin desvíos, amarillo leve, rojo importante, con el producto que
+            falta o sobra.</li>
+        </ul>
+        <h4>Cómo calcula</h4>
+        <ul>
+          <li><b>Pickeados, embalados y enviados</b> son las SJ que <i>se vieron llegar</i> a 550, 555 y 580 entre dos
+            cargas de JD de hoy. Si una SJ aparece por primera vez ya pickeada, no cuenta: no se sabe cuándo pasó.</li>
+          <li><b>Cajas y relleno</b> son la estimación de las SJ que llegaron a embalado (ver Insumos).</li>
+        </ul>
+        <h4>Potencial</h4>
+        <p>Reemplazar la planilla de la reunión: todos miran lo mismo y lo urgente aparece solo.</p>
+        <h4>Limitaciones</h4>
+        <ul class="lim">
+          <li>Sin un archivo de JD cargado hoy, los números del día quedan en "—".</li>
+          <li>Las cajas y el relleno son estimados hasta que se resuelva el registro de packing.</li>
+          <li><b>El estado de los pasillos es inventado</b>: no sale de ningún dato real todavía.</li>
+        </ul>
+      </details>
+
+      <details class="card" id="g-ordenes">
+        <summary>Órdenes</summary>
+        <h4>Para qué</h4>
+        <p>Ver dónde está cada SJ, cuánto lleva parada y cuáles están atrasadas o sin stock.</p>
+        <h4>Cómo se usa</h4>
+        <ul>
+          <li><b>Recorrido</b>: una tarjeta por etapa (535 stock y despiece · 545 sugerencia de picking · 550 pickeado ·
+            555 embalado). Tocá una para ver sus órdenes.</li>
+          <li><b>Órdenes</b>: filtrá con los botones (abiertas, por etapa, atrasadas, sin stock, enviadas) o buscá por
+            orden, cliente o artículo. Tocá una fila para ver sus líneas.</li>
+          <li><b>Historial de cargas</b>: cada archivo que se pasó y qué cambió.</li>
+          <li><b>Estados de JD</b>: los códigos de cada etapa y el de fin (580). Se pueden cambiar y agregar etapas, por
+            ejemplo si el despiece tiene su propio estado.</li>
+        </ul>
+        <h4>Cómo calcula</h4>
+        <ul>
+          <li>Cada línea está en la etapa que corresponde a su <b>siguiente estado</b> de JD. Desde 580 la orden se
+            envió y sale del recorrido.</li>
+          <li><b>Una orden está donde está su línea más atrasada</b>: no sale hasta que sale todo. Las líneas canceladas
+            (último estado 980) no cuentan.</li>
+          <li>Cada archivo es una foto: comparándola con la anterior se sabe qué avanzó y desde cuándo está en cada
+            etapa. "Más de 2 h" quiere decir que ya estaba ahí en la primera carga.</li>
+          <li><b>Atrasada</b>: la fecha comprometida ya pasó. <b>Sin stock</b>: alguna línea tiene cantidad en espera
+            (backorder), si el archivo trae esa columna.</li>
+          <li>Por defecto sólo toma las SJ (se cambia en <i>Cargar → Archivo de JD</i>).</li>
+        </ul>
+        <h4>Potencial</h4>
+        <p>Con una carga automática desde JD (Orchestrator o un informe programado) y el historial de estados de JD, los
+          tiempos por etapa dejarían de ser estimados y se podría medir cuánto tarda cada paso y dónde se traba.</p>
+        <h4>Limitaciones</h4>
+        <ul class="lim">
+          <li><b>Los códigos 535 · 545 · 550 · 555 · 580 hay que confirmarlos</b> con quien administra JD.</li>
+          <li>Los tiempos dependen de cada cuánto se carga el archivo.</li>
+          <li>No distingue tipos de línea (texto, servicio, flete), kits ni retenciones: una línea que no es de
+            inventario puede hacer que una orden parezca más adelantada o atrasada.</li>
+          <li>Si el exporte de JD tiene un tope de filas, el archivo puede venir cortado sin avisar: compará una vez
+            cuántas órdenes muestra el tablero con las que muestra JD.</li>
+          <li>Las órdenes enviadas se borran a los 45 días.</li>
+          <li><b>No escribe nada en JD</b>: sólo lee lo que le pasás.</li>
+        </ul>
+      </details>
+
+      <details class="card" id="g-flujo">
+        <summary>Flujo <span class="pill-demo">ejemplo</span></summary>
+        <h4>Para qué</h4>
+        <p>La pantalla del líder de despacho: dónde está parado cada pallet, cuánta gente hace falta en cada puesto y
+          quién nos atrasa.</p>
+        <h4>Cómo se usa</h4>
+        <ul>
+          <li><b>Circuito y personal</b>: cargá los pallets parados en cada cola (R, pasillo, expo, salida), la ventana
+            del turno y la gente asignada a cada puesto.</li>
+          <li><b>Compromisos de salida</b>: cada pallet con fecha y hora de salida, su etapa y de qué área depende si
+            llega tarde. Al salir el camión, marcalo como despachado.</li>
+        </ul>
+        <h4>Cómo calcula</h4>
+        <ul>
+          <li>Horas por hacer = pallets × estándar de horas por pallet de cada puesto (1,12 h de punta a punta).</li>
+          <li>Personas = horas hombre ÷ largo del turno.</li>
+          <li><b>Atraso</b> = horas hombre que pide el pallet − horas hábiles que quedan hasta el camión. Cuentan sólo las
+            horas del turno, de lunes a viernes. Al marcarlo como despachado el número se congela.</li>
+        </ul>
+        <h4>Potencial</h4>
+        <p>Decidir cuánta gente poner en cada puesto y llevar a la reunión cuántas horas hombre costó cada área que
+          entregó tarde.</p>
+        <h4>Limitaciones</h4>
+        <ul class="lim">
+          <li><b>Los pallets y compromisos que trae son inventados.</b></li>
+          <li>Se carga a mano: todavía no está conectado con las órdenes de JD.</li>
+          <li>El reparto de 1,12 h entre puestos es una estimación a confirmar con cronómetro.</li>
+        </ul>
+      </details>
+
+      <details class="card" id="g-insumos">
+        <summary>Insumos <span class="pill-demo">ejemplo</span></summary>
+        <h4>Para qué</h4>
+        <p>Saber si las cajas, pallets y relleno alcanzan para las SJ que vienen, y qué pedirle a cada proveedor.</p>
+        <h4>Cómo se usa</h4>
+        <ul>
+          <li><b>Qué pedir</b>: las sugerencias, agrupadas por proveedor. <i>Copiar pedido</i> deja el texto listo para
+            mandar; <i>Registrar como pedido</i> lo pasa a "en camino"; <i>Recibido</i> lo suma al stock. La cantidad
+            sugerida se puede cambiar antes de registrar.</li>
+          <li><b>Stock</b>: cuánto hay, el mínimo, lo que piden las SJ y lo que viene. Corregilo después de un
+            conteo.</li>
+          <li><b>Insumos y reglas</b>: los insumos con su proveedor, plazo, lote y costo; las clases de artículo; y las
+            reglas de cuánto insumo lleva cada clase.</li>
+        </ul>
+        <h4>Cómo calcula</h4>
+        <ul>
+          <li>Cada línea de una SJ se <b>clasifica</b> (Grande, Chico…) buscando los patrones de la clase en el código
+            y la descripción. Lo que no coincide queda "Sin clasificar".</li>
+          <li>Las <b>reglas</b> dicen qué caja lleva cada clase (por ejemplo, 1 caja chica cada 2 unidades), el relleno
+            por caja y los pallets y el film por orden. Una caja no se comparte entre órdenes.</li>
+          <li><b>A pedir</b> = (lo que piden las SJ que todavía no llegaron a embalado + mínimo) − stock − lo que ya
+            viene, redondeado al lote del proveedor.</li>
+          <li><b>El stock baja solo</b> cuando una SJ llega a embalado (555). Lo hecho en casa (cartón procesado) no
+            tiene stock ni se pide.</li>
+        </ul>
+        <h4>Potencial</h4>
+        <p>Que nunca falte una caja por sorpresa y que los pedidos salgan con anticipación según lo que viene, no según
+          lo que ya se acabó.</p>
+        <h4>Limitaciones</h4>
+        <ul class="lim">
+          <li><b>Stocks, mínimos, lotes, proveedores, plazos y costos son inventados.</b></li>
+          <li><b>Las clases y reglas son de ejemplo</b> (por diámetro DN): hay que armarlas con qué caja lleva cada
+            artículo real.</li>
+          <li>El consumo es una <b>estimación</b>: el stock se desvía de la realidad hasta el próximo conteo. Cuando se
+            resuelva el registro de packing, pasará a ser real.</li>
+          <li>No genera órdenes de compra en JD: sugiere y deja el texto listo.</li>
+        </ul>
+      </details>
+
+      <details class="card" id="g-costos">
+        <summary>Costos <span class="pill-demo">ejemplo</span></summary>
+        <h4>Para qué</h4>
+        <p>Cuánto cuesta mover la mercadería y cuánto relleno reciclado se usa, mes a mes.</p>
+        <h4>Cómo se usa</h4>
+        <ul>
+          <li>Elegí el <b>mes</b> arriba a la derecha.</li>
+          <li><b>Resumen</b>: costo del mes, por orden enviada, de embalaje, los indicadores y el costo por día.</li>
+          <li><b>Relleno</b>: kilos de relleno reciclado, kilos por caja, qué parte es reciclado, ahorro estimado, el
+            detalle por tipo y cuánto lleva cada caja.</li>
+          <li><b>Variables e indicadores</b>: agregá cualquier cosa que se mida y tenga costo, y armá indicadores
+            dividiendo una cosa por otra.</li>
+        </ul>
+        <h4>Cómo calcula</h4>
+        <ul>
+          <li>Las variables que agrupan insumos (cajas, pallets, relleno, film) salen solas de las SJ que llegaron a
+            embalado. Las demás (horas hombre, energía…) salen del cierre del día.</li>
+          <li>Cada consumo guarda el precio del día: si mañana aumenta, el mes pasado no cambia.</li>
+          <li><b>Kilos por caja</b> usa el promedio de lo que se pesó en <i>Medir relleno</i>; sin mediciones, el valor de
+            la regla.</li>
+          <li><b>Ahorro estimado</b> = kilos reciclados × precio del relleno comprado que más se usa.</li>
+        </ul>
+        <h4>Potencial</h4>
+        <p>Saber cuánto cuesta embalar y despachar cada orden, mostrar con números cuánto se ahorra reciclando cartón y
+          seguir cualquier indicador nuevo sin tocar código.</p>
+        <h4>Limitaciones</h4>
+        <ul class="lim">
+          <li><b>Los costos unitarios son inventados</b>: cargá los reales antes de mostrar los números.</li>
+          <li>Los consumos de embalaje son estimados (packing pendiente).</li>
+          <li>Sólo suma lo cargado en este equipo y las órdenes de los últimos 45 días.</li>
+        </ul>
+      </details>
+
+      <details class="card" id="g-mensual">
+        <summary>Mensual <span class="pill-demo">ejemplo</span></summary>
+        <h4>Para qué</h4>
+        <p>La foto del mes para la gerencia: precisión de stock, operación y atrasos.</p>
+        <h4>Cómo se usa</h4>
+        <ul>
+          <li><b>Precisión de stock</b>: la cifra del mes contra la meta, la evolución, los pasillos y las causas de los
+            ajustes.</li>
+          <li><b>Operación</b>: indicadores por sector, pallets despachados por día y picking.</li>
+          <li><b>Atrasos</b>: horas hombre perdidas por área, sacadas de los compromisos de <i>Flujo</i>.</li>
+          <li><i>Ver tabla</i> muestra los números de cada gráfico; <i>Exportar PDF</i> imprime la sección que estás
+            viendo.</li>
+        </ul>
+        <h4>Cómo calcula</h4>
+        <p>La precisión se mide absoluta por ubicación: cada ubicación con diferencia cuenta como error, sin compensar
+          sobrantes con faltantes.</p>
+        <h4>Potencial</h4>
+        <p>Armar el reporte mensual solo, a partir de los cierres y los conteos cargados.</p>
+        <h4>Limitaciones</h4>
+        <ul class="lim">
+          <li><b>Todo lo de esta página es inventado</b>, salvo los atrasos (que salen de los compromisos de Flujo, que
+            también son de ejemplo). Todavía no se calcula a partir de los cierres del día.</li>
+        </ul>
+      </details>
+
+      <details class="card" id="g-carga">
+        <summary>Cargar</summary>
+        <h4>Para qué</h4>
+        <p>Todo lo que se carga a mano, en un solo lugar.</p>
+        <h4>Cómo se usa</h4>
+        <ul>
+          <li><b>Archivo de JD</b>: soltar el archivo (también funciona en cualquier página). Opciones: tipos de orden
+            (SJ por defecto) y si el archivo trae todas las órdenes abiertas (la que deja de venir se da por enviada).
+            <i>Deshacer la última carga</i> vuelve todo atrás, incluido el stock que descontó. En <i>Columnas del
+            archivo</i> se elige a mano una columna que no se reconozca; queda recordada.</li>
+          <li><b>Cierre del día</b>: elegí la fecha; si ya estaba cargada, se trae lo que tenía. Lo que vino de JD aparece
+            en azul; completá lo demás y guardá.</li>
+          <li><b>Medir relleno</b>: elegí caja y relleno, anotá los kilos y Enter. El campo queda listo para la próxima
+            caja.</li>
+          <li><b>Packing</b> (pendiente): lo estimado hoy, orden por orden.</li>
+          <li><b>Copia de seguridad</b>: bajar un archivo con todo, o restaurarlo en otro equipo.</li>
+        </ul>
+        <h4>Cómo calcula</h4>
+        <ul>
+          <li>Reconoce las columnas de JD por su nombre, en español o en inglés. Lee CSV con <code>;</code>,
+            <code>,</code> o tabulación, en cualquier codificación, y fechas dd/mm/aaaa, juliano de JD o de Excel.</li>
+          <li>Pesar una combinación de caja y relleno que no tenía regla la crea sola.</li>
+        </ul>
+        <h4>Potencial</h4>
+        <p>Cuando la carga desde JD sea automática, esta página queda sólo para el cierre y el pesaje. El registro de
+          packing por orden, cuando se resuelva, va acá.</p>
+        <h4>Limitaciones</h4>
+        <ul class="lim">
+          <li>El archivo de JD se carga a mano.</li>
+          <li>Leer <b>Excel</b> necesita internet la primera vez; sin conexión, exportá en CSV.</li>
+          <li>Restaurar una copia <b>reemplaza</b> todo lo que había en ese equipo.</li>
+          <li>El <b>registro de packing está pendiente</b>.</li>
+        </ul>
+      </details>
+    </div>
+
+    <!-- avisos -->
+    <div class="sub guia" data-sub="avisos" hidden>
+      <section>
+        <div class="sec-head"><h2>Qué es real y qué es inventado</h2></div>
+        <div class="card">
+          <table class="izq">
+            <thead><tr><th>Inventado (de ejemplo)</th><th>Real (lo que cargás vos)</th></tr></thead>
+            <tbody>
+              <tr><td>Estado de los pasillos de <i>Hoy</i></td><td>Las órdenes de los archivos de JD que cargues</td></tr>
+              <tr><td>Todo <i>Flujo</i>: pallets, puestos, compromisos</td><td>Los cierres del día</td></tr>
+              <tr><td>Todo <i>Mensual</i></td><td>Las mediciones de relleno</td></tr>
+              <tr><td>Stocks, mínimos, lotes, proveedores, plazos y costos de insumos</td><td>Lo que corrijas a mano: stock, costos, reglas</td></tr>
+              <tr><td>Costos unitarios de las variables</td><td></td></tr>
+              <tr><td>Clases de artículo y reglas de consumo</td><td></td></tr>
+              <tr><td>Los archivos de <code>ejemplos/</code></td><td></td></tr>
+            </tbody>
+          </table>
+          <p class="card-note">Lo inventado está para discutir qué se mide y cómo se muestra, no para tomar decisiones. Las
+            páginas con datos de ejemplo llevan la marca <span class="pill-demo">ejemplo</span>.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>Avisos importantes</h2></div>
+        <div class="card">
+          <ul class="lim">
+            <li><b>Los datos viven en este navegador.</b> No se comparten entre equipos: lo cargado en la PC no aparece en
+              el celular ni en la PC de otro. Si se borra el historial del navegador, se pierde. Bajá una copia de
+              seguridad seguido.</li>
+            <li><b>Cambiar de dirección es cambiar de datos.</b> La versión de GitHub Pages, la de Vercel y el archivo
+              abierto en la PC guardan cada una lo suyo. Para mudarse, usá la copia de seguridad.</li>
+            <li><b>No reemplaza a JD Edwards.</b> La fuente oficial de órdenes y stock de productos sigue siendo JD. El
+              tablero sólo lee lo que le pasás y no escribe nada en JD.</li>
+            <li><b>Mucho de lo que muestra es estimado</b>: el consumo de cajas y relleno, el stock de insumos que baja solo
+              y los tiempos por etapa. Se corrigen con conteos, mediciones y cargas frecuentes.</li>
+            <li><b>Los códigos de estado de JD hay que confirmarlos</b> con quien administra JD.</li>
+            <li><b>Privacidad:</b> los datos no se envían a ningún servidor. La página publicada es pública, pero lo
+              cargado queda en tu navegador. Lo único que se descarga de internet es el lector de Excel.</li>
+            <li><b>Espacio:</b> el navegador guarda unos 5 MB. Alcanza para el día a día; si el exporte de JD trae todo el
+              histórico, filtralo de 535 a 580 antes de bajarlo. El tablero avisa si no entra.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>Lo que falta resolver</h2></div>
+        <div class="card">
+          <ul>
+            <li><b>Registro de packing por orden</b>: qué caja y cuánto relleno lleva cada SJ. Hoy se estima.</li>
+            <li><b>Qué caja y qué pallet lleva cada artículo</b>, para reemplazar las clases y reglas de ejemplo.</li>
+            <li><b>Confirmar los códigos de JD</b>, si el despiece tiene estado propio y cómo se llama la columna de cantidad
+              en espera.</li>
+            <li><b>Datos compartidos</b> entre equipos y usuarios: hace falta un servidor y una base de datos.</li>
+            <li><b>Carga automática desde JD</b>, con Orchestrator o un informe programado, coordinada con sistemas.</li>
+            <li><b>Conectar Flujo y Mensual</b> con datos reales.</li>
+          </ul>
         </div>
       </section>
     </div>
@@ -5168,7 +5635,7 @@
 
   const VISTAS = { diaria:"Hoy", ordenes:"Órdenes JD Edwards", flujo:"Flujo y carga de trabajo",
                    insumos:"Insumos", costos:"Costos y consumos",
-                   mensual:"Reporte mensual", carga:"Cargar datos" };
+                   mensual:"Reporte mensual", carga:"Cargar datos", guia:"Guía de uso" };
 
   /* Las rutas son #página o #página/subpágina, así cualquier pantalla se puede
      dejar como acceso directo. Volver a una página abre la última subpágina
@@ -5206,6 +5673,31 @@
     if (vista === "carga") { pintarMediciones(); pintarPacking(); }
     if (scroll) window.scrollTo(0, 0);
   }
+
+  /* "¿Cómo funciona?" abre en la guía la explicación de esa página, ya desplegada. */
+  document.querySelectorAll("[data-guia]").forEach(a => a.addEventListener("click", () => {
+    setTimeout(() => {
+      const d = document.getElementById("g-" + a.dataset.guia);
+      if (!d) return;
+      d.open = true;
+      d.scrollIntoView({ block: "start" });
+      window.scrollBy(0, -80);   // que no quede debajo de la barra de arriba
+    }, 30);
+  }));
+
+  // Al imprimir la guía se imprime entera, no sólo lo que estaba desplegado.
+  window.addEventListener("beforeprint", () =>
+    document.querySelectorAll(".guia details").forEach(d => d.open = true));
+
+  /* El aviso de datos inventados queda hasta que cada persona lo cierre. Es
+     una preferencia de este navegador: si no se puede guardar, vuelve a salir. */
+  const KEY_AVISO = "tablero-almacen-aviso-visto";
+  const avisoDemo = document.getElementById("avisoDemo");
+  try { avisoDemo.hidden = localStorage.getItem(KEY_AVISO) === "1"; } catch (e) { avisoDemo.hidden = false; }
+  document.getElementById("avisoOk").addEventListener("click", () => {
+    avisoDemo.hidden = true;
+    try { localStorage.setItem(KEY_AVISO, "1"); } catch (e) {}
+  });
 
   window.addEventListener("hashchange", () => mostrar(location.hash.slice(1), true));
   mostrar(location.hash.slice(1), false);
