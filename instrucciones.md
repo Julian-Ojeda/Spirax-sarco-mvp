@@ -209,27 +209,34 @@ archivo con todo y se puede restaurar en otra PC o en el celular. Restaurar
 
 ---
 
-## 8. Subirlo a internet (gratis)
+## 8. Subirlo a internet (gratis, con Vercel)
 
 Hace falta para dos cosas: verlo desde el celular e instalarlo como app.
 
-**Netlify Drop** es el camino más corto — sin cuenta, sin git, sin tarjeta:
+El repositorio ya está listo para **Vercel**: es un sitio estático, no tiene nada que
+compilar, y `vercel.json` le dice a Vercel cómo servirlo.
 
-1. Poné `index.html` solo en una carpeta (el nombre del archivo tiene que ser
-   exactamente `index.html`).
-2. Entrá a **app.netlify.com/drop** y arrastrá la carpeta.
-3. Te devuelve una dirección tipo `algo-random.netlify.app`.
+1. Entrá a **vercel.com** con tu cuenta de GitHub.
+2. *Add New… → Project* e importá el repositorio **Spirax-sarco-mvp**.
+3. Dejá todo como viene: *Framework Preset* **Other**, sin *Build Command*, sin
+   *Install Command*. Tocá **Deploy**.
+4. Te devuelve una dirección tipo `spirax-sarco-mvp.vercel.app`. En *Settings →
+   Domains* se le puede cambiar el nombre o poner un dominio propio.
 
-Creando una cuenta gratis podés renombrar el sitio y el enlace queda permanente.
-Alternativas equivalentes: Cloudflare Pages o GitHub Pages.
+Desde ahí, **cada push a `main` se publica solo** en un minuto.
+
+> **Los datos no se mudan solos.** Lo cargado vive en el navegador y queda atado a
+> la dirección de la página. Si ya venías usando la de GitHub Pages, antes de pasarte
+> bajá una copia en *Cargar → Copia de seguridad* y restaurala en la dirección de
+> Vercel.
 
 > **Por qué hace falta HTTPS:** el celular sólo permite instalar como app las
-> páginas servidas por HTTPS. Netlify lo trae puesto. Abriendo el archivo local
-> esa opción no aparece.
+> páginas servidas por HTTPS. Vercel lo trae puesto. Abriendo el archivo local esa
+> opción no aparece.
 
 ### Instalarlo como app en el celular
 
-Con la página abierta desde la dirección de Netlify:
+Con la página abierta desde la dirección de Vercel:
 
 - **Android (Chrome):** menú ⋮ → *Agregar a pantalla de inicio*
 - **iPhone (Safari):** botón compartir → *Agregar a pantalla de inicio*

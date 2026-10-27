@@ -4,7 +4,8 @@ Tablero diario para la reunión de las 9:00 del almacén: movimiento del día, e
 de los pasillos, carga de trabajo de despacho y seguimiento mensual de la precisión
 de stock.
 
-**Página:** https://julian-ojeda.github.io/Spirax-sarco-mvp/
+**Publicación:** listo para Vercel (sitio estático, sin build). Pasos en
+[instrucciones.md](instrucciones.md#8-subirlo-a-internet-gratis-con-vercel).
 
 Un solo archivo (`index.html`), sin servidor, sin dependencias y sin nada que
 instalar. Funciona en la PC y se puede agregar a la pantalla de inicio del celular
