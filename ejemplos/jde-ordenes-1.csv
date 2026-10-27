@@ -1,0 +1,13 @@
+Trabajar con líneas de órdenes de venta;;;;;;;;;;;;;
+Cía;Nº orden;Tipo or;Nº línea;Nº 2º artículo;Descripción;Cant pedida;Cant en espera;UM;Últ est;Sig est;Fecha promesa entrega;Nombre envío a;Sucursal/planta
+00001;40182;SJ;1,000;TD52-DN15;Trampa termodinámica TD52 DN15;12;0;UN;520;535;20/10/2026;Petroquímica del Sur SA;BA01
+00001;40182;SJ;2,000;BRD-DN50;Bridas DN50 PN40;4;4;UN;520;535;20/10/2026;Petroquímica del Sur SA;BA01
+00001;40195;SJ;1,000;KE-DN80;Válvula de control KE DN80;2;0;UN;535;545;28/10/2026;Lácteos La Pampa;BA01
+00001;40195;SJ;2,000;MAN-010;Manómetro 0-10 bar DN15;6;0;UN;535;545;28/10/2026;Lácteos La Pampa;BA01
+00001;40151;SJ;1,000;BPRV-DN25;Reductora de presión BRV DN25;8;0;UN;545;550;22/10/2026;Frigorífico Norte;BA01
+00001;40151;SJ;2,000;FT14-DN20;Trampa flotador FT14 DN20;10;0;UN;545;550;22/10/2026;Frigorífico Norte;BA01
+00001;40166;SJ;1,000;SV-DN100;Válvula de seguridad SV DN100;3;0;UN;550;555;30/10/2026;Ingenio Tucumán;BA01
+00001;40170;SJ;1,000;SEP-DN65;Separador S13 DN65;1;0;UN;550;555;23/10/2026;Cervecería Andina;BA01
+00001;40170;SJ;2,000;KIT-BM34;Kit reparación BM-34;5;0;UN;550;555;23/10/2026;Cervecería Andina;BA01
+00001;40201;SJ;1,000;STR-DN40;Filtro Y DN40;20;0;UN;520;535;05/11/2026;Papelera del Plata;BA01
+00001;50010;SO;1,000;TD52-DN15;Trampa termodinámica TD52 DN15;3;0;UN;535;545;25/10/2026;Mostrador;BA01

@@ -12,12 +12,17 @@ como app.
 
 ## Vistas
 
-| Pestaña | Para qué |
+| Página | Para qué |
 |---|---|
-| **Diaria** | Pedidos armados, embalados y despachados; pallets y bultos por destino; estado de cada pasillo con el detalle de qué producto está fuera de lugar. |
-| **Flujo** | La del líder de despacho: dónde está parado cada pallet del circuito, cuántas horas hombre falta meterle, cuánta gente hace falta en cada puesto y qué compromisos vienen atrasados. |
-| **Mensual** | Precisión de stock, su evolución, KPI por sector, pallets por día, causas de los ajustes y horas hombre perdidas por atrasos. |
-| **Carga del día** | Formulario del cierre de jornada. |
+| **Hoy** | Pedidos armados, embalados y despachados del día (de JD), lo que hay que atender, cajas y relleno usados, y el estado de los pasillos. |
+| **Órdenes** | Las SJ de JD Edwards de 535 a 580: despiece, sugerencia de picking, picking, embalado y envío. |
+| **Flujo** | La del líder de despacho: dónde está cada pallet, cuánta gente hace falta y qué compromisos vienen atrasados. |
+| **Insumos** | Cajas, pallets, relleno y film contra lo que piden las SJ abiertas, con sugerencia de pedido a cada proveedor. |
+| **Costos** | El mes en plata, el tablero de relleno (cuánto se recicla, kilos por caja, ahorro) y las variables e indicadores. |
+| **Mensual** | Precisión de stock, operación y atrasos. |
+| **Cargar** | Todo lo que se carga a mano en un solo lugar: archivo de JD, cierre del día, medir relleno, packing (pendiente) y copia de seguridad. |
+
+Casi todo sale solo del archivo de JD, que se puede soltar en cualquier página.
 
 ## El circuito de despacho
 
@@ -54,4 +59,9 @@ estimación que **hay que confirmar** — ver las decisiones pendientes al final
 [instrucciones.md](instrucciones.md).
 
 Los datos que se cargan quedan en el navegador del dispositivo (localStorage), no
-se envían a ningún servidor.
+se envían a ningún servidor. La única excepción de "sin dependencias": para leer
+archivos **Excel** de JD se baja el lector SheetJS la primera vez que hace falta
+(necesita internet). El CSV se lee sin nada.
+
+En [ejemplos/](ejemplos/) hay dos listados de JD de prueba, uno después del otro,
+para ver cómo avanzan las órdenes entre una carga y la siguiente.

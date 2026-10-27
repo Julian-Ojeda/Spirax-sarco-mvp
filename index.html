@@ -477,7 +477,7 @@
   .load-date { display: flex; align-items: center; gap: 9px; margin-top: 18px; }
   .load-date label { font-size: 12.5px; font-weight: 650; color: var(--ink-2); }
 
-  input[type="date"], input[type="number"], input[type="text"], select {
+  input[type="date"], input[type="number"], input[type="text"], input[type="search"], select {
     font: inherit; color: var(--ink); background: var(--surface);
     border: 1px solid var(--rule); border-radius: 8px; padding: 7px 10px;
   }
@@ -532,6 +532,188 @@
 
   .print-head { display: none; }
 
+  /* ---------- páginas y subpáginas ---------- */
+
+  a { color: var(--s1); }
+  a.tab { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+  .tab[aria-current="page"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+
+  .page-head {
+    display: flex; align-items: flex-end; gap: 14px 18px; flex-wrap: wrap;
+    margin-top: 24px;
+  }
+  .page-head > div:first-child { flex: 1; min-width: 0; }
+  .page-head h1 { font-size: 24px; font-weight: 700; margin: 4px 0 0; letter-spacing: -.025em; }
+  .page-head .sub { font-size: 13px; color: var(--muted); margin: 3px 0 0; }
+  .page-head + .tiles { margin-top: 18px; }
+
+  .subtabs {
+    display: flex; gap: 22px; margin-top: 18px; border-bottom: 1px solid var(--rule);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .subtabs::-webkit-scrollbar { display: none; }
+  .subtabs a {
+    color: var(--ink-2); text-decoration: none; font-size: 13.5px; font-weight: 600;
+    padding: 9px 0 10px; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap;
+  }
+  .subtabs a:hover { color: var(--ink); }
+  .subtabs a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--brand); }
+  .subtabs a:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
+  .sub > .tiles:first-child { margin-top: 18px; }
+  .sub > section:first-child, .sub > .card:first-child { margin-top: 18px; }
+  .card.narrow { max-width: 640px; }
+  .pend {
+    display: inline-block; margin-left: 5px; padding: 0 6px; border-radius: 9px;
+    font-size: 10px; font-weight: 700; line-height: 16px; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--ink); background: color-mix(in srgb, var(--warning) 30%, transparent);
+  }
+
+  /* "Para atender": lo único que pide acción hoy, cada cosa con su link. */
+  .alertas { display: flex; flex-direction: column; gap: 8px; }
+  .alerta {
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+    text-decoration: none; color: var(--ink);
+  }
+  .alerta:hover { border-color: var(--rule); }
+  .alerta .pill { flex: none; }
+  .alerta-t { flex: 1; font-size: 13.5px; }
+  .alerta-t small { display: block; color: var(--muted); font-size: 12px; }
+  .alerta-ir { color: var(--muted); font-size: 16px; }
+
+  .drop-all {
+    position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--page) 80%, transparent); backdrop-filter: blur(2px);
+  }
+  .drop-all > div {
+    border: 2px dashed var(--s1); border-radius: 14px; padding: 36px 44px; background: var(--surface);
+    font-size: 16px; font-weight: 650; box-shadow: var(--shadow);
+  }
+  .toast {
+    position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 70;
+    width: min(620px, calc(100% - 32px)); padding: 12px 16px; border-radius: 10px;
+    background: var(--ink); color: var(--surface); font-size: 13px; line-height: 1.45;
+    box-shadow: 0 6px 24px rgba(14,20,23,.25);
+  }
+  .toast a { color: inherit; font-weight: 700; }
+
+  /* Lo que salió de JD se distingue de lo tipeado. */
+  input.auto { background: color-mix(in srgb, var(--s1) 10%, var(--surface)); border-color: color-mix(in srgb, var(--s1) 45%, var(--rule)); }
+  .auto-mark { color: var(--s1); font-weight: 700; }
+  .auto-nota { margin: 8px 0 0; }
+  .cons-auto { font-size: 13px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--s1); }
+  .med-add label { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+
+  @media print {
+    .subtabs, .drop-all, .toast, .page-head .btn { display: none !important; }
+  }
+
+  /* ---------- órdenes JDE ---------- */
+
+  .drop {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    border: 1.5px dashed var(--rule); border-radius: 10px; padding: 16px 18px;
+    background: var(--sunken); transition: border-color .12s, background .12s;
+  }
+  .drop[data-on="1"] { border-color: var(--s1); background: color-mix(in srgb, var(--s1) 9%, var(--sunken)); }
+  .drop-txt { font-size: 13px; color: var(--ink-2); flex: 1; min-width: 220px; line-height: 1.45; }
+  .drop-txt b { color: var(--ink); }
+  .imp-opts { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; margin-top: 12px; font-size: 12.5px; color: var(--ink-2); }
+  .imp-opts label { display: inline-flex; align-items: center; gap: 7px; }
+  .imp-opts input[type="text"] { width: 96px; padding: 5px 8px; }
+  .imp-acc { display: flex; gap: 6px; margin-left: auto; }
+  .imp-msg { margin-top: 12px; font-size: 12.5px; line-height: 1.5; color: var(--ink-2); }
+  .imp-msg:empty { display: none; }
+  .imp-msg[data-s="critical"] { color: var(--critical); font-weight: 600; }
+  .imp-msg[data-s="good"] { color: var(--good-ink); }
+  details.box { margin-top: 12px; border-top: 1px solid var(--grid); padding-top: 10px; }
+  details.box summary { cursor: pointer; font-size: 12.5px; font-weight: 650; color: var(--ink-2); }
+  .map-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 10px 16px; margin-top: 12px; }
+  .map-grid label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--ink-2); font-weight: 600; }
+  .map-grid select { font-size: 12.5px; padding: 5px 8px; font-weight: 400; }
+
+  .pipe-5 { grid-template-columns: repeat(var(--n, 5), minmax(0,1fr)); }
+  .pipe-card[role="button"] { cursor: pointer; transition: box-shadow .12s; }
+  .pipe-card[role="button"]:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
+  .pipe-card[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--s1), var(--shadow); }
+  .pipe-cod { font-size: 11px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+  .pipe-big { display: flex; align-items: baseline; gap: 7px; margin-top: 12px; }
+  .pipe-big b { font-size: 30px; font-weight: 700; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .pipe-big span { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+
+  .ord-bar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .ord-bar input[type="search"] { margin-left: auto; width: 280px; max-width: 100%; }
+  .chip {
+    appearance: none; font: inherit; font-size: 12px; font-weight: 650; cursor: pointer;
+    padding: 4px 11px; border-radius: 20px; border: 1px solid var(--rule);
+    background: transparent; color: var(--ink-2); white-space: nowrap;
+  }
+  .chip:hover { color: var(--ink); border-color: var(--ink-2); }
+  .chip:focus-visible { outline: 2px solid var(--s1); outline-offset: 1px; }
+  .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+  .chip em { font-style: normal; opacity: .65; margin-left: 4px; font-variant-numeric: tabular-nums; }
+
+  table.izq th, table.izq td { text-align: left; }
+  table.izq .num { text-align: right; }
+  .ord-row { cursor: pointer; }
+  .ord-row:hover td { background: var(--sunken); }
+  .ord-row:focus-visible { outline: 2px solid var(--s1); outline-offset: -2px; }
+  .ord-row[aria-expanded="true"] td { background: var(--sunken); border-bottom-color: transparent; }
+  .ord-det > td { background: var(--sunken); padding: 4px 10px 12px; white-space: normal; }
+  .ord-det table { font-size: 12px; }
+  .ord-det thead th { font-size: 10.5px; }
+  .ord-n { font-weight: 650; }
+  .ord-sub { display: block; font-size: 11.5px; color: var(--muted); }
+  .steps { display: inline-flex; gap: 3px; vertical-align: middle; margin-right: 8px; }
+  .steps i { width: 12px; height: 6px; border-radius: 3px; background: var(--grid); }
+  .steps i[data-on="1"] { background: color-mix(in srgb, var(--s1) 45%, var(--grid)); }
+  .steps i[data-on="2"] { background: var(--s1); width: 20px; }
+  .mas { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+  /* ---------- costos ---------- */
+
+  .head-ctl { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 650; color: var(--ink-2); }
+  input[type="month"] { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 6px 10px; }
+  .cons { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 10px 22px; }
+  .cons .fld + .fld { margin-top: 0; }
+  .cons .fld:last-of-type { margin-bottom: 0; }
+  .cons-c { font-size: 11.5px; color: var(--muted); width: 92px; text-align: right; font-variant-numeric: tabular-nums; flex: none; }
+  .cause-val.ancho { width: 104px; }
+  .ind-f { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  input.ed { width: 100%; min-width: 90px; padding: 4px 7px; font-size: 12.5px; }
+  input.ed.n { text-align: right; max-width: 120px; }
+  table select { font-size: 12.5px; padding: 4px 7px; max-width: 240px; }
+  .add-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+  .empty { font-size: 13px; color: var(--muted); padding: 18px 0 6px; }
+
+  /* ---------- insumos ---------- */
+
+  .badge {
+    display: inline-block; min-width: 17px; margin-left: 6px; padding: 0 5px;
+    border-radius: 9px; background: var(--critical); color: #fff;
+    font-size: 10.5px; font-weight: 700; line-height: 17px; text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .sug + .sug { margin-top: 12px; }
+  .sug .card-head { flex-wrap: wrap; }
+  .sug-acc { margin-left: auto; display: flex; gap: 6px; }
+  .sug-ok { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); }
+  .regla-txt { font-size: 12px; color: var(--muted); white-space: normal; min-width: 220px; }
+  label.regla-txt { white-space: nowrap; min-width: 0; display: inline-flex; align-items: center; gap: 5px; }
+  #insDef td:first-child input.ed { min-width: 170px; }
+  @media print { .sug-acc, .badge { display: none !important; } }
+
+  @media (max-width: 1040px) { .pipe-5 { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (max-width: 560px) {
+    .pipe-5 { grid-template-columns: minmax(0,1fr); }
+    .imp-acc { margin-left: 0; }
+    .ord-bar input[type="search"] { margin-left: 0; width: 100%; }
+    .head-ctl { margin-left: 0; }
+  }
+  @media print {
+    .no-print, .ord-bar { display: none !important; }
+    body .pipe.pipe-5 { grid-template-columns: repeat(var(--n, 5), minmax(0,1fr)); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
   }
@@ -564,6 +746,10 @@
     .ms { flex: 1 1 calc(50% - 4px); }
     .goalbar-scale { font-size: 10px; }
     .stamp { width: 100%; }
+    /* Seis pestañas no entran en un celular: se desliza la barra. */
+    .tabs { width: 100%; overflow-x: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab { padding: 7px 10px; font-size: 13px; }
     .sec-head .hint { display: none; }
     .row-who { display: none; }
   }
@@ -613,16 +799,18 @@
       <div class="brand-mark"></div>
       <div class="brand-name">Almacén</div>
     </div>
-    <div class="tabs" role="tablist">
-      <button class="tab" role="tab" aria-selected="true"  data-view="diaria">Diaria</button>
-      <button class="tab" role="tab" aria-selected="false" data-view="flujo">Flujo</button>
-      <button class="tab" role="tab" aria-selected="false" data-view="mensual">Mensual</button>
-      <button class="tab" role="tab" aria-selected="false" data-view="carga">Carga del día</button>
-    </div>
+    <nav class="tabs" aria-label="Páginas">
+      <a class="tab" href="#diaria"  data-view="diaria">Hoy</a>
+      <a class="tab" href="#ordenes" data-view="ordenes">Órdenes</a>
+      <a class="tab" href="#flujo"   data-view="flujo">Flujo</a>
+      <a class="tab" href="#insumos" data-view="insumos">Insumos<span class="badge" id="insBadge" hidden></span></a>
+      <a class="tab" href="#costos"  data-view="costos">Costos</a>
+      <a class="tab" href="#mensual" data-view="mensual">Mensual</a>
+      <a class="tab" href="#carga"   data-view="carga">Cargar</a>
+    </nav>
     <button class="btn-export" id="btnExport" title="Abre el diálogo de impresión: elegí «Guardar como PDF»">
       Exportar PDF
     </button>
-    <div class="stamp" id="stamp"></div>
   </div>
 </div>
 
@@ -637,46 +825,49 @@
     </div>
   </div>
 
-  <!-- ================= VISTA DIARIA ================= -->
-  <div id="view-diaria">
+  <!-- Se ve mientras se arrastra un archivo sobre cualquier página -->
+  <div class="drop-all" id="dropAll" hidden><div>Soltá el archivo de JD para actualizar las órdenes</div></div>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <input type="file" id="jdeFile" accept=".csv,.txt,.xlsx,.xlsm,.xls" hidden>
 
-    <div class="day-head">
+  <!-- ================= HOY ================= -->
+  <div id="view-diaria" class="view">
+
+    <div class="page-head">
       <div>
         <div class="eyebrow">Jornada</div>
         <h1 id="diaTitulo"></h1>
-        <p class="sub">Movimiento del día y estado de cada pasillo</p>
+        <p class="sub" id="hoyJD"></p>
       </div>
+      <button class="btn btn-ghost" data-accion="jd">Cargar archivo de JD</button>
     </div>
 
     <div class="tiles" id="tilesDia"></div>
 
     <section>
+      <div class="sec-head"><h2>Para atender</h2></div>
+      <div class="alertas" id="hoyAlertas"></div>
+    </section>
+
+    <section>
       <div class="sec-head">
-        <h2>Despachos del día</h2>
-        <div class="hint">Exportación vs. nacional</div>
+        <h2>Embalaje del día</h2>
+        <div class="hint">Estimado de las SJ que llegaron a embalado · <a href="#carga/packing">packing pendiente</a></div>
       </div>
       <div class="g2">
         <div class="card">
-          <div class="card-head">
-            <h3 class="card-title">Pallets</h3>
-            <button class="tbl-toggle" data-tbl="tblPallets">Ver tabla</button>
-          </div>
+          <div class="card-head"><h3 class="card-title">Cajas</h3></div>
           <div class="chart-host donut">
-            <svg id="svgPallets" viewBox="0 0 300 270" role="img" aria-label="Pallets despachados por destino"></svg>
+            <svg id="svgCajas" viewBox="0 0 300 270" role="img" aria-label="Cajas usadas hoy por tipo"></svg>
           </div>
-          <div class="legend" id="lgPallets"></div>
-          <div class="tbl-wrap" id="tblPallets" hidden></div>
+          <div class="legend" id="lgCajas"></div>
         </div>
         <div class="card">
-          <div class="card-head">
-            <h3 class="card-title">Bultos</h3>
-            <button class="tbl-toggle" data-tbl="tblBoxes">Ver tabla</button>
-          </div>
+          <div class="card-head"><h3 class="card-title">Relleno</h3></div>
           <div class="chart-host donut">
-            <svg id="svgBoxes" viewBox="0 0 300 270" role="img" aria-label="Bultos despachados por destino"></svg>
+            <svg id="svgRelleno" viewBox="0 0 300 270" role="img" aria-label="Relleno usado hoy por tipo"></svg>
           </div>
-          <div class="legend" id="lgBoxes"></div>
-          <div class="tbl-wrap" id="tblBoxes" hidden></div>
+          <div class="legend" id="lgRelleno"></div>
         </div>
       </div>
     </section>
@@ -684,271 +875,676 @@
     <section>
       <div class="sec-head">
         <h2>Estado de los pasillos</h2>
-        <div class="hint">Verde sin desvíos · Amarillo desvío leve · Rojo desvío importante</div>
+        <div class="hint">Verde sin desvíos · Amarillo leve · Rojo importante</div>
       </div>
       <div class="aisles" id="aisles"></div>
     </section>
   </div>
 
-  <!-- ================= VISTA FLUJO ================= -->
-  <div id="view-flujo" hidden>
+  <!-- ================= ÓRDENES JDE ================= -->
+  <div id="view-ordenes" class="view" hidden>
 
-    <div class="day-head">
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">JD Edwards</div>
+        <h1>Órdenes de <span id="jdeRango"></span></h1>
+        <p class="sub" id="jdeUltima"></p>
+      </div>
+      <button class="btn btn-brand" data-accion="jd">Cargar archivo de JD</button>
+    </div>
+
+    <nav class="subtabs" aria-label="Secciones de órdenes">
+      <a href="#ordenes/recorrido" data-sub="recorrido">Recorrido</a>
+      <a href="#ordenes/cargas" data-sub="cargas">Historial de cargas</a>
+      <a href="#ordenes/estados" data-sub="estados">Estados de JD</a>
+    </nav>
+
+    <div class="sub" data-sub="recorrido">
+      <div class="tiles" id="tilesJDE"></div>
+
+      <section>
+        <div class="sec-head">
+          <h2>El recorrido</h2>
+          <div class="hint">Tocá una etapa para ver sus órdenes</div>
+        </div>
+        <div class="pipe pipe-5" id="jdePipe"></div>
+        <p class="card-note" id="jdePrevio"></p>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <h2>Órdenes</h2>
+          <div class="hint" id="jdeCuenta"></div>
+        </div>
+        <div class="card">
+          <div class="ord-bar">
+            <span id="jdeChips" style="display:contents"></span>
+            <input type="search" id="jdeBuscar" placeholder="Buscar orden, cliente o artículo" aria-label="Buscar">
+          </div>
+          <div class="tbl-wrap" id="jdeTabla"></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="sub" data-sub="cargas" hidden>
+      <section>
+        <div class="card">
+          <p class="card-note" style="margin-top:0">Cada archivo que se pasó y qué cambió respecto del anterior.</p>
+          <div class="tbl-wrap" id="jdeCargas"></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="sub" data-sub="estados" hidden>
+      <section>
+        <div class="card narrow">
+          <p class="card-note" style="margin-top:0">El siguiente estado desde el que una línea está en cada etapa: está ahí hasta llegar al
+            código de la etapa siguiente. Desde el código de fin, la orden ya se envió y sale del recorrido. Si una tarea
+            tiene su propio estado en JD (por ejemplo el despiece), agregala como etapa.</p>
+          <div class="tbl-wrap" id="jdeEstados"></div>
+          <p class="card-note" id="jdeEstNota"></p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ================= FLUJO ================= -->
+  <div id="view-flujo" class="view" hidden>
+
+    <div class="page-head">
       <div>
         <div class="eyebrow">Despacho</div>
         <h1>Flujo y carga de trabajo</h1>
-        <p class="sub">Dónde está parado cada pallet, cuántas horas hombre falta meterle y quién nos está atrasando</p>
+        <p class="sub">Dónde está parado cada pallet, cuánta gente hace falta y quién nos está atrasando</p>
       </div>
     </div>
 
-    <div class="tiles" id="tilesFlujo"></div>
+    <nav class="subtabs" aria-label="Secciones del flujo">
+      <a href="#flujo/circuito" data-sub="circuito">Circuito y personal</a>
+      <a href="#flujo/compromisos" data-sub="compromisos">Compromisos de salida</a>
+    </nav>
 
-    <section>
-      <div class="sec-head">
-        <h2>El circuito</h2>
-        <div class="hint">Cada cola espera una tarea · los pallets se editan acá mismo</div>
-      </div>
-      <div class="pipe" id="pipe"></div>
-    </section>
+    <div class="sub" data-sub="circuito">
+      <div class="tiles" id="tilesFlujo"></div>
 
-    <section>
-      <div class="sec-head">
-        <h2>Plan de horas del turno</h2>
-        <div class="hint">Cuánta gente hace falta en cada tarea</div>
-      </div>
-      <div class="card">
-        <div class="cfg">
-          <span><label for="cfgIni">Turno de</label><input type="number" id="cfgIni" min="0" max="24" step="0.5"> h</span>
-          <span><label for="cfgFin">a</label><input type="number" id="cfgFin" min="0" max="24" step="0.5"> h</span>
-          <span><label for="cfgMez">Exportación</label><input type="number" id="cfgMez" min="0" max="100" step="5"> %</span>
-          <span class="cfg-note">Sólo se cuentan estas horas, de lunes a viernes. La mezcla reparte el packing entre sus dos puestos.</span>
+      <section>
+        <div class="sec-head">
+          <h2>El circuito</h2>
+          <div class="hint">Los pallets se editan en cada tarjeta</div>
         </div>
-        <div class="tbl-wrap" id="tblPlan"></div>
-        <p class="card-note" id="planNota"></p>
-      </div>
-    </section>
+        <div class="pipe" id="pipe"></div>
+      </section>
 
-    <section>
-      <div class="sec-head">
-        <h2>Compromisos de salida</h2>
-        <div class="hint">Atraso = horas hombre que pide el pallet − horas hábiles que quedan hasta el camión</div>
-      </div>
-      <div class="card">
-        <div class="cmp-add">
-          <input type="text" id="cmpOrden" placeholder="Nº de orden" aria-label="Número de orden">
-          <select id="cmpDestino" aria-label="Destino">
-            <option>Exportación</option>
-            <option>Nacional</option>
-          </select>
-          <input type="number" id="cmpPallets" min="1" step="1" placeholder="Pallets" aria-label="Pallets comprometidos">
-          <input type="datetime-local" id="cmpSalida" aria-label="Salida comprometida">
-          <select id="cmpEtapa" aria-label="Etapa actual"></select>
-          <select id="cmpResp" aria-label="De quién depende si llega tarde"></select>
-          <button class="btn btn-ghost" id="cmpAdd">Agregar</button>
+      <section>
+        <div class="sec-head"><h2>Plan de horas del turno</h2></div>
+        <div class="card">
+          <div class="cfg">
+            <span><label for="cfgIni">Turno de</label><input type="number" id="cfgIni" min="0" max="24" step="0.5"> h</span>
+            <span><label for="cfgFin">a</label><input type="number" id="cfgFin" min="0" max="24" step="0.5"> h</span>
+            <span><label for="cfgMez">Exportación</label><input type="number" id="cfgMez" min="0" max="100" step="5"> %</span>
+          </div>
+          <div class="tbl-wrap" id="tblPlan"></div>
+          <p class="card-note" id="planNota"></p>
         </div>
-        <div class="cmp-list" id="compList"></div>
-      </div>
-    </section>
+      </section>
+    </div>
+
+    <div class="sub" data-sub="compromisos" hidden>
+      <section>
+        <div class="card">
+          <p class="card-note" style="margin-top:0">Atraso = horas hombre que pide el pallet − horas hábiles que quedan hasta el camión.</p>
+          <div class="cmp-add" style="margin-top:12px">
+            <input type="text" id="cmpOrden" placeholder="Nº de orden" aria-label="Número de orden">
+            <select id="cmpDestino" aria-label="Destino">
+              <option>Exportación</option>
+              <option>Nacional</option>
+            </select>
+            <input type="number" id="cmpPallets" min="1" step="1" placeholder="Pallets" aria-label="Pallets comprometidos">
+            <input type="datetime-local" id="cmpSalida" aria-label="Salida comprometida">
+            <select id="cmpEtapa" aria-label="Etapa actual"></select>
+            <select id="cmpResp" aria-label="De quién depende si llega tarde"></select>
+            <button class="btn btn-ghost" id="cmpAdd">Agregar</button>
+          </div>
+          <div class="cmp-list" id="compList"></div>
+        </div>
+      </section>
+    </div>
   </div>
 
-  <!-- ================= VISTA MENSUAL ================= -->
-  <div id="view-mensual" hidden>
+  <!-- ================= INSUMOS ================= -->
+  <div id="view-insumos" class="view" hidden>
 
-    <div class="card hero">
-      <div class="hero-main">
-        <div class="eyebrow">Precisión de stock — absoluta por ubicación</div>
-        <div class="hero-fig">87,4<span>%</span></div>
-        <div class="hero-delta">▲ +7,4 pts <em>desde el arranque (80,0%)</em></div>
-        <div style="height:20px"></div>
-        <div class="goalbar-track">
-          <div class="goalbar-fill" id="goalFill"></div>
-          <div class="goalbar-tick" id="goalTick"></div>
-        </div>
-        <div class="goalbar-scale">
-          <span>80% inicio</span><span>Meta trim. 90%</span><span>95% objetivo</span>
-        </div>
-      </div>
-      <div class="hero-side">
-        <div class="eyebrow">Hitos trimestrales</div>
-        <div class="milestones">
-          <div class="ms" data-state="done"><div class="ms-q">T1</div><div class="ms-v">85%</div></div>
-          <div class="ms" data-state="now"><div class="ms-q">T2 · actual</div><div class="ms-v">90%</div></div>
-          <div class="ms"><div class="ms-q">T3</div><div class="ms-v">93%</div></div>
-          <div class="ms"><div class="ms-q">T4</div><div class="ms-v">95%</div></div>
-        </div>
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Logística</div>
+        <h1>Insumos</h1>
+        <p class="sub">Stock de embalaje contra lo que piden las SJ abiertas</p>
       </div>
     </div>
 
-    <section>
-      <div class="sec-head">
-        <h2>Evolución de la precisión de stock</h2>
-        <div class="hint">Últimos 8 meses</div>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <h3 class="card-title">De 80,0% a 87,4%</h3>
-          <button class="tbl-toggle" data-tbl="tblPrecision">Ver tabla</button>
-        </div>
-        <div class="chart-host" id="hostPrecision">
-          <svg id="svgPrecision" viewBox="0 0 760 250" role="img" aria-label="Evolución mensual de la precisión de stock"></svg>
-          <div class="tip" id="tipPrecision"></div>
-        </div>
-        <div class="tbl-wrap" id="tblPrecision" hidden></div>
-      </div>
-    </section>
+    <nav class="subtabs" aria-label="Secciones de insumos">
+      <a href="#insumos/pedir" data-sub="pedir">Qué pedir</a>
+      <a href="#insumos/stock" data-sub="stock">Stock</a>
+      <a href="#insumos/reglas" data-sub="reglas">Insumos y reglas</a>
+    </nav>
 
-    <section>
-      <div class="sec-head"><h2>Por sector</h2></div>
-      <div class="kpis" id="kpis"></div>
-    </section>
+    <div class="sub" data-sub="pedir">
+      <div class="tiles" id="tilesIns"></div>
 
-    <section>
-      <div class="sec-head">
-        <h2>Despacho — pallets por día</h2>
-        <div class="hint">Últimos 20 días hábiles</div>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <h3 class="card-title">Volumen despachado</h3>
-          <button class="tbl-toggle" data-tbl="tblDespacho">Ver tabla</button>
+      <section>
+        <div class="sec-head">
+          <h2>Sugerencias de pedido</h2>
+          <div class="hint">Lo que piden las SJ + mínimo − stock − lo que ya viene</div>
         </div>
-        <p class="card-note">Promedio del período: <b id="despProm"></b> pallets/día.</p>
-        <div class="chart-host" id="hostDespacho">
-          <svg id="svgDespacho" viewBox="0 0 760 225" role="img" aria-label="Pallets despachados por día"></svg>
-          <div class="tip" id="tipDespacho"></div>
-        </div>
-        <div class="tbl-wrap" id="tblDespacho" hidden></div>
-      </div>
-    </section>
+        <div id="insSug"></div>
+      </section>
 
-    <section>
-      <div class="sec-head">
-        <h2>Pasillos</h2>
-        <div class="hint">Participación en el error y precisión de cada uno</div>
-      </div>
-      <div class="g-pasillos">
+      <section>
+        <div class="sec-head"><h2>Pedidos en camino</h2></div>
+        <div class="card"><div id="insPed"></div></div>
+      </section>
+    </div>
+
+    <div class="sub" data-sub="stock" hidden>
+      <section>
         <div class="card">
-          <div class="card-head"><h3 class="card-title">De dónde salen los errores</h3></div>
-          <div class="chart-host donut">
-            <svg id="svgTorta" viewBox="0 0 300 300" role="img" aria-label="Participación de cada pasillo en el total de errores"></svg>
+          <p class="card-note" style="margin-top:0">El stock baja solo cuando una SJ llega a embalado. Después de un conteo, corregilo acá.</p>
+          <div class="tbl-wrap" id="insStock"></div>
+          <p class="card-note" id="insNota"></p>
+        </div>
+      </section>
+    </div>
+
+    <div class="sub" data-sub="reglas" hidden>
+      <section>
+        <div class="sec-head">
+          <h2>Insumos y proveedores</h2>
+          <div class="hint">Plazo en días hábiles · lote = múltiplo en que vende el proveedor</div>
+        </div>
+        <div class="card">
+          <div class="tbl-wrap" id="insDef"></div>
+          <div class="add-row">
+            <input type="text" id="insNuevo" placeholder="Nuevo insumo" aria-label="Nombre del insumo">
+            <button class="btn btn-ghost" id="insAdd">Agregar</button>
           </div>
-          <div class="legend" id="lgTorta"></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <h2>Clases de artículo</h2>
+          <div class="hint">Patrones que se buscan en el código y la descripción · gana la primera</div>
+        </div>
+        <div class="card">
+          <div class="tbl-wrap" id="insClases"></div>
+          <div class="add-row">
+            <input type="text" id="insClaseNueva" placeholder="Nueva clase" aria-label="Nombre de la clase">
+            <button class="btn btn-ghost" id="insClaseAdd">Agregar</button>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>Reglas de consumo</h2></div>
+        <div class="card">
+          <div class="cfg">
+            <span><label for="insEtapa">Se consume al llegar a</label><select id="insEtapa"></select></span>
+          </div>
+          <div class="tbl-wrap" id="insReglas"></div>
+          <div class="add-row"><button class="btn btn-ghost" id="insReglaAdd">Agregar regla</button></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ================= COSTOS ================= -->
+  <div id="view-costos" class="view" hidden>
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Logística</div>
+        <h1>Costos y consumos</h1>
+        <p class="sub">Lo que cuesta mover la mercadería</p>
+      </div>
+      <div class="head-ctl"><label for="cosMes">Mes</label><input type="month" id="cosMes"></div>
+    </div>
+
+    <nav class="subtabs" aria-label="Secciones de costos">
+      <a href="#costos/resumen" data-sub="resumen">Resumen</a>
+      <a href="#costos/relleno" data-sub="relleno">Relleno</a>
+      <a href="#costos/variables" data-sub="variables">Variables e indicadores</a>
+    </nav>
+
+    <div class="sub" data-sub="resumen">
+      <div class="tiles" id="tilesCostos"></div>
+
+      <section>
+        <div class="sec-head"><h2>Indicadores</h2></div>
+        <div class="kpis" id="cosInd"></div>
+      </section>
+
+      <section>
+        <div class="g2">
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">En qué se va la plata</h3>
+              <button class="tbl-toggle" data-tbl="tblCosVars">Ver tabla</button>
+            </div>
+            <div style="margin-top:16px" id="cosVars"></div>
+            <div class="tbl-wrap" id="tblCosVars" hidden></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Costo por día</h3></div>
+            <p class="card-note" id="cosDiaNota"></p>
+            <div class="chart-host" id="hostCostoDia">
+              <svg id="svgCostoDia" viewBox="0 0 380 190" role="img" aria-label="Costo por día del mes"></svg>
+              <div class="tip" id="tipCostoDia"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="sub" data-sub="relleno" hidden>
+      <div class="tiles" id="tilesRell"></div>
+
+      <section>
+        <div class="g2">
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">Por tipo de relleno</h3>
+              <button class="tbl-toggle" data-tbl="tblRell">Ver tabla</button>
+            </div>
+            <div style="margin-top:16px" id="rellTipos"></div>
+            <div class="tbl-wrap" id="tblRell" hidden></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Relleno reciclado por día</h3></div>
+            <p class="card-note" id="rellDiaNota"></p>
+            <div class="chart-host" id="hostRellDia">
+              <svg id="svgRellDia" viewBox="0 0 380 190" role="img" aria-label="Kilos de cartón reciclado por día"></svg>
+              <div class="tip" id="tipRellDia"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <h2>Cuánto relleno lleva cada caja</h2>
+          <div class="hint"><a href="#carga/relleno">Medir una caja</a></div>
+        </div>
+        <div class="card">
+          <p class="card-note" style="margin-top:0">El promedio de lo medido es lo que se usa para estimar el consumo.
+            Sin mediciones se usa el valor de la regla.</p>
+          <div class="tbl-wrap" id="rellMatriz"></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="sub" data-sub="variables" hidden>
+      <section>
+        <div class="sec-head">
+          <h2>Variables que se miden</h2>
+          <div class="hint">Cualquier cosa que se pueda contar y tenga costo</div>
+        </div>
+        <div class="card">
+          <p class="card-note" style="margin-top:0">Las atadas a un insumo se calculan solas desde JD. Las demás
+            (horas hombre, energía…) se cargan en el cierre del día. Cada jornada guarda el precio del día.</p>
+          <div class="tbl-wrap" id="cosDef"></div>
+          <div class="add-row">
+            <input type="text" id="cosNuevaNom" placeholder="Nueva variable" aria-label="Nombre de la variable">
+            <input type="text" id="cosNuevaUni" placeholder="Unidad" style="width:96px" aria-label="Unidad">
+            <input type="number" id="cosNuevaCos" placeholder="Costo unit." min="0" step="any" style="width:120px" aria-label="Costo unitario">
+            <button class="btn btn-ghost" id="cosNuevaAdd">Agregar</button>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <h2>Indicadores</h2>
+          <div class="hint">Una cosa dividida otra, sobre el mes elegido</div>
+        </div>
+        <div class="card">
+          <div class="tbl-wrap" id="cosIndDef"></div>
+          <div class="add-row"><button class="btn btn-ghost" id="cosIndAdd">Agregar indicador</button></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ================= MENSUAL ================= -->
+  <div id="view-mensual" class="view" hidden>
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Reporte mensual</div>
+        <h1>El mes</h1>
+        <p class="sub">Precisión de stock, operación y atrasos</p>
+      </div>
+    </div>
+
+    <nav class="subtabs" aria-label="Secciones del mensual">
+      <a href="#mensual/stock" data-sub="stock">Precisión de stock</a>
+      <a href="#mensual/operacion" data-sub="operacion">Operación</a>
+      <a href="#mensual/atrasos" data-sub="atrasos">Atrasos</a>
+    </nav>
+
+    <div class="sub" data-sub="stock">
+      <div class="card hero">
+        <div class="hero-main">
+          <div class="eyebrow">Precisión de stock — absoluta por ubicación</div>
+          <div class="hero-fig">87,4<span>%</span></div>
+          <div class="hero-delta">▲ +7,4 pts <em>desde el arranque (80,0%)</em></div>
+          <div style="height:20px"></div>
+          <div class="goalbar-track">
+            <div class="goalbar-fill" id="goalFill"></div>
+            <div class="goalbar-tick" id="goalTick"></div>
+          </div>
+          <div class="goalbar-scale">
+            <span>80% inicio</span><span>Meta trim. 90%</span><span>95% objetivo</span>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="eyebrow">Hitos trimestrales</div>
+          <div class="milestones">
+            <div class="ms" data-state="done"><div class="ms-q">T1</div><div class="ms-v">85%</div></div>
+            <div class="ms" data-state="now"><div class="ms-q">T2 · actual</div><div class="ms-v">90%</div></div>
+            <div class="ms"><div class="ms-q">T3</div><div class="ms-v">93%</div></div>
+            <div class="ms"><div class="ms-q">T4</div><div class="ms-v">95%</div></div>
+          </div>
+        </div>
+      </div>
+
+      <section>
+        <div class="sec-head">
+          <h2>Evolución</h2>
+          <div class="hint">Últimos 8 meses</div>
         </div>
         <div class="card">
           <div class="card-head">
-            <h3 class="card-title">Precisión por pasillo</h3>
-            <button class="tbl-toggle" data-tbl="tblPasillos">Ver tabla</button>
+            <h3 class="card-title">De 80,0% a 87,4%</h3>
+            <button class="tbl-toggle" data-tbl="tblPrecision">Ver tabla</button>
           </div>
-          <p class="card-note">La marca vertical es la meta del trimestre (90%).</p>
-          <div class="rows" id="rowsPasillos"></div>
-          <div class="tbl-wrap" id="tblPasillos" hidden></div>
+          <div class="chart-host" id="hostPrecision">
+            <svg id="svgPrecision" viewBox="0 0 760 250" role="img" aria-label="Evolución mensual de la precisión de stock"></svg>
+            <div class="tip" id="tipPrecision"></div>
+          </div>
+          <div class="tbl-wrap" id="tblPrecision" hidden></div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section>
-      <div class="sec-head">
-        <h2>Picking</h2>
-        <div class="hint">Un eje por gráfico</div>
-      </div>
-      <div class="g2">
+      <section>
+        <div class="sec-head"><h2>Pasillos</h2></div>
+        <div class="g-pasillos">
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">De dónde salen los errores</h3></div>
+            <div class="chart-host donut">
+              <svg id="svgTorta" viewBox="0 0 300 300" role="img" aria-label="Participación de cada pasillo en el total de errores"></svg>
+            </div>
+            <div class="legend" id="lgTorta"></div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">Precisión por pasillo</h3>
+              <button class="tbl-toggle" data-tbl="tblPasillos">Ver tabla</button>
+            </div>
+            <p class="card-note">La marca vertical es la meta del trimestre (90%).</p>
+            <div class="rows" id="rowsPasillos"></div>
+            <div class="tbl-wrap" id="tblPasillos" hidden></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <h2>Causas de los ajustes</h2>
+          <div class="hint">214 ajustes en el mes</div>
+        </div>
         <div class="card">
-          <div class="card-head"><h3 class="card-title">Precisión de picking</h3></div>
-          <p class="card-note">% de líneas sin error.</p>
-          <div class="chart-host" id="hostPickCal">
-            <svg id="svgPickCal" viewBox="0 0 380 190" role="img" aria-label="Precisión de picking por día"></svg>
-            <div class="tip" id="tipPickCal"></div>
+          <div class="card-head">
+            <h3 class="card-title">Por qué se ajustó</h3>
+            <button class="tbl-toggle" data-tbl="tblCausas">Ver tabla</button>
           </div>
+          <div style="margin-top:16px" id="causas"></div>
+          <div class="tbl-wrap" id="tblCausas" hidden></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="sub" data-sub="operacion" hidden>
+      <section>
+        <div class="sec-head"><h2>Por sector</h2></div>
+        <div class="kpis" id="kpis"></div>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <h2>Despacho — pallets por día</h2>
+          <div class="hint">Últimos 20 días hábiles</div>
         </div>
         <div class="card">
-          <div class="card-head"><h3 class="card-title">Líneas por hora</h3></div>
-          <p class="card-note">Productividad.</p>
-          <div class="chart-host" id="hostPickVel">
-            <svg id="svgPickVel" viewBox="0 0 380 190" role="img" aria-label="Líneas pickeadas por hora"></svg>
-            <div class="tip" id="tipPickVel"></div>
+          <div class="card-head">
+            <h3 class="card-title">Volumen despachado</h3>
+            <button class="tbl-toggle" data-tbl="tblDespacho">Ver tabla</button>
+          </div>
+          <p class="card-note">Promedio del período: <b id="despProm"></b> pallets/día.</p>
+          <div class="chart-host" id="hostDespacho">
+            <svg id="svgDespacho" viewBox="0 0 760 225" role="img" aria-label="Pallets despachados por día"></svg>
+            <div class="tip" id="tipDespacho"></div>
+          </div>
+          <div class="tbl-wrap" id="tblDespacho" hidden></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>Picking</h2></div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Precisión de picking</h3></div>
+            <p class="card-note">% de líneas sin error.</p>
+            <div class="chart-host" id="hostPickCal">
+              <svg id="svgPickCal" viewBox="0 0 380 190" role="img" aria-label="Precisión de picking por día"></svg>
+              <div class="tip" id="tipPickCal"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Líneas por hora</h3></div>
+            <p class="card-note">Productividad.</p>
+            <div class="chart-host" id="hostPickVel">
+              <svg id="svgPickVel" viewBox="0 0 380 190" role="img" aria-label="Líneas pickeadas por hora"></svg>
+              <div class="tip" id="tipPickVel"></div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
-    <section>
-      <div class="sec-head">
-        <h2>Causas de los ajustes</h2>
-        <div class="hint">214 ajustes en el mes</div>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <h3 class="card-title">Por qué se ajustó</h3>
-          <button class="tbl-toggle" data-tbl="tblCausas">Ver tabla</button>
+    <div class="sub" data-sub="atrasos" hidden>
+      <section>
+        <div class="card">
+          <div class="card-head">
+            <h3 class="card-title">Quién nos llegó tarde</h3>
+            <span class="cmp-sub" id="atrHint"></span>
+            <button class="tbl-toggle" data-tbl="tblAtrasos">Ver tabla</button>
+          </div>
+          <p class="card-note">Horas hombre que faltaron para llegar al camión a horario, por el área que entregó
+            tarde. Sale de los compromisos cargados en <b>Flujo</b>, del mes en curso.</p>
+          <div style="margin-top:16px" id="atrasos"></div>
+          <div class="tbl-wrap" id="tblAtrasos" hidden></div>
         </div>
-        <div style="margin-top:16px" id="causas"></div>
-        <div class="tbl-wrap" id="tblCausas" hidden></div>
-      </div>
-    </section>
-
-    <section>
-      <div class="sec-head">
-        <h2>Atrasos — horas hombre que nos costaron</h2>
-        <div class="hint" id="atrHint"></div>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <h3 class="card-title">Quién nos llegó tarde</h3>
-          <button class="tbl-toggle" data-tbl="tblAtrasos">Ver tabla</button>
-        </div>
-        <p class="card-note">Horas hombre que faltaron para llegar al camión a horario, agrupadas
-          por el área que entregó tarde. Sale de los compromisos cargados en <b>Flujo</b>, del mes en curso.</p>
-        <div style="margin-top:16px" id="atrasos"></div>
-        <div class="tbl-wrap" id="tblAtrasos" hidden></div>
-      </div>
-    </section>
+      </section>
+    </div>
   </div>
 
-  <!-- ================= VISTA CARGA ================= -->
-  <div id="view-carga" hidden>
+  <!-- ================= CARGAR ================= -->
+  <div id="view-carga" class="view" hidden>
 
-    <div class="load-head">
+    <div class="page-head">
       <div>
-        <div class="eyebrow">Cierre de jornada</div>
-        <h1>Carga del día</h1>
-        <p>Solo los números que salen de las planillas de papel. Los porcentajes se calculan solos.</p>
+        <div class="eyebrow">Cargar datos</div>
+        <h1>Lo que se carga a mano</h1>
+        <p class="sub">Todo en un solo lugar. Lo demás sale solo del archivo de JD.</p>
       </div>
     </div>
 
-    <div class="load-date">
-      <label for="fecha">Fecha de la jornada</label>
-      <input type="date" id="fecha">
-    </div>
+    <nav class="subtabs" aria-label="Qué cargar">
+      <a href="#carga/jd" data-sub="jd">Archivo de JD</a>
+      <a href="#carga/cierre" data-sub="cierre">Cierre del día</a>
+      <a href="#carga/relleno" data-sub="relleno">Medir relleno</a>
+      <a href="#carga/packing" data-sub="packing">Packing <span class="pend">pendiente</span></a>
+      <a href="#carga/respaldo" data-sub="respaldo">Copia de seguridad</a>
+    </nav>
 
-    <div class="blocks" id="blocks"></div>
-
-    <section>
-      <div class="sec-head">
-        <h2>Ajustes de inventario del día</h2>
-        <div class="hint">Qué producto y por qué</div>
-      </div>
-      <div class="card">
-        <div class="adj-add">
-          <input type="text" id="adjSku" placeholder="Producto / código" aria-label="Producto o código">
-          <select id="adjWhy" aria-label="Motivo del ajuste">
-            <option>Unidad de medida</option>
-            <option>Movimiento sin registrar</option>
-            <option>Error de recepción</option>
-            <option>Devolución no procesada</option>
-            <option>Rotura / descarte</option>
-            <option>Error de picking</option>
-            <option>Sin identificar</option>
-          </select>
-          <input type="number" id="adjQty" placeholder="Cant." step="1" style="width:88px" aria-label="Cantidad ajustada">
-          <button class="btn btn-ghost" id="adjAdd">Agregar</button>
+    <!-- archivo de JD -->
+    <div class="sub" data-sub="jd">
+      <section>
+        <div class="card">
+          <div class="drop" id="jdeDrop">
+            <div class="drop-txt"><b>Arrastrá acá el CSV o el Excel que bajás de JD</b> — o en cualquier
+              página del tablero. Cada archivo actualiza las órdenes, descuenta los insumos de lo que se embaló y
+              registra lo que avanzó.</div>
+            <button class="btn btn-brand" data-accion="jd">Elegir archivo</button>
+          </div>
+          <div class="imp-opts">
+            <label>Tipos de orden <input type="text" id="jdeTipos" placeholder="todos"></label>
+            <label><input type="checkbox" id="jdeCompleto"> Trae todas las órdenes abiertas: la que no venga se da por salida</label>
+            <span class="imp-acc">
+              <button class="btn-xs" id="jdeDeshacer" hidden>Deshacer la última carga</button>
+              <button class="btn-xs" id="jdeBorrar">Borrar órdenes</button>
+            </span>
+          </div>
+          <div class="imp-msg" id="jdeMsg" role="status"></div>
+          <details class="box" id="jdeCols">
+            <summary>Columnas del archivo</summary>
+            <p class="card-note">Se detectan solas por el nombre. Si alguna no aparece, elegila acá: queda recordada.</p>
+            <div class="map-grid" id="jdeMapa"></div>
+            <div class="add-row"><button class="btn btn-ghost" id="jdeReimp" hidden>Importar con estas columnas</button></div>
+          </details>
         </div>
-        <div class="adj-list" id="adjList"></div>
-      </div>
-    </section>
+      </section>
+    </div>
 
-    <div class="save-bar">
-      <button class="btn btn-brand" id="btnSave">Guardar jornada</button>
-      <div class="save-msg" id="saveMsg">Guardado ✓</div>
+    <!-- cierre del día -->
+    <div class="sub" data-sub="cierre" hidden>
+      <div class="load-date">
+        <label for="fecha">Fecha de la jornada</label>
+        <input type="date" id="fecha">
+        <span class="card-note" id="fechaEstado" style="margin:0"></span>
+      </div>
+      <p class="card-note auto-nota">Los campos <span class="auto-mark">en azul</span> salieron de JD: revisalos y corregí sólo si hace falta.</p>
+
+      <div class="blocks" id="blocks"></div>
+
+      <section>
+        <div class="sec-head">
+          <h2>Consumos del día</h2>
+          <div class="hint"><a href="#costos/variables">Agregar o cambiar variables</a></div>
+        </div>
+        <div class="card">
+          <div class="cons" id="consumos"></div>
+          <div class="calc" style="margin-top:14px">
+            <span class="calc-lab">Costo del día</span>
+            <span class="calc-val" id="consTotal">—</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>Ajustes de inventario</h2></div>
+        <div class="card">
+          <div class="adj-add" style="margin-top:0">
+            <input type="text" id="adjSku" placeholder="Producto / código" aria-label="Producto o código">
+            <select id="adjWhy" aria-label="Motivo del ajuste">
+              <option>Unidad de medida</option>
+              <option>Movimiento sin registrar</option>
+              <option>Error de recepción</option>
+              <option>Devolución no procesada</option>
+              <option>Rotura / descarte</option>
+              <option>Error de picking</option>
+              <option>Sin identificar</option>
+            </select>
+            <input type="number" id="adjQty" placeholder="Cant." step="1" style="width:88px" aria-label="Cantidad ajustada">
+            <button class="btn btn-ghost" id="adjAdd">Agregar</button>
+          </div>
+          <div class="adj-list" id="adjList"></div>
+        </div>
+      </section>
+
+      <div class="save-bar">
+        <button class="btn btn-brand" id="btnSave">Guardar jornada</button>
+        <div class="save-msg" id="saveMsg">Guardado ✓</div>
+      </div>
+    </div>
+
+    <!-- medir relleno -->
+    <div class="sub" data-sub="relleno" hidden>
+      <section>
+        <div class="card">
+          <div class="card-head"><h3 class="card-title">Pesar una caja</h3></div>
+          <p class="card-note">Al embalar, pesá el relleno que lleva una caja y anotalo. Con unas pocas mediciones por tipo de
+            caja alcanza: el promedio pasa solo a la estimación de consumo y al tablero de relleno.</p>
+          <div class="add-row med-add">
+            <label>Caja <select id="medCaja"></select></label>
+            <label>Relleno <select id="medRel"></select></label>
+            <label>Kilos <input type="number" id="medKg" min="0" step="0.01" inputmode="decimal" style="width:96px"></label>
+            <button class="btn btn-brand" id="medAdd">Anotar</button>
+            <span class="card-note" id="medMsg" style="margin:0"></span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>Promedios</h2></div>
+        <div class="card"><div class="tbl-wrap" id="medProm"></div></div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>Últimas mediciones</h2></div>
+        <div class="card"><div class="tbl-wrap" id="medLista"></div></div>
+      </section>
+    </div>
+
+    <!-- packing: pendiente -->
+    <div class="sub" data-sub="packing" hidden>
+      <section>
+        <div class="card pend-card">
+          <div class="card-head">
+            <h3 class="card-title">Registro de packing por orden</h3>
+            <span class="pill" data-s="warning"><i></i>pendiente</span>
+          </div>
+          <p class="card-note">Todavía no se registra qué caja y cuánto relleno lleva cada SJ. Mientras tanto, cuando una SJ
+            llega a embalado en JD, el tablero estima su consumo con las <a href="#insumos/reglas">reglas</a> y las
+            <a href="#carga/relleno">mediciones de relleno</a>, y lo descuenta del stock. Cuando el registro de packing esté
+            resuelto, el dato real reemplaza a esta estimación orden por orden.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <h2>Lo estimado hoy</h2>
+          <div class="hint" id="packHint"></div>
+        </div>
+        <div class="card"><div class="tbl-wrap" id="packHoy"></div></div>
+      </section>
+    </div>
+
+    <!-- copia de seguridad -->
+    <div class="sub" data-sub="respaldo" hidden>
+      <section>
+        <div class="card narrow">
+          <p class="card-note" style="margin-top:0">Todo lo cargado vive en este navegador. Bajá un archivo con todo
+            — jornadas, órdenes de JD, insumos, mediciones, variables — para guardarlo o pasarlo a otra PC o al
+            celular. Restaurar reemplaza lo que haya en ese equipo.</p>
+          <div class="add-row">
+            <button class="btn btn-ghost" id="bkBajar">Descargar copia</button>
+            <button class="btn btn-ghost" id="bkSubir">Restaurar desde archivo</button>
+            <input type="file" id="bkFile" accept=".json,application/json" hidden>
+            <span class="card-note" id="bkMsg" style="margin:0"></span>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 
@@ -962,25 +1558,18 @@
      Todos los números de ejemplo viven acá. Para pasar a datos reales,
      reemplazar estos valores (ver instrucciones.md). */
 
-  // --- Diaria ---
-  const DIA = {
-    pickeados:   14,
-    embalados:   12,
-    despachados: 11,
-    pallets: { exportacion: 6,  nacional: 3  },
-    boxes:   { exportacion: 24, nacional: 41 }
-  };
-
+  // --- Hoy ---
+  // Los pedidos del día, las cajas y el relleno salen solos de JD. Los pasillos todavía son de ejemplo.
   // estado: "ok" | "leve" | "grave"  ·  tipo del desvío: "falta" | "sobra"
   const PASILLOS_HOY = [
-    { cod:"A", nom:"Válvulas de control", quien:"M.G.",         estado:"ok",    desvios:[] },
-    { cod:"B", nom:"Trampas de vapor",    quien:"R.S.",         estado:"leve",  desvios:[
+    { cod:"A", nom:"Válvulas de control", estado:"ok",    desvios:[] },
+    { cod:"B", nom:"Trampas de vapor", estado:"leve",  desvios:[
         { item:"Trampa TD-52 DN15", cant:2, tipo:"sobra" } ] },
-    { cod:"C", nom:"Reguladores",         quien:"L.F.",         estado:"ok",    desvios:[] },
-    { cod:"D", nom:"Repuestos",           quien:"D.I.",         estado:"grave", desvios:[
+    { cod:"C", nom:"Reguladores", estado:"ok",    desvios:[] },
+    { cod:"D", nom:"Repuestos", estado:"grave", desvios:[
         { item:"Bridas DN50",            cant:3, tipo:"falta" },
         { item:"Kit reparación BM-34",   cant:1, tipo:"sobra" } ] },
-    { cod:"E", nom:"Instrumentación",     quien:"C.M.",         estado:"leve",  desvios:[
+    { cod:"E", nom:"Instrumentación", estado:"leve",  desvios:[
         { item:"Manómetro 0-10 bar", cant:1, tipo:"falta" } ] }
   ];
 
@@ -994,11 +1583,11 @@
   ];
 
   const PASILLOS = [
-    { cod:"A", nom:"Válvulas de control", quien:"M.G.",         prec:92.1, err:31 },
-    { cod:"B", nom:"Trampas de vapor",    quien:"R.S.",         prec:84.3, err:58 },
-    { cod:"C", nom:"Reguladores",         quien:"L.F.",         prec:89.7, err:39 },
-    { cod:"D", nom:"Repuestos",           quien:"D.I.",         prec:78.2, err:72 },
-    { cod:"E", nom:"Instrumentación",     quien:"C.M.",         prec:93.5, err:14 }
+    { cod:"A", nom:"Válvulas de control", prec:92.1, err:31 },
+    { cod:"B", nom:"Trampas de vapor", prec:84.3, err:58 },
+    { cod:"C", nom:"Reguladores", prec:89.7, err:39 },
+    { cod:"D", nom:"Repuestos", prec:78.2, err:72 },
+    { cod:"E", nom:"Instrumentación", prec:93.5, err:14 }
   ];
 
   const CAUSAS = [
@@ -1013,7 +1602,6 @@
 
   const MESES      = ["Dic","Ene","Feb","Mar","Abr","May","Jun","Jul"];
   const PRECISION  = [80.0, 80.6, 81.9, 83.4, 84.8, 85.9, 86.7, 87.4];
-  const HITO_DUENO = 2; // Feb: arranca "cada uno responsable de su pasillo"
 
   const DIAS = ["04/07","07/07","08/07","09/07","10/07","11/07","14/07","15/07","16/07","17/07",
                 "18/07","21/07","22/07","23/07","24/07","25/07","28/07","29/07","30/07","31/07"];
@@ -1090,6 +1678,107 @@
       resp:"Coordinación de envíos",  cerrado:true, atrasoFinal:2.1 }
   ];
 
+  // --- Órdenes JDE ---
+  /* El recorrido de una SJ en JD. Cada etapa arranca en un "siguiente estado"
+     y dura hasta el código de la que sigue; desde JDE_FIN la orden ya se envió
+     y sale del recorrido. 535 es el control de stock: con stock pasa a
+     despiece, sin stock hay que pedir lo que falta (se ve si el archivo trae la
+     cantidad en espera). Se cambian en Órdenes → Estados de JD. */
+  const JDE_ETAPAS = [
+    { cod:535, nom:"Stock y despiece" },
+    { cod:545, nom:"Sugerencia de picking" },
+    { cod:550, nom:"Pickeado" },
+    { cod:555, nom:"Embalado" }
+  ];
+  const JDE_FIN = 580;   // enviado: fin del recorrido
+  // Tipos de orden que se toman del archivo, separados por coma. Vacío = todos.
+  const JDE_TIPOS = "SJ";
+
+  // --- Costos y consumos ---
+  /* Lo que se mide para saber cuánto cuesta mover la mercadería. Las que
+     agrupan insumos (cajas, pallets, relleno…) se calculan solas desde JD; las
+     demás se cargan en el cierre del día. Costos de ejemplo: se cargan los
+     reales en Costos → Variables y en Insumos → Insumos y reglas. */
+  const MONEDA = "$";
+  const VARIABLES = [
+    { id:"cajas",   nom:"Cajas",        uni:"u",      costo:0 },
+    { id:"relleno", nom:"Relleno",      uni:"kg",     costo:0 },
+    { id:"pallets", nom:"Pallets",      uni:"u",      costo:0 },
+    { id:"film",    nom:"Film stretch", uni:"rollos", costo:14000 },
+    { id:"hh",      nom:"Horas hombre", uni:"h",      costo:6500 },
+    { id:"kwh",     nom:"Energía",      uni:"kWh",    costo:130 }
+  ];
+  /* Indicadores: una cosa dividida otra. Cada lado es una variable (por
+     cantidad "q:" o por costo "c:"), el costo total, el costo de embalaje, los
+     kilos de relleno reciclado, o un volumen: órdenes y líneas que salieron en
+     JD, cajas usadas, pedidos y pallets del cierre del día, días con datos. */
+  const INDICADORES = [
+    { id:"i1", nom:"Costo por orden salida",    num:"total",     den:"ordenes" },
+    { id:"i2", nom:"Relleno por caja",          num:"q:relleno", den:"cajas" },
+    { id:"i3", nom:"Reciclado por caja",        num:"reciclado", den:"cajas" },
+    { id:"i4", nom:"Embalaje por orden",        num:"embalaje",  den:"ordenes" },
+    { id:"i5", nom:"Horas hombre por pedido",   num:"q:hh",      den:"pedidos" }
+  ];
+
+  // --- Insumos ---
+  /* El stock de insumos y quién los vende.
+     tipo: "caja" | "pallet" | "relleno" | "otro" — con eso se arman los totales
+       de cajas, el tablero de relleno y las mediciones.
+     reciclado: cuenta como relleno reciclado en el tablero.
+     propio: se hace en casa (el cartón procesado): no se le compra a nadie, así
+       que no tiene stock que controlar ni entra en una sugerencia de pedido.
+     var: la variable de Costos en la que se suma. Si el insumo no tiene costo
+       propio, usa el de la variable.
+     Stocks, mínimos, lotes, proveedores y costos de ejemplo. */
+  const INSUMOS = [
+    { id:"c3224x12", nom:"Caja 32x24x12",     uni:"u",  tipo:"caja",    stock:80,  min:40, lote:100, prov:"Cartonera", plazo:3, var:"cajas",   costo:700 },
+    { id:"c3224x24", nom:"Caja 32x24x24",     uni:"u",  tipo:"caja",    stock:60,  min:40, lote:100, prov:"Cartonera", plazo:3, var:"cajas",   costo:950 },
+    { id:"c9100",    nom:"Caja 9100",         uni:"u",  tipo:"caja",    stock:30,  min:20, lote:50,  prov:"Cartonera", plazo:3, var:"cajas",   costo:1200 },
+    { id:"c9200",    nom:"Caja 9200",         uni:"u",  tipo:"caja",    stock:30,  min:20, lote:50,  prov:"Cartonera", plazo:3, var:"cajas",   costo:1500 },
+    { id:"c9300",    nom:"Caja 9300",         uni:"u",  tipo:"caja",    stock:20,  min:15, lote:50,  prov:"Cartonera", plazo:3, var:"cajas",   costo:1900 },
+    { id:"cS25c",    nom:"Caja S25 chica",    uni:"u",  tipo:"caja",    stock:25,  min:30, lote:100, prov:"Cartonera", plazo:3, var:"cajas",   costo:800 },
+    { id:"cS25g",    nom:"Caja S25 grande",   uni:"u",  tipo:"caja",    stock:20,  min:20, lote:50,  prov:"Cartonera", plazo:3, var:"cajas",   costo:1300 },
+    { id:"c604040",  nom:"Caja 60x40x40",     uni:"u",  tipo:"caja",    stock:15,  min:10, lote:25,  prov:"Cartonera", plazo:3, var:"cajas",   costo:2400 },
+    { id:"p604040",  nom:"Pallet 60x40x40",   uni:"u",  tipo:"pallet",  stock:10,  min:5,  lote:10,  prov:"Palletera", plazo:5, var:"pallets", costo:6000 },
+    { id:"p776865",  nom:"Pallet 77x68x65",   uni:"u",  tipo:"pallet",  stock:8,   min:5,  lote:10,  prov:"Palletera", plazo:5, var:"pallets", costo:8000 },
+    { id:"p776880",  nom:"Pallet 77x68x80",   uni:"u",  tipo:"pallet",  stock:8,   min:5,  lote:10,  prov:"Palletera", plazo:5, var:"pallets", costo:9000 },
+    { id:"p1208080", nom:"Pallet 120x80x80",  uni:"u",  tipo:"pallet",  stock:12,  min:8,  lote:20,  prov:"Palletera", plazo:5, var:"pallets", costo:12000 },
+    { id:"rRanpakC", nom:"Ranpak compactado", uni:"kg", tipo:"relleno", stock:40,  min:15, lote:25,  prov:"Embalajes", plazo:2, var:"relleno", costo:2500 },
+    { id:"rRanpakL", nom:"Ranpak liso",       uni:"kg", tipo:"relleno", stock:30,  min:10, lote:25,  prov:"Embalajes", plazo:2, var:"relleno", costo:2200 },
+    { id:"rRecicl",  nom:"Relleno reciclado", uni:"kg", tipo:"relleno", stock:20,  min:10, lote:20,  prov:"Embalajes", plazo:2, var:"relleno", costo:900, reciclado:true },
+    { id:"rCarton",  nom:"Cartón procesado",  uni:"kg", tipo:"relleno", stock:0,   min:0,  lote:1,   prov:"",          plazo:0, var:"relleno", costo:0,   reciclado:true, propio:true },
+    { id:"film",     nom:"Film stretch",      uni:"rollos", tipo:"otro", stock:6,  min:4,  lote:6,   prov:"Embalajes", plazo:2, var:"film",    costo:0 }
+  ];
+  /* Clases: cómo se agrupan los artículos según cómo se embalan. Cada patrón se
+     busca en el código y la descripción que trae JD; gana la primera clase que
+     coincide. Un patrón que termina en número no agarra uno más largo: "DN15"
+     no toma "DN150". Lo que no coincide con ninguna queda "Sin clasificar".
+     Las dos que trae son de ejemplo: hay que armarlas con los artículos reales. */
+  const CLASES = [
+    { id:"grande", nom:"Grande", pat:"DN50, DN65, DN80, DN100, DN150, DN200" },
+    { id:"chico",  nom:"Chico",  pat:"DN8, DN10, DN15, DN20, DN25, DN32, DN40" }
+  ];
+  /* Reglas: cuánto insumo lleva cada clase. `cant` de insumo cada `cada`
+     unidades, líneas u órdenes — o cada caja de un tipo ("ins:c604040"), que es
+     como se cuenta el relleno. "*" es cualquier clase y "otros" la de los sin
+     clasificar. Las reglas con `medir` usan el promedio de lo que se pesó en
+     Cargar → Medir relleno; si todavía no hay mediciones, `cant`. Pesar una
+     combinación de caja y relleno que no tiene regla la crea sola.
+     Una caja no se comparte entre órdenes: se redondea orden por orden. */
+  const REGLAS = [
+    { id:"r1", clase:"grande", ins:"c604040",  cant:1,    cada:1, base:"unidades" },
+    { id:"r2", clase:"chico",  ins:"c3224x12", cant:1,    cada:2, base:"unidades" },
+    { id:"r3", clase:"otros",  ins:"c3224x24", cant:1,    cada:1, base:"unidades" },
+    { id:"r4", clase:"*",      ins:"rCarton",  cant:0.6,  cada:1, base:"ins:c604040",  medir:true },
+    { id:"r5", clase:"*",      ins:"rCarton",  cant:0.15, cada:1, base:"ins:c3224x12", medir:true },
+    { id:"r6", clase:"*",      ins:"rCarton",  cant:0.25, cada:1, base:"ins:c3224x24", medir:true },
+    { id:"r7", clase:"*",      ins:"rRanpakC", cant:0.2,  cada:1, base:"ins:c604040",  medir:true },
+    { id:"r8", clase:"*",      ins:"film",     cant:1,    cada:8, base:"ordenes" },
+    { id:"r9", clase:"*",      ins:"p1208080", cant:1,    cada:1, base:"ordenes" }
+  ];
+  // Las cajas y el relleno se usan al llegar a esta etapa; antes son demanda.
+  const ETAPA_CONSUMO = 3;   // Embalado (555)
+
   /* ================= HELPERS ================= */
 
   const CSS = getComputedStyle(document.documentElement);
@@ -1115,25 +1804,11 @@
   const hoy = new Date();
   const fechaCorta = hoy.toLocaleDateString("es-AR", { day:"2-digit", month:"2-digit", year:"numeric" });
   const fechaLarga = hoy.toLocaleDateString("es-AR", { weekday:"long", day:"2-digit", month:"long", year:"numeric" });
-  document.getElementById("stamp").textContent = "Datos al " + fechaCorta;
   document.getElementById("phFecha").textContent = "Emitido el " + fechaCorta;
   document.getElementById("diaTitulo").textContent =
     fechaLarga.charAt(0).toUpperCase() + fechaLarga.slice(1);
 
   /* ================= VISTA DIARIA ================= */
-
-  const TILES = [
-    { lab:"Pickeados",   val:DIA.pickeados,   sub:"pedidos armados" },
-    { lab:"Embalados",   val:DIA.embalados,   sub:"pedidos embalados" },
-    { lab:"Despachados", val:DIA.despachados, sub:"pedidos despachados" },
-    { lab:"Pallets",     val:DIA.pallets.exportacion + DIA.pallets.nacional, sub:"pallets despachados" }
-  ];
-  document.getElementById("tilesDia").innerHTML = TILES.map(t =>
-    `<div class="card tile">
-       <div class="tile-lab">${t.lab}</div>
-       <div class="tile-val">${t.val}</div>
-       <div class="tile-sub">${t.sub}</div>
-     </div>`).join("");
 
   const EST = {
     ok:    { color:"--good",     txt:"Sin desvíos",       pill:"good" },
@@ -1164,14 +1839,11 @@
       nom.className = "aisle-nom"; nom.textContent = p.nom;
       top.append(cod, nom);
 
-      const who = document.createElement("div");
-      who.className = "aisle-who"; who.textContent = p.quien;
-
       const st = document.createElement("div");
       st.className = "aisle-state";
       st.innerHTML = `<span class="pill" data-s="${e.pill}"><i></i>${e.txt}</span>`;
 
-      inner.append(top, who, st);
+      inner.append(top, st);
 
       if (p.desvios.length) {
         const devs = document.createElement("div");
@@ -1213,7 +1885,8 @@
     const pt = (a, rad) => [cx + Math.cos(a) * rad, cy + Math.sin(a) * rad];
 
     items.forEach((it, i) => {
-      const frac = total ? it.val / total : 0, span = frac * Math.PI * 2;
+      // Un arco de vuelta entera empieza y termina en el mismo punto y no se dibuja: se deja un pelo corto.
+      const frac = total ? it.val / total : 0, span = Math.min(frac * Math.PI * 2, Math.PI * 2 - 1e-4);
       const a0 = ang, a1 = ang + span;
       const [x0,y0] = pt(a0,R), [x1,y1] = pt(a1,R);
       const [x2,y2] = pt(a1,r0), [x3,y3] = pt(a0,r0);
@@ -1233,7 +1906,7 @@
     });
 
     out += `<text x="${cx}" y="${cy-2}" text-anchor="middle"
-             style="font-size:31px;font-weight:700;fill:${v("--ink")}">${total}</text>`;
+             style="font-size:31px;font-weight:700;fill:${v("--ink")}">${Number.isInteger(total) ? total : nf(total, 1)}</text>`;
     out += `<text x="${cx}" y="${cy+18}" text-anchor="middle"
              style="font-size:11px;font-weight:650;fill:${v("--muted")};letter-spacing:.06em">${unidad}</text>`;
     svg.innerHTML = out;
@@ -1407,7 +2080,6 @@
     return `<div>
       <div class="row-h">
         <span class="row-lab">Pasillo ${p.cod} · ${p.nom}</span>
-        <span class="row-who">${p.quien}</span>
         <span class="row-val">${nf(p.prec)}%</span>
       </div>
       <div class="row-track">
@@ -1435,18 +2107,6 @@
     return `<table><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table>`;
   }
 
-  const totPal = DIA.pallets.exportacion + DIA.pallets.nacional;
-  const totBox = DIA.boxes.exportacion + DIA.boxes.nacional;
-  document.getElementById("tblPallets").innerHTML = tabla(["Destino","Pallets","%"], [
-    ["Exportación", DIA.pallets.exportacion, Math.round(DIA.pallets.exportacion/totPal*100) + "%"],
-    ["Nacional",    DIA.pallets.nacional,    Math.round(DIA.pallets.nacional/totPal*100) + "%"],
-    ["Total",       totPal, "100%"]
-  ]);
-  document.getElementById("tblBoxes").innerHTML = tabla(["Destino","Bultos","%"], [
-    ["Exportación", DIA.boxes.exportacion, Math.round(DIA.boxes.exportacion/totBox*100) + "%"],
-    ["Nacional",    DIA.boxes.nacional,    Math.round(DIA.boxes.nacional/totBox*100) + "%"],
-    ["Total",       totBox, "100%"]
-  ]);
   document.getElementById("tblPrecision").innerHTML =
     tabla(["Mes","Precisión","Variación"], MESES.map((m, i) => [
       m, nf(PRECISION[i]) + "%",
@@ -1455,8 +2115,8 @@
   document.getElementById("tblDespacho").innerHTML =
     tabla(["Día","Pallets"], DIAS.map((d, i) => [d, DESPACHO[i]]));
   document.getElementById("tblPasillos").innerHTML =
-    tabla(["Pasillo","Responsable","Precisión","Errores"],
-      PASILLOS.map(p => [`${p.cod} · ${p.nom}`, p.quien, nf(p.prec) + "%", p.err]));
+    tabla(["Pasillo","Precisión","Errores"],
+      PASILLOS.map(p => [`${p.cod} · ${p.nom}`, nf(p.prec) + "%", p.err]));
   document.getElementById("tblCausas").innerHTML =
     tabla(["Motivo","Ajustes","Participación"],
       CAUSAS.map(c => [c.nom, c.n, Math.round(c.n/totalC*100) + "%"]));
@@ -1565,18 +2225,68 @@
 
   const KEY = "tablero-almacen-v1";
   const fechaEl = document.getElementById("fecha");
-  fechaEl.value = new Date().toISOString().slice(0, 10);
+  const isoDia = d =>
+    `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  // Fecha local: toISOString() es UTC y después de las 21 ya daría mañana.
+  fechaEl.value = isoDia(new Date());
+
+  const leerJornadas = () => {
+    let todo = [];
+    try { todo = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { todo = []; }
+    return Array.isArray(todo) ? todo : [];
+  };
+
+  /* Al elegir una fecha ya cargada se trae lo que tenía: antes el formulario
+     quedaba en blanco y guardar de nuevo pisaba la jornada con vacíos. */
+  function cargarJornada() {
+    const j = leerJornadas().find(x => x.fecha === fechaEl.value);
+    Object.values(CAMPOS).flat().forEach(([id]) => {
+      document.getElementById(id).value = j && j.campos && j.campos[id] != null ? j.campos[id] : "";
+    });
+    ajustes = j && Array.isArray(j.ajustes) ? j.ajustes.slice() : [];
+    pintarAjustes();
+    ponerAutoCampos();
+    ponerConsumos(j && j.consumos || {});
+    document.getElementById("fechaEstado").textContent =
+      j ? "Esta jornada ya está cargada: lo que cambies la reemplaza." : "";
+  }
+  fechaEl.addEventListener("change", cargarJornada);
+
+  /* Lo que JD ya sabe de ese día (pedidos armados, embalados, despachados) se
+     completa solo, en azul. Sólo en campos vacíos o que todavía tienen el valor
+     de JD: lo que alguien tipeó no se pisa. */
+  function ponerAutoCampos() {
+    const a = autoCampos(fechaEl.value);
+    Object.values(CAMPOS).flat().forEach(([id]) => {
+      const inp = document.getElementById(id);
+      if (!(id in a)) { if (inp.classList.contains("auto")) { inp.value = ""; inp.classList.remove("auto"); } return; }
+      if (inp.value === "" || inp.classList.contains("auto")) {
+        inp.value = a[id];
+        inp.classList.add("auto");
+        inp.title = "Salió de JD";
+      }
+    });
+    document.querySelector(".auto-nota").hidden = !Object.keys(a).length;
+    recalcular();
+  }
+  Object.values(CAMPOS).flat().forEach(([id]) => document.getElementById(id).addEventListener("input", ev => {
+    ev.target.classList.remove("auto");
+    ev.target.title = "";
+  }));
 
   document.getElementById("btnSave").addEventListener("click", () => {
-    const jornada = { fecha: fechaEl.value, ajustes, campos: {} };
+    const jornada = { fecha: fechaEl.value, ajustes, campos: {}, consumos: leerConsumos() };
     Object.values(CAMPOS).flat().forEach(([id]) => {
       jornada.campos[id] = document.getElementById(id).value;
     });
-    let todo = [];
-    try { todo = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { todo = []; }
+    let todo = leerJornadas();
     todo = todo.filter(j => j.fecha !== jornada.fecha);
     todo.push(jornada);
     try { localStorage.setItem(KEY, JSON.stringify(todo)); } catch (e) {}
+    document.getElementById("fechaEstado").textContent =
+      "Esta jornada ya está cargada: lo que cambies la reemplaza.";
+    pintarCostos();
+    pintarHoy();
     const m = document.getElementById("saveMsg");
     m.dataset.on = "1";
     setTimeout(() => m.dataset.on = "0", 2200);
@@ -2134,7 +2844,2252 @@
   const pintarFlujo = () => refrescar();
   setInterval(() => {
     if (!document.getElementById("view-flujo").hidden) refrescar();
+    if (!document.getElementById("view-ordenes").hidden) pintarJDE();
   }, 60000);
+
+  /* ================= ÓRDENES JDE ================= */
+
+  /* Las órdenes tal como las tiene JD Edwards, de 535 a 580. No hay conexión
+     directa con JD: se baja el CSV o el Excel de la pantalla de órdenes y se
+     arrastra acá. Cada archivo es una foto; comparándola con la anterior se
+     sabe qué orden avanzó, cuándo, y cuánto lleva parada en cada etapa. */
+
+  const KEY_JDE       = "tablero-almacen-jde-v1";
+  const KEY_JDE_ATRAS = "tablero-almacen-jde-v1-deshacer";
+  /* El Excel se lee con SheetJS, que se baja recién la primera vez que hace
+     falta (necesita internet). El CSV no necesita nada. */
+  const XLSX_URL = "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js";
+  const DIA_MS = 86400000;
+  const LIMITE_FILAS = 200;
+
+  const el = (tag, cls, txt) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt !== undefined) e.textContent = txt;
+    return e;
+  };
+  const esc = s => String(s).replace(/[&<>"']/g, c =>
+    ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  const ent = x => Math.round(x).toLocaleString("es-AR");
+  const pl = (n, uno, varios) => `${ent(n)} ${n === 1 ? uno : varios}`;
+  // Un tope de eje redondo: 375.935 no le dice nada a nadie, 400.000 sí.
+  const topeRedondo = x => {
+    if (!(x > 0)) return 1;
+    const paso = Math.pow(10, Math.floor(Math.log10(x))) / 2;
+    return Math.ceil(x * 1.1 / paso) * paso;
+  };
+  const hoyISO = () => isoDia(new Date());
+  const esHoy = ts => !!ts && isoDia(new Date(ts)) === hoyISO();
+  const fechaTxt = iso => iso ? `${iso.slice(8,10)}/${iso.slice(5,7)}/${iso.slice(0,4)}` : "—";
+  const diasEntre = (a, b) => Math.round((new Date(b + "T12:00") - new Date(a + "T12:00")) / DIA_MS);
+  const momento = ts => new Date(ts).toLocaleString("es-AR",
+    { weekday:"short", day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false });
+  function hace(ms) {
+    const h = Math.max(0, ms) / 3600000;
+    if (h < 1) return Math.max(1, Math.round(h * 60)) + " min";
+    if (h < 24) return nf(h, h < 10 ? 1 : 0) + " h";
+    return nf(h / 24, h / 24 < 10 ? 1 : 0) + " d";
+  }
+  // Las tarjetas de arriba de cada vista. Los textos pueden traer nombres
+  // cargados por la gente, así que van escapados.
+  const pintarTiles = (id, tiles) => {
+    document.getElementById(id).innerHTML = tiles.map(t =>
+      `<div class="card tile">
+         <div class="tile-lab">${esc(t.lab)}</div>
+         <div class="tile-val">${esc(t.val)}</div>
+         <div class="tile-sub">${esc(t.sub)}</div>
+       </div>`).join("");
+  };
+  const opcion = (sel, valor, txt) => { const o = el("option", "", txt); o.value = valor; sel.appendChild(o); };
+
+  /* Las columnas que se buscan en el archivo. Cambian según la pantalla de JD,
+     el idioma y la versión, así que cada dato acepta varios nombres (ya pasados
+     a minúscula, sin acentos ni signos). Si igual no aparece, se elige a mano
+     en «Columnas del archivo» y queda recordado. */
+  const CAMPOS_JDE = [
+    { id:"orden", nom:"Nº de orden", req:true, alias:["no orden","n orden","nro orden","num orden","numero orden",
+        "numero de orden","no de orden","n de orden","orden","no doc orden","doc orden","order number","order no",
+        "sales order","no pedido","nro pedido","numero de pedido","pedido","order"] },
+    { id:"sig", nom:"Siguiente estado", req:true, alias:["sig est","sig estado","est sig","estado sig",
+        "estado siguiente","siguiente estado","sgte est","sgte estado","estado sgte","prox est","proximo estado",
+        "next stat","next status","next st","nxt st","next"] },
+    { id:"tipo", nom:"Tipo de orden", alias:["tipo or","tipo orden","tipo de orden","tp or","t or","or ty",
+        "order type","ty orden","tipo doc orden","tipo"] },
+    { id:"ult", nom:"Último estado", alias:["ult est","ult estado","est ult","estado ult","ultimo estado",
+        "estado ultimo","last stat","last status","last st"] },
+    { id:"cia", nom:"Compañía", alias:["cia","cia orden","cia doc orden","compania","compania orden","order co","company"] },
+    { id:"linea", nom:"Nº de línea", alias:["no linea","n linea","nro linea","numero linea","numero de linea",
+        "no de linea","linea","line number","line no","line"] },
+    { id:"item", nom:"Artículo", alias:["no 2o articulo","n 2o articulo","2o no articulo","2o articulo",
+        "segundo no articulo","2nd item number","2nd item no","2nd item","item number","no articulo","n articulo",
+        "numero de articulo","codigo articulo","articulo","codigo","item","producto"] },
+    { id:"desc", nom:"Descripción", alias:["descripcion","descripcion 1","descripcion articulo","description",
+        "description 1","desc"] },
+    { id:"cant", nom:"Cantidad", alias:["cant pedida","cantidad pedida","cant ordenada","cantidad ordenada",
+        "cant solicitada","quantity ordered","qty ordered","cantidad","cant","quantity","qty"] },
+    { id:"um", nom:"Unidad", alias:["um","u m","um tr","um transaccion","unidad de medida","unidad medida","uom",
+        "tr uom","unidad"] },
+    { id:"fecha", nom:"Fecha comprometida", alias:["fecha promesa entrega","fecha prom entrega","fecha promesa envio",
+        "fecha prom envio","fecha promesa","promised delivery","promised delivery date","promised ship",
+        "promised ship date","fecha entrega","fecha solicitada","fecha solic","fecha requerida","requested date",
+        "request date","fecha"] },
+    { id:"cliente", nom:"Cliente / envío a", alias:["nombre envio a","envio a nombre","nombre de envio",
+        "ship to name","nombre cliente","cliente","customer","nombre alfa","alpha name","nombre","razon social",
+        "envio a","ship to","vendido a","sold to"] },
+    { id:"suc", nom:"Sucursal", alias:["sucursal planta","sucursal","suc planta","branch plant","branch","planta"] },
+    // Lo que no hay en stock: con esto se ve qué SJ esperan mercadería en 535.
+    { id:"pend", nom:"Cantidad en espera (sin stock)", alias:["cant en espera","cantidad en espera","cant pedido pendiente",
+        "cant ped pend","cant backorder","backorder","cant bo","quantity backordered","qty backordered","backordered",
+        "sin stock","faltante"] }
+  ];
+
+  const normCab = s => String(s == null ? "" : s).normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .toLowerCase().replace(/[º°ª]/g, "o").replace(/[^a-z0-9]+/g, " ").trim();
+
+  /* ---- estado guardado ---- */
+
+  const jdeVacio = () => ({
+    etapas: JDE_ETAPAS.map(e => ({ cod:e.cod, nom:e.nom })), fin: JDE_FIN,
+    tipos: JDE_TIPOS, completo: true, mapa: {}, cabeceras: [], ordenes: {}, cargas: []
+  });
+  function jdeLeer(key) {
+    let g = null;
+    try { g = JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { g = null; }
+    if (!g || typeof g !== "object") return null;
+    const d = Object.assign(jdeVacio(), g);
+    // Lo guardado antes de saber que 580 es el fin tenía otras etapas: se pasa
+    // a las de ahora y al arrancar cada orden se vuelve a ubicar.
+    if (g.fin === undefined) { d.etapas = jdeVacio().etapas; d.fin = JDE_FIN; d.migrar = true; }
+    return d;
+  }
+  let J = jdeLeer(KEY_JDE) || jdeVacio();
+
+  function jdeGuardar() {
+    const txt = JSON.stringify(J);
+    try { localStorage.setItem(KEY_JDE, txt); return true; } catch (e) {}
+    // Sin lugar: se sacrifica la copia para deshacer antes que los datos.
+    try { localStorage.removeItem(KEY_JDE_ATRAS); localStorage.setItem(KEY_JDE, txt); return true; }
+    catch (e) { return false; }
+  }
+  const hayDeshacer = () => { try { return !!localStorage.getItem(KEY_JDE_ATRAS); } catch (e) { return false; } };
+  function guardarDeshacer() {
+    try { localStorage.setItem(KEY_JDE_ATRAS, JSON.stringify(J)); localStorage.setItem(KEY_INS_ATRAS, JSON.stringify(I)); }
+    catch (e) { try { localStorage.removeItem(KEY_JDE_ATRAS); localStorage.removeItem(KEY_INS_ATRAS); } catch (e2) {} }
+  }
+
+  /* ---- etapas ---- */
+
+  const nEt = () => J.etapas.length;
+  const codigos = () => J.etapas.map(e => numT(e.cod));
+
+  // -1: todavía no llegó a la primera etapa · nEt(): llegó al fin (se envió).
+  function etapaDeCodigo(cod) {
+    const c = codigos();
+    if (cod < c[0]) return -1;
+    if (cod >= numT(J.fin)) return c.length;
+    let i = 0;
+    c.forEach((x, k) => { if (cod >= x) i = k; });
+    return i;
+  }
+  const codLinea  = l => l.sig || l.ult;
+  const cancelada = l => l.ult === 980;
+  const etapaLinea = l => cancelada(l) || !codLinea(l) ? null : etapaDeCodigo(codLinea(l));
+
+  /* Una orden está donde está su línea más atrasada: no sale hasta que sale
+     todo. Las líneas canceladas no cuentan. */
+  function etapaDeOrden(lineas) {
+    const et = lineas.map(etapaLinea).filter(x => x !== null);
+    if (!et.length) return { idx: nEt(), cancelada: lineas.some(cancelada) };
+    return { idx: Math.min(...et), cancelada: false };
+  }
+  function nomEtapa(i) {
+    if (i < 0) return "Antes de " + codigos()[0];
+    if (i >= nEt()) return "Enviada";
+    return J.etapas[i].nom;
+  }
+  function motivoTxt(o) {
+    if (o.motivo === "cancelada") return "Cancelada";
+    if (o.motivo === "ausente") return "Ya no vino en el archivo";
+    return `Enviada (${J.fin})`;
+  }
+
+  function moverOrden(o, idx, ts) {
+    const n = nEt(), antes = o.etapa;
+    if (idx > antes) {
+      // Si saltó varias etapas entre dos cargas, las del medio se dan por hechas
+      // ahora: no se sabe cuándo pasaron, sólo que pasaron.
+      for (let j = Math.max(antes + 1, 0); j <= Math.min(idx, n - 1); j++)
+        if (!o.hist[j]) o.hist[j] = ts;
+    } else if (idx < antes) {
+      // Volvió para atrás (se anuló una sugerencia de picking, por ejemplo).
+      Object.keys(o.hist).forEach(j => { if (Number(j) > idx) delete o.hist[j]; });
+      if (idx >= 0 && !o.hist[idx]) o.hist[idx] = ts;
+    }
+    o.etapa = idx;
+    o.fin = idx >= n ? (o.fin || ts) : null;
+    return Math.sign(idx - antes);
+  }
+
+  const atrasada = o => !o.fin && !!o.fecha && o.fecha < hoyISO();
+  // Esperando mercadería: alguna línea viva con cantidad en espera.
+  const sinStock = o => !o.fin && o.lineas.some(l => l.bo > 0 && etapaLinea(l) !== null && etapaLinea(l) < nEt());
+
+  /* ---- leer el archivo ---- */
+
+  function texto(x) {
+    if (x == null) return "";
+    if (x instanceof Date) return isNaN(x) ? "" : isoDia(x);
+    // JD a veces exporta ="000123" para que Excel no le coma los ceros.
+    return String(x).trim().replace(/^="(.*)"$/, "$1").trim();
+  }
+
+  function numero(x) {
+    if (typeof x === "number") return x;
+    let s = texto(x).replace(/\s/g, "");
+    if (!s) return NaN;
+    // Negativos como -5, 5- o (5).
+    const neg = /^-|-$|^\(.*\)$/.test(s);
+    s = s.replace(/[()\-]/g, "");
+    // Separadores según la configuración regional: "1.234,5" o "1,234.5".
+    const c = s.lastIndexOf(","), p = s.lastIndexOf(".");
+    if (c >= 0 && p >= 0) s = c > p ? s.replace(/\./g, "").replace(",", ".") : s.replace(/,/g, "");
+    else if (c >= 0) s = /^\d{1,3}(,\d{3}){2,}$/.test(s) ? s.replace(/,/g, "") : s.replace(",", ".");
+    else if (/^\d{1,3}(\.\d{3}){2,}$/.test(s)) s = s.replace(/\./g, "");
+    const n = Number(s);
+    return neg ? -n : n;
+  }
+  const codEstado = x => { const n = Math.round(numero(x)); return n > 0 ? n : 0; };
+
+  const armarFecha = (a, m, d) => (m >= 1 && m <= 12 && d >= 1 && d <= 31)
+    ? `${a}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}` : "";
+
+  // Juliano de JD (CYYDDD: 126295 = día 295 de 2026) o número de serie de Excel.
+  function fechaNum(n) {
+    if (n >= 100001 && n <= 199366) return isoDia(new Date(1900 + Math.floor(n / 1000), 0, n % 1000));
+    if (n > 30000 && n < 80000) {
+      const d = new Date(Math.round((n - 25569) * DIA_MS));
+      return armarFecha(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+    }
+    return "";
+  }
+
+  // Devuelve "aaaa-mm-dd" o "". Ante la duda, día/mes como se usa acá.
+  function fechaJDE(x) {
+    // De Excel llega como Date a medianoche, a veces corrida por el huso
+    // horario: medio día de margen la deja siempre en el día correcto.
+    if (x instanceof Date) return isNaN(x) ? "" : isoDia(new Date(x.getTime() + DIA_MS / 2));
+    if (typeof x === "number") return fechaNum(x);
+    const s = texto(x);
+    let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (m) return armarFecha(+m[1], +m[2], +m[3]);
+    m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})/);
+    if (m) {
+      let d = +m[1], me = +m[2], a = +m[3];
+      if (a < 100) a += 2000;
+      if (me > 12 && d <= 12) [d, me] = [me, d];   // venía mes/día
+      return armarFecha(a, me, d);
+    }
+    if (/^\d{5,6}$/.test(s)) return fechaNum(Number(s));
+    return "";
+  }
+
+  // JD exporta en UTF-8, UTF-16 o Windows-1252 según la versión: se prueba en ese orden.
+  function decodificar(buf) {
+    const b = new Uint8Array(buf);
+    if (b[0] === 0xFF && b[1] === 0xFE) return new TextDecoder("utf-16le").decode(b.subarray(2));
+    if (b[0] === 0xFE && b[1] === 0xFF) return new TextDecoder("utf-16be").decode(b.subarray(2));
+    if (b.length > 3 && b[1] === 0 && b[3] === 0) return new TextDecoder("utf-16le").decode(b);
+    try { return new TextDecoder("utf-8", { fatal: true }).decode(b); }
+    catch (e) { return new TextDecoder("windows-1252").decode(b); }
+  }
+
+  function partirCSV(txt) {
+    // El separador es el que más se repite, línea por línea (la mediana, por
+    // si arriba viene un título que no tiene ninguno).
+    const muestra = txt.split(/\r?\n/).filter(l => l.trim()).slice(0, 15);
+    const sep = [";", "\t", ",", "|"].map(s => {
+      const n = muestra.map(l => l.split(s).length - 1).sort((a, b) => a - b);
+      return { s, n: n[Math.floor(n.length / 2)] || 0 };
+    }).sort((a, b) => b.n - a.n)[0].s;
+
+    const filas = [];
+    let fila = [], campo = "", comillas = false;
+    for (let i = 0; i < txt.length; i++) {
+      const c = txt[i];
+      if (comillas) {
+        if (c === '"') { if (txt[i + 1] === '"') { campo += '"'; i++; } else comillas = false; }
+        else campo += c;
+      } else if (c === '"' && campo === "") comillas = true;
+      else if (c === sep) { fila.push(campo); campo = ""; }
+      else if (c === "\n" || c === "\r") {
+        if (c === "\r" && txt[i + 1] === "\n") i++;
+        fila.push(campo); filas.push(fila); fila = []; campo = "";
+      } else campo += c;
+    }
+    if (campo !== "" || fila.length) { fila.push(campo); filas.push(fila); }
+    return filas.filter(f => f.some(x => String(x).trim() !== ""));
+  }
+
+  let xlsxPromesa = null;
+  function cargarXLSX() {
+    if (window.XLSX) return Promise.resolve(window.XLSX);
+    if (!xlsxPromesa) xlsxPromesa = new Promise((ok, mal) => {
+      const s = document.createElement("script");
+      s.src = XLSX_URL;
+      s.onload = () => window.XLSX ? ok(window.XLSX) : mal(new Error("no cargó el lector de Excel"));
+      s.onerror = () => {
+        xlsxPromesa = null;
+        mal(new Error("para leer Excel hace falta internet. Sin conexión, exportá desde JD en CSV"));
+      };
+      document.head.appendChild(s);
+    });
+    return xlsxPromesa;
+  }
+
+  async function leerArchivo(file) {
+    const buf = await file.arrayBuffer();
+    const b = new Uint8Array(buf, 0, Math.min(8, buf.byteLength));
+    const zip = b[0] === 0x50 && b[1] === 0x4B, ole = b[0] === 0xD0 && b[1] === 0xCF;
+    if (zip || ole || /\.(xlsx|xlsm|xls)$/i.test(file.name)) {
+      // El .xls de JD a veces es HTML o XML disfrazado: SheetJS lee todo eso.
+      const X = await cargarXLSX();
+      const wb = X.read(buf, { type: "array", cellDates: true });
+      // La hoja con más filas: algunos exportes traen una carátula adelante.
+      let mejor = [];
+      wb.SheetNames.forEach(n => {
+        const f = X.utils.sheet_to_json(wb.Sheets[n], { header: 1, raw: true, defval: "" });
+        if (f.length > mejor.length) mejor = f;
+      });
+      return mejor;
+    }
+    return partirCSV(decodificar(buf));
+  }
+
+  /* ---- columnas ---- */
+
+  function detectarColumnas(cab) {
+    const n = cab.map(normCab), usadas = new Set(), m = {};
+    const tomar = (id, i) => { m[id] = i; if (i >= 0) usadas.add(i); };
+    const libre = k => !usadas.has(k);
+    // Lo que se eligió a mano manda sobre los alias.
+    CAMPOS_JDE.forEach(f => {
+      const elegido = J.mapa[f.id];
+      if (elegido === undefined) return;
+      const i = elegido === "" ? -1 : n.indexOf(elegido);
+      if (elegido === "" || (i >= 0 && libre(i))) tomar(f.id, i);
+    });
+    // Primero nombres exactos; recién después "contiene", y sólo con alias de
+    // dos palabras o más: uno de una sola palabra suelto agarra cualquier cosa.
+    CAMPOS_JDE.forEach(f => {
+      if (f.id in m) return;
+      for (const a of f.alias) {
+        const i = n.findIndex((h, k) => libre(k) && h === a);
+        if (i >= 0) { tomar(f.id, i); return; }
+      }
+    });
+    CAMPOS_JDE.forEach(f => {
+      if (f.id in m) return;
+      for (const a of f.alias) {
+        if (a.indexOf(" ") < 0) continue;
+        const i = n.findIndex((h, k) => libre(k) && (" " + h + " ").includes(" " + a + " "));
+        if (i >= 0) { tomar(f.id, i); return; }
+      }
+      m[f.id] = -1;
+    });
+    return m;
+  }
+
+  // La cabecera no siempre es la primera fila: JD suele poner un título arriba.
+  function buscarCabecera(filas) {
+    let mejor = { fila: 0, puntos: -1, m: null };
+    filas.slice(0, 30).forEach((f, i) => {
+      const m = detectarColumnas(f.map(texto));
+      const p = CAMPOS_JDE.reduce((a, c) => a + (m[c.id] >= 0 ? (c.req ? 3 : 1) : 0), 0);
+      if (p > mejor.puntos) mejor = { fila: i, puntos: p, m };
+    });
+    return mejor;
+  }
+
+  let ultimoLeido = null;   // el último archivo, en memoria, para reimportarlo con otras columnas
+
+  function pintarMapa(cab, m) {
+    const cont = document.getElementById("jdeMapa");
+    cont.innerHTML = "";
+    CAMPOS_JDE.forEach(f => {
+      const lab = el("label", "", f.nom + (f.req ? " *" : ""));
+      const sel = el("select");
+      opcion(sel, "", "(no está en el archivo)");
+      cab.forEach((h, i) => opcion(sel, String(i), h || `Columna ${i + 1}`));
+      sel.value = m[f.id] >= 0 ? String(m[f.id]) : "";
+      sel.addEventListener("change", () => {
+        J.mapa[f.id] = sel.value === "" ? "" : normCab(cab[Number(sel.value)]);
+        jdeGuardar();
+        document.getElementById("jdeReimp").hidden = !ultimoLeido;
+      });
+      lab.appendChild(sel);
+      cont.appendChild(lab);
+    });
+  }
+
+  /* ---- importar ---- */
+
+  function leerOrdenes(filas, desde, m) {
+    const tipos = new Set(String(J.tipos || "").toUpperCase().split(/[\s,;]+/).filter(Boolean));
+    const filtra = tipos.size > 0 && m.tipo >= 0;
+    const val = (f, id) => m[id] >= 0 ? f[m[id]] : "";
+    const cabOrden = normCab(texto(filas[desde][m.orden]));
+    const vino = new Map(), otros = {};
+    let lineas = 0, sinEstado = 0;
+
+    for (let r = desde + 1; r < filas.length; r++) {
+      const f = filas[r];
+      const orden = texto(val(f, "orden"));
+      if (!orden || normCab(orden) === cabOrden) continue;   // vacía o cabecera repetida
+      const tipo = texto(val(f, "tipo")).toUpperCase();
+      if (filtra && !tipos.has(tipo)) { const k = tipo || "sin tipo"; otros[k] = (otros[k] || 0) + 1; continue; }
+      const sig = codEstado(val(f, "sig")), ult = codEstado(val(f, "ult"));
+      if (!sig && !ult) { sinEstado++; continue; }
+      const cia = texto(val(f, "cia"));
+      const k = [cia, tipo, orden].join("|");
+      let o = vino.get(k);
+      if (!o) vino.set(k, o = { k, o: orden, t: tipo, co: cia, cli: "", suc: "", fecha: "", lineas: [] });
+      if (!o.cli) o.cli = texto(val(f, "cliente"));
+      if (!o.suc) o.suc = texto(val(f, "suc"));
+      // Si las líneas traen fechas distintas, manda la más temprana.
+      const fe = fechaJDE(val(f, "fecha"));
+      if (fe && (!o.fecha || fe < o.fecha)) o.fecha = fe;
+      o.lineas.push({ ln: texto(val(f, "linea")), it: texto(val(f, "item")), de: texto(val(f, "desc")),
+                      q: numero(val(f, "cant")), um: texto(val(f, "um")), sig, ult,
+                      bo: Math.max(0, numero(val(f, "pend")) || 0) });
+      lineas++;
+    }
+    return { vino, otros, lineas, sinEstado, filtra, tipos };
+  }
+
+  function aplicar(r, archivo) {
+    guardarDeshacer();
+    const ts = Date.now(), n = nEt();
+    let nuevas = 0, avanzaron = 0, salieron = 0, fuera = 0, embaladas = 0;
+
+    r.vino.forEach((v, k) => {
+      const et = etapaDeOrden(v.lineas);
+      let o = J.ordenes[k];
+      if (!o) {
+        // Lo que ya había salido antes de la primera carga no le interesa a nadie.
+        if (et.idx >= n) { fuera++; return; }
+        o = J.ordenes[k] = Object.assign(v, { etapa: et.idx, ini: et.idx, hist: {}, alta: ts, fin: null, motivo: "" });
+        if (et.idx >= 0) o.hist[et.idx] = ts;
+        nuevas++;
+      } else {
+        const eraFin = !!o.fin, antes = o.etapa;
+        Object.assign(o, { cli: v.cli || o.cli, suc: v.suc || o.suc, fecha: v.fecha || o.fecha, lineas: v.lineas });
+        if (moverOrden(o, et.idx, ts) > 0 && !eraFin) et.idx >= n ? salieron++ : avanzaron++;
+        if (consumir(o, antes, ts)) embaladas++;
+      }
+      o.visto = ts;
+      o.motivo = o.fin ? (et.cancelada ? "cancelada" : "estado") : "";
+    });
+
+    /* Si el archivo trae todas las abiertas, la que falta es porque pasó 580
+       (o porque se canceló): se da por salida. Sólo entre los tipos que se
+       están mirando, para no cerrar lo que el filtro dejó afuera. */
+    if (J.completo) Object.values(J.ordenes).forEach(o => {
+      if (o.fin || r.vino.has(o.k) || (r.filtra && !r.tipos.has(o.t))) return;
+      // Una que ni había entrado al recorrido no "salió": se cierra sin historia.
+      const antes = o.etapa;
+      if (o.etapa < 0) { o.etapa = n; o.fin = ts; } else moverOrden(o, n, ts);
+      o.motivo = "ausente";
+      if (consumir(o, antes, ts)) embaladas++;
+      salieron++;
+    });
+
+    J.cargas.unshift({ ts, archivo, ordenes: r.vino.size, lineas: r.lineas, nuevas, avanzaron, salieron });
+    J.cargas = J.cargas.slice(0, 30);
+    // Lo que salió hace más de 45 días ya no le sirve a nadie en el tablero.
+    Object.keys(J.ordenes).forEach(k => {
+      const o = J.ordenes[k];
+      if (o.fin && ts - o.fin > 45 * DIA_MS) delete J.ordenes[k];
+    });
+    // Lo consumido por día sirve para el mes y el año; más atrás, no.
+    Object.keys(I.auto).forEach(f => { if (ts - new Date(f + "T12:00") > 400 * DIA_MS) delete I.auto[f]; });
+    guardarIns();
+    return { nuevas, avanzaron, salieron, fuera, embaladas, ok: jdeGuardar() };
+  }
+
+  function mensaje(estado, txt, flotante) {
+    const m = document.getElementById("jdeMsg");
+    m.dataset.s = estado;
+    m.textContent = txt;
+    if (flotante) aviso(txt);
+  }
+
+  let avisoT = null;
+  function aviso(txt) {
+    const t = document.getElementById("toast");
+    t.textContent = txt;
+    t.hidden = false;
+    clearTimeout(avisoT);
+    avisoT = setTimeout(() => t.hidden = true, 9000);
+  }
+
+  function procesar(filas, archivo) {
+    ultimoLeido = { filas, archivo };
+    const cab = buscarCabecera(filas);
+    const cabecera = (filas[cab.fila] || []).map(texto);
+    J.cabeceras = cabecera;
+    pintarMapa(cabecera, cab.m);
+
+    const faltan = CAMPOS_JDE.filter(f => f.req && !(cab.m[f.id] >= 0));
+    if (faltan.length) {
+      jdeGuardar();
+      document.getElementById("jdeCols").open = true;
+      document.getElementById("jdeReimp").hidden = false;
+      mensaje("critical", `En «${archivo}» no encontré la columna de ${faltan.map(f => f.nom.toLowerCase()).join(" ni la de ")}. ` +
+        "Elegila en «Columnas del archivo» y tocá «Importar con estas columnas».", true);
+      location.hash = "carga/jd";
+      return;
+    }
+
+    const r = leerOrdenes(filas, cab.fila, cab.m);
+    const otros = Object.entries(r.otros);
+    if (!r.vino.size) {
+      mensaje("critical", `«${archivo}» no trae ninguna orden` +
+        (r.filtra ? ` de tipo ${[...r.tipos].join(", ")}` : "") +
+        (otros.length ? ` — trae ${otros.map(([k]) => k).join(", ")}. Revisá «Tipos de orden».` : ".") +
+        " No se cambió nada.", true);
+      return;
+    }
+
+    const a = aplicar(r, archivo);
+    const cods = codigos();
+    let txt = `«${archivo}»: ${pl(r.lineas, "línea", "líneas")} de ${pl(r.vino.size, "orden", "órdenes")}` +
+      (r.filtra ? ` ${[...r.tipos].join("/")}` : "") +
+      `. ${pl(a.nuevas, "nueva", "nuevas")} · ${pl(a.avanzaron, "avanzó", "avanzaron")} de etapa · ` +
+      `${pl(a.salieron, "enviada", "enviadas")}.`;
+    if (otros.length) txt += ` Quedaron afuera ${pl(otros.reduce((s, [, x]) => s + x, 0), "línea", "líneas")} de otros tipos (${otros.map(([k, x]) => k + " " + x).join(", ")}).`;
+    if (a.fuera) txt += ` ${pl(a.fuera, "orden ya había", "órdenes ya habían")} pasado ${cods[cods.length - 1]} y no se agregaron.`;
+    if (a.embaladas) txt += ` ${pl(a.embaladas, "SJ llegó", "SJ llegaron")} a ${nomEtapa(I.llega).toLowerCase()}: se descontaron sus cajas y relleno del stock.`;
+    if (r.sinEstado) txt += ` Se saltearon ${pl(r.sinEstado, "línea", "líneas")} sin estado legible.`;
+    if (String(J.tipos).trim() && !r.filtra) txt += " El archivo no trae tipo de orden: se tomaron todas.";
+    if (!a.ok) txt += " OJO: no entra en la memoria del navegador y al cerrar se pierde. Filtrá el listado en JD antes de bajarlo.";
+    document.getElementById("jdeReimp").hidden = true;
+    trasCambioJDE();
+    const pedir = calcInsumos().filas.filter(f => f.sug > 0).length;
+    if (pedir) txt += ` Hay ${pedir} insumo${pedir === 1 ? "" : "s"} para pedir: mirá Insumos.`;
+    mensaje(a.ok ? "good" : "critical", txt, true);
+  }
+
+  // Las órdenes alimentan la demanda de insumos y las salidas del mes en Costos.
+  function trasCambioJDE() {
+    pintarJDE();
+    construirClases();
+    pintarInsumos();
+    pintarCostos();
+    pintarHoy();
+    pintarPacking();
+    ponerAutoCampos();
+    recalcConsumos();
+  }
+
+  async function cargarArchivo(file) {
+    if (!file) return;
+    mensaje("", `Leyendo «${file.name}»…`, true);
+    try {
+      procesar(await leerArchivo(file), file.name);
+    } catch (e) {
+      mensaje("critical", `No pude leer «${file.name}»: ${e.message}.`, true);
+    }
+  }
+
+  /* ---- pintar ---- */
+
+  let jdeFiltro = "abiertas", jdeAbierta = null;
+
+  function pintarJDE() {
+    const c = codigos(), n = nEt();
+    document.getElementById("jdeRango").textContent = `${c[0]} a ${J.fin}`;
+    const ult = J.cargas[0];
+    document.getElementById("jdeUltima").textContent = ult
+      ? `Última carga: ${momento(ult.ts)} (hace ${hace(Date.now() - ult.ts)}) · ${ult.archivo}`
+      : "Todavía no se cargó ningún archivo de JD.";
+    document.getElementById("jdeDeshacer").hidden = !hayDeshacer();
+
+    const ords = Object.values(J.ordenes);
+    const abiertas = ords.filter(o => !o.fin);
+    const enRec = abiertas.filter(o => o.etapa >= 0);
+    // Sólo cuentan los pasos vistos entre dos cargas, no la etapa en que apareció.
+    const avanzaron = ords.filter(o => Object.keys(o.hist).some(j => Number(j) > o.ini && esHoy(o.hist[j]))).length;
+
+    pintarTiles("tilesJDE", [
+      { lab:"En recorrido",  val:ent(enRec.length), sub:`${enRec.length === 1 ? "orden" : "órdenes"} · ${pl(enRec.reduce((a, o) => a + o.lineas.length, 0), "línea", "líneas")}` },
+      { lab:"Atrasadas",     val:ent(abiertas.filter(atrasada).length), sub:"con la fecha comprometida vencida" },
+      { lab:"Avanzaron hoy", val:ent(avanzaron), sub:"órdenes que cambiaron de etapa" },
+      { lab:"Enviadas hoy", val:ent(llegaron(n, hoyISO())), sub:`llegaron a ${J.fin}` }
+    ]);
+
+    const pipe = document.getElementById("jdePipe");
+    pipe.innerHTML = "";
+    pipe.style.setProperty("--n", n);
+    J.etapas.forEach((e, i) => {
+      const os = abiertas.filter(o => o.etapa === i);
+      const lin = os.reduce((a, o) => a + o.lineas.length, 0);
+      const at = os.filter(atrasada).length;
+      const entraron = ords.filter(o => i > o.ini && esHoy(o.hist[i])).length;
+      const vieja = os.reduce((a, o) => Math.max(a, o.hist[i] ? Date.now() - o.hist[i] : 0), 0);
+
+      const card = el("div", "card pipe-card");
+      card.setAttribute("role", "button");
+      card.tabIndex = 0;
+      card.setAttribute("aria-pressed", String(jdeFiltro === String(i)));
+      const bar = el("div", "pipe-bar");
+      bar.style.background = `var(${SLOTS[i % SLOTS.length]})`;
+      const inner = el("div", "pipe-in");
+      const big = el("div", "pipe-big");
+      big.append(el("b", "", ent(os.length)), el("span", "", os.length === 1 ? "orden" : "órdenes"));
+      const nota = el("div", "pipe-nota", pl(lin, "línea", "líneas") +
+        (at ? ` · ${at} atrasada${at === 1 ? "" : "s"}` : "") +
+        (os.filter(sinStock).length ? ` · ${os.filter(sinStock).length} sin stock` : "") +
+        (entraron ? ` · +${entraron} hoy` : ""));
+      const nx = el("div", "pipe-next");
+      nx.append(el("em", "", "La más vieja"), el("b", "", os.length ? hace(vieja) : "—"));
+      inner.append(el("div", "pipe-cod", String(e.cod)), el("div", "pipe-cola", e.nom), big, nota, nx);
+      card.append(bar, inner);
+
+      const elegir = () => {
+        jdeFiltro = jdeFiltro === String(i) ? "abiertas" : String(i);
+        jdeAbierta = null;
+        pintarJDE();
+        pipe.children[i].focus();
+      };
+      card.addEventListener("click", elegir);
+      card.addEventListener("keydown", ev => {
+        if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); elegir(); }
+      });
+      pipe.appendChild(card);
+    });
+
+    const previas = abiertas.length - enRec.length;
+    document.getElementById("jdePrevio").textContent = previas
+      ? `Además hay ${ent(previas)} órdenes antes de ${c[0]}: todavía no entraron al recorrido.` : "";
+
+    pintarTablaJDE();
+    pintarCargas();
+  }
+
+  function pasaFiltro(o) {
+    if (jdeFiltro === "abiertas") return !o.fin;
+    if (jdeFiltro === "atrasadas") return atrasada(o);
+    if (jdeFiltro === "salidas") return !!o.fin;
+    if (jdeFiltro === "sinstock") return sinStock(o);
+    return !o.fin && o.etapa === Number(jdeFiltro);
+  }
+
+  function pintarTablaJDE() {
+    const ords = Object.values(J.ordenes);
+    const chips = document.getElementById("jdeChips");
+    chips.innerHTML = "";
+    [["abiertas", "Abiertas", ords.filter(o => !o.fin).length]]
+      .concat(J.etapas.map((e, i) => [String(i), e.nom, ords.filter(o => !o.fin && o.etapa === i).length]))
+      .concat([["atrasadas", "Atrasadas", ords.filter(atrasada).length],
+               ["sinstock", "Sin stock", ords.filter(sinStock).length],
+               ["salidas", "Enviadas", ords.filter(o => o.fin).length]])
+      .filter(([id, , cnt]) => id !== "sinstock" || cnt > 0)
+      .forEach(([id, nom, cnt]) => {
+        const b = el("button", "chip", nom);
+        b.appendChild(el("em", "", ent(cnt)));
+        b.setAttribute("aria-pressed", String(jdeFiltro === id));
+        b.addEventListener("click", () => { jdeFiltro = id; jdeAbierta = null; pintarJDE(); });
+        chips.appendChild(b);
+      });
+
+    const q = normCab(document.getElementById("jdeBuscar").value);
+    const buscable = o => normCab([o.t, o.o, o.cli, o.suc].concat(o.lineas.map(l => l.it + " " + l.de)).join(" "));
+    const fe = o => o.fecha || "9999";
+    // Primero lo abierto, y de eso lo que vence antes; lo salido, lo último primero.
+    const lista = ords.filter(o => pasaFiltro(o) && (!q || buscable(o).includes(q)))
+      .sort((a, b) => (!!a.fin - !!b.fin) || (a.fin ? b.fin - a.fin : 0)
+        || (fe(a) < fe(b) ? -1 : fe(a) > fe(b) ? 1 : 0) || (a.etapa - b.etapa));
+
+    document.getElementById("jdeCuenta").textContent = ords.length
+      ? `${ent(lista.length)} de ${ent(ords.length)} órdenes` : "";
+    const cont = document.getElementById("jdeTabla");
+    cont.innerHTML = "";
+    if (!ords.length) {
+      cont.appendChild(el("p", "empty", "Todavía no hay órdenes. Bajá de JD el listado de líneas de las órdenes " +
+        "(CSV o Excel) y arrastralo al recuadro de arriba."));
+      return;
+    }
+    if (!lista.length) { cont.appendChild(el("p", "empty", "Ninguna orden coincide.")); return; }
+
+    const t = el("table", "izq");
+    t.innerHTML = `<thead><tr><th>Orden</th><th>Cliente</th><th class="num">Líneas</th><th>Etapa</th>
+      <th>En la etapa</th><th>Comprometida</th><th>Estado</th></tr></thead>`;
+    const tb = el("tbody");
+    lista.slice(0, LIMITE_FILAS).forEach(o => tb.append(...filaOrden(o)));
+    t.appendChild(tb);
+    cont.appendChild(t);
+    if (lista.length > LIMITE_FILAS)
+      cont.appendChild(el("p", "mas", `Se muestran ${LIMITE_FILAS} de ${ent(lista.length)}. Filtrá o buscá para ver el resto.`));
+  }
+
+  function pasos(o) {
+    const s = el("span", "steps"), i = o.fin ? nEt() : o.etapa;
+    for (let j = 0; j < nEt(); j++) {
+      const d = el("i");
+      d.dataset.on = j < i ? "1" : j === i ? "2" : "0";
+      s.appendChild(d);
+    }
+    return s;
+  }
+
+  function estadoPill(o) {
+    const p = el("span", "pill"), hoy = hoyISO();
+    let s = "", txt;
+    if (o.fin) { s = o.motivo === "cancelada" ? "warning" : "good"; txt = o.motivo === "cancelada" ? "cancelada" : "salió"; }
+    else if (!o.fecha) txt = "sin fecha";
+    else if (o.fecha < hoy) { s = "critical"; txt = `atrasada ${diasEntre(o.fecha, hoy)} d`; }
+    else if (sinStock(o)) { s = "warning"; txt = "sin stock"; }
+    else if (o.fecha === hoy) { s = "warning"; txt = "vence hoy"; }
+    else { s = "good"; txt = "en fecha"; }
+    if (s) p.dataset.s = s;
+    p.append(el("i"), txt);
+    return p;
+  }
+
+  function filaOrden(o) {
+    const abierta = jdeAbierta === o.k;
+    const tr = el("tr", "ord-row");
+    tr.tabIndex = 0;
+    tr.setAttribute("aria-expanded", String(abierta));
+    const td = (cls, ...hijos) => { const c = el("td", cls); c.append(...hijos); return c; };
+
+    const tdOrd = td("", el("span", "ord-n", (o.t ? o.t + " " : "") + o.o));
+    if (o.suc) tdOrd.appendChild(el("span", "ord-sub", o.suc));
+
+    const tdEt = td("", pasos(o), o.fin ? motivoTxt(o) : nomEtapa(o.etapa));
+    if (!o.fin && o.etapa >= 0) {
+      const adelante = o.lineas.filter(l => { const e = etapaLinea(l); return e !== null && e > o.etapa; }).length;
+      if (adelante) tdEt.appendChild(el("span", "ord-sub", `${adelante} de ${o.lineas.length} líneas ya más adelante`));
+    }
+
+    let enEt = "—";
+    if (o.fin) enEt = "salió " + momento(o.fin);
+    // Si está en la etapa en que apareció, entró antes de la primera carga: "más de".
+    else if (o.etapa >= 0 && o.hist[o.etapa]) enEt = (o.ini === o.etapa ? "más de " : "") + hace(Date.now() - o.hist[o.etapa]);
+
+    tr.append(tdOrd, td("", o.cli || "—"), td("num", ent(o.lineas.length)), tdEt,
+              td("", enEt), td("", fechaTxt(o.fecha)), td("", estadoPill(o)));
+
+    const abrir = () => {
+      jdeAbierta = abierta ? null : o.k;
+      pintarTablaJDE();
+      const fila = [...document.querySelectorAll("#jdeTabla .ord-row")].find(r => r.dataset.k === o.k);
+      if (fila) fila.focus();
+    };
+    tr.dataset.k = o.k;
+    tr.addEventListener("click", abrir);
+    tr.addEventListener("keydown", ev => {
+      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); abrir(); }
+    });
+    if (!abierta) return [tr];
+
+    const det = el("tr", "ord-det"), c = el("td");
+    c.colSpan = 7;
+    const t = el("table", "izq");
+    t.innerHTML = `<thead><tr><th>Línea</th><th>Artículo</th><th>Descripción</th><th class="num">Cant.</th>
+      <th>UM</th><th>Clase</th><th class="num">Últ.</th><th class="num">Sig.</th><th>Etapa</th></tr></thead>`;
+    const tb = el("tbody");
+    o.lineas.forEach(l => {
+      const f = el("tr");
+      const et = cancelada(l) ? "Cancelada" : codLinea(l) ? nomEtapa(etapaLinea(l)) : "—";
+      [[l.ln || "—"], [l.it || "—"], [l.de || "—"],
+       [(Number.isFinite(l.q) ? nf(l.q, l.q % 1 ? 2 : 0) : "—") + (l.bo > 0 ? ` (${nf(l.bo, l.bo % 1 ? 2 : 0)} en espera)` : ""), "num"], [l.um || ""],
+       [nomClase(claseDe(l))], [l.ult || "—", "num"], [l.sig || "—", "num"], [et]]
+        .forEach(([x, cls]) => f.appendChild(el("td", cls || "", String(x))));
+      tb.appendChild(f);
+    });
+    t.appendChild(tb);
+    c.appendChild(t);
+    det.appendChild(c);
+    return [tr, det];
+  }
+
+  function pintarCargas() {
+    const cont = document.getElementById("jdeCargas");
+    if (!J.cargas.length) { cont.innerHTML = `<p class="empty">Sin cargas todavía.</p>`; return; }
+    const corto = ts => new Date(ts).toLocaleString("es-AR",
+      { day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false });
+    cont.innerHTML = tabla(["Cuándo", "Archivo", "Órd.", "Nuevas", "Avanz.", "Salidas"],
+      J.cargas.slice(0, 10).map(x => [esc(corto(x.ts)), esc(x.archivo), ent(x.ordenes), x.nuevas, x.avanzaron, x.salieron]));
+  }
+
+  /* ---- configuración de estados ---- */
+
+  // Con otros códigos, cada orden se vuelve a ubicar según sus líneas.
+  function reubicar() {
+    const ts = Date.now();
+    Object.values(J.ordenes).forEach(o => {
+      if (o.motivo === "ausente") return;
+      const r = etapaDeOrden(o.lineas);
+      moverOrden(o, r.idx, ts);
+      o.motivo = o.fin ? (r.cancelada ? "cancelada" : "estado") : "";
+    });
+    jdeGuardar();
+  }
+
+  function validarEstados() {
+    const c = codigos().concat([numT(J.fin)]), nota = document.getElementById("jdeEstNota");
+    const ok = c.every((x, i) => x > 0 && (i === 0 || x > c[i - 1]));
+    nota.textContent = ok ? "" : "Los códigos tienen que ir de menor a mayor, en el orden del recorrido, y el fin después de todos.";
+    nota.style.color = ok ? "" : "var(--critical)";
+  }
+
+  /* Con etapas de más o de menos, la historia de cada orden ya no se puede leer
+     con los mismos números: las abiertas arrancan de nuevo desde ahora. */
+  function reestructurar() {
+    const ts = Date.now(), n = nEt();
+    Object.values(J.ordenes).forEach(o => {
+      if (o.fin) return;
+      const r = etapaDeOrden(o.lineas);
+      o.etapa = o.ini = r.idx;
+      o.hist = {};
+      if (r.idx >= 0 && r.idx < n) o.hist[r.idx] = ts;
+      if (r.idx >= n) { o.fin = ts; o.motivo = r.cancelada ? "cancelada" : "estado"; }
+    });
+    I.llega = Math.max(1, Math.min(I.llega, n - 1));
+    jdeGuardar(); guardarIns();
+    construirEstados(); construirEtapaConsumo();
+    trasCambioJDE();
+  }
+
+  function construirEstados() {
+    const cont = document.getElementById("jdeEstados");
+    cont.innerHTML = "";
+    const t = el("table", "izq");
+    t.innerHTML = `<thead><tr><th>Etapa</th><th class="num">Siguiente estado</th><th></th></tr></thead>`;
+    const tb = el("tbody");
+    J.etapas.forEach((e, i) => {
+      const nom = el("input", "ed");
+      nom.type = "text"; nom.value = e.nom;
+      nom.setAttribute("aria-label", `Nombre de la etapa ${i + 1}`);
+      nom.addEventListener("change", () => {
+        e.nom = nom.value.trim() || (JDE_ETAPAS[i] || {}).nom || "Etapa";
+        nom.value = e.nom;
+        jdeGuardar(); pintarJDE(); construirEtapaConsumo(); pintarHoy();
+      });
+      const cod = el("input", "ed n");
+      cod.type = "number"; cod.min = "1"; cod.step = "1"; cod.value = e.cod;
+      cod.setAttribute("aria-label", `Siguiente estado de ${e.nom}`);
+      cod.addEventListener("change", () => {
+        e.cod = numT(cod.value);
+        validarEstados(); reubicar(); trasCambioJDE();
+      });
+      const tr = el("tr"), a = el("td"), b = el("td", "num");
+      a.appendChild(nom); b.appendChild(cod);
+      tr.append(a, b, nEt() > 2 ? botonQuitar("Quitar la etapa " + e.nom, () => {
+        if (!confirm(`¿Quitar la etapa «${e.nom}»? Las órdenes se vuelven a ubicar.`)) return;
+        J.etapas.splice(i, 1);
+        reestructurar();
+      }) : el("td"));
+      tb.appendChild(tr);
+    });
+    // El fin no es una etapa: desde ese código la orden ya se envió y sale del recorrido.
+    const trF = el("tr"), tdF = el("td"), tdC = el("td", "num");
+    tdF.append(el("b", "", "Enviada"), el("span", "ord-sub", "fin del recorrido"));
+    const fin = el("input", "ed n");
+    fin.type = "number"; fin.min = "1"; fin.step = "1"; fin.value = J.fin;
+    fin.setAttribute("aria-label", "Código de fin");
+    fin.addEventListener("change", () => {
+      J.fin = numT(fin.value);
+      validarEstados(); reubicar(); trasCambioJDE();
+    });
+    tdC.appendChild(fin);
+    trF.append(tdF, tdC, el("td"));
+    tb.appendChild(trF);
+    t.appendChild(tb);
+    cont.appendChild(t);
+
+    // Por ejemplo, si el despiece tiene su propio estado.
+    const add = el("div", "add-row");
+    const nNom = el("input"), nCod = el("input"), bAdd = el("button", "btn btn-ghost", "Agregar etapa");
+    nNom.type = "text"; nNom.placeholder = "Nueva etapa"; nNom.setAttribute("aria-label", "Nombre de la etapa nueva");
+    nCod.type = "number"; nCod.placeholder = "Código"; nCod.style.width = "96px"; nCod.setAttribute("aria-label", "Código de la etapa nueva");
+    bAdd.addEventListener("click", () => {
+      const c = numT(nCod.value);
+      if (!nNom.value.trim()) { nNom.focus(); return; }
+      if (!c || c >= numT(J.fin) || codigos().includes(c)) { nCod.focus(); return; }
+      J.etapas.push({ cod: c, nom: nNom.value.trim() });
+      J.etapas.sort((x, y) => x.cod - y.cod);
+      reestructurar();
+    });
+    add.append(nNom, nCod, bAdd);
+    cont.appendChild(add);
+    validarEstados();
+  }
+
+  function armarJDE() {
+    const file = document.getElementById("jdeFile");
+    // Cualquier botón "Cargar archivo de JD", esté en la página que esté.
+    document.querySelectorAll("[data-accion=\"jd\"]").forEach(b => b.addEventListener("click", () => file.click()));
+    file.addEventListener("change", () => { cargarArchivo(file.files[0]); file.value = ""; });
+
+    /* El archivo se puede soltar en cualquier página: no hay que ir a buscar
+       dónde se carga. Sólo reacciona a archivos, no a texto arrastrado. */
+    const capa = document.getElementById("dropAll");
+    let dentro = 0;
+    const conArchivo = ev => [...(ev.dataTransfer && ev.dataTransfer.types || [])].includes("Files");
+    document.addEventListener("dragenter", ev => { if (conArchivo(ev)) { dentro++; capa.hidden = false; } });
+    document.addEventListener("dragleave", ev => { if (conArchivo(ev) && --dentro <= 0) { dentro = 0; capa.hidden = true; } });
+    document.addEventListener("dragover", ev => { if (conArchivo(ev)) ev.preventDefault(); });
+    document.addEventListener("drop", ev => {
+      if (!conArchivo(ev)) return;
+      ev.preventDefault();
+      dentro = 0;
+      capa.hidden = true;
+      cargarArchivo(ev.dataTransfer.files[0]);
+    });
+
+    const tipos = document.getElementById("jdeTipos"), completo = document.getElementById("jdeCompleto");
+    tipos.value = J.tipos;
+    completo.checked = !!J.completo;
+    tipos.addEventListener("change", () => { J.tipos = tipos.value.trim(); jdeGuardar(); });
+    completo.addEventListener("change", () => { J.completo = completo.checked; jdeGuardar(); });
+
+    document.getElementById("jdeReimp").addEventListener("click", () => {
+      if (ultimoLeido) procesar(ultimoLeido.filas, ultimoLeido.archivo);
+    });
+    document.getElementById("jdeDeshacer").addEventListener("click", () => {
+      const g = jdeLeer(KEY_JDE_ATRAS);
+      if (!g) return;
+      J = g;
+      jdeGuardar();
+      // Lo que esa carga descontó de stock también vuelve.
+      const gi = insLeer(KEY_INS_ATRAS);
+      if (gi) { Object.assign(I, gi); guardarIns(); }
+      try { localStorage.removeItem(KEY_JDE_ATRAS); localStorage.removeItem(KEY_INS_ATRAS); } catch (e) {}
+      tipos.value = J.tipos;
+      completo.checked = !!J.completo;
+      construirEstados();
+      mensaje("", "Se deshizo la última carga.");
+      trasCambioJDE();
+    });
+    document.getElementById("jdeBorrar").addEventListener("click", () => {
+      if (!Object.keys(J.ordenes).length) return;
+      if (!confirm("¿Borrar todas las órdenes cargadas? Los estados y las columnas se mantienen.")) return;
+      guardarDeshacer();
+      J.ordenes = {};
+      J.cargas = [];
+      jdeGuardar();
+      mensaje("", "Se borraron las órdenes. Si fue sin querer, tocá «Deshacer la última carga».");
+      trasCambioJDE();
+    });
+    document.getElementById("jdeBuscar").addEventListener("input", () => { jdeAbierta = null; pintarTablaJDE(); });
+
+    if (J.cabeceras.length) pintarMapa(J.cabeceras, detectarColumnas(J.cabeceras));
+  }
+
+  /* ================= INSUMOS ================= */
+
+  /* Stock de insumos contra lo que van a pedir las SJ abiertas. Cada línea de
+     una SJ se clasifica (grande, chico…) y las reglas dicen cuánto insumo lleva
+     cada clase. Si lo que hay más lo que ya viene no alcanza para eso más el
+     mínimo, se sugiere el pedido, redondeado al lote del proveedor.
+
+     Y es automático para atrás también: cuando una SJ llega a embalado en JD, lo
+     que llevó se estima con las mismas reglas y se descuenta del stock. Es una
+     estimación hasta que se resuelva el registro de packing por orden. */
+
+  const KEY_INS       = "tablero-almacen-insumos-v2";
+  const KEY_INS_ATRAS = "tablero-almacen-insumos-v2-deshacer";
+  const BASES = { unidades:"unidades", lineas:"líneas", ordenes:"órdenes" };
+  const BASE_UNA = { unidades:"unidad", lineas:"línea", ordenes:"orden" };
+  const TIPOS_INS = { caja:"Caja", pallet:"Pallet", relleno:"Relleno", otro:"Otro" };
+  // De dónde sale un relleno: se compra, se compra reciclado, o se hace en casa con cartón.
+  const ORIGENES = [["compra", "Se compra"], ["compraRec", "Se compra, reciclado"], ["casa", "Se hace en casa (reciclado)"]];
+  const origenDe = x => x.propio ? "casa" : x.reciclado ? "compraRec" : "compra";
+
+  const insVacio = () => ({
+    ins: INSUMOS.map(x => ({ ...x })), clases: CLASES.map(x => ({ ...x })),
+    reglas: REGLAS.map(x => ({ ...x })), llega: ETAPA_CONSUMO, pedidos: [],
+    medidas: [],   // relleno pesado por caja: { id, ts, caja, rel, kg }
+    auto: {}       // consumo estimado por día: { "aaaa-mm-dd": { ord, ins: { id: { q, c } } } }
+  });
+  function insLeer(key) {
+    let g = null;
+    try { g = JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { g = null; }
+    if (!g || typeof g !== "object") return null;
+    const d = insVacio();
+    ["ins", "clases", "reglas", "pedidos", "medidas"].forEach(k => { if (Array.isArray(g[k])) d[k] = g[k]; });
+    if (g.auto && typeof g.auto === "object") d.auto = g.auto;
+    if (Number.isFinite(g.llega)) d.llega = g.llega;
+    d.ins.forEach(x => { if (!TIPOS_INS[x.tipo]) x.tipo = "otro"; });
+    return d;
+  }
+  const I = insLeer(KEY_INS) || insVacio();
+  const guardarIns = () => { try { localStorage.setItem(KEY_INS, JSON.stringify(I)); } catch (e) {} };
+  const nuevoIdCorto = p => p + Date.now().toString(36) + (seq++).toString(36);
+  const insDe = id => I.ins.find(x => x.id === id);
+  const cajas = () => I.ins.filter(x => x.tipo === "caja");
+  const rellenos = () => I.ins.filter(x => x.tipo === "relleno");
+
+  /* ---- clases ---- */
+
+  const escRx = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  let cacheClases = null;
+  function patrones() {
+    const firma = JSON.stringify(I.clases);
+    if (cacheClases && cacheClases.firma === firma) return cacheClases.lista;
+    const lista = I.clases.map(c => ({
+      id: c.id,
+      rx: String(c.pat || "").split(",").map(p => p.trim().toUpperCase()).filter(Boolean)
+        // Un patrón que termina en número no agarra uno más largo: DN15 no toma DN150.
+        .map(p => new RegExp("(^|[^A-Z0-9])" + escRx(p) + (/\d$/.test(p) ? "(?!\\d)" : "")))
+    }));
+    cacheClases = { firma, lista };
+    return lista;
+  }
+  function claseDe(l) {
+    const txt = ((l.it || "") + " " + (l.de || "")).toUpperCase();
+    const c = patrones().find(p => p.rx.some(r => r.test(txt)));
+    return c ? c.id : "otros";
+  }
+  function nomClase(id) {
+    if (id === "*") return "Cualquier artículo";
+    if (id === "otros") return "Sin clasificar";
+    const c = I.clases.find(x => x.id === id);
+    return c ? c.nom : "(clase borrada)";
+  }
+
+  /* ---- mediciones de relleno ---- */
+
+  function medido(caja, rel) {
+    const m = I.medidas.filter(x => x.caja === caja && x.rel === rel).map(x => numT(x.kg));
+    if (!m.length) return null;
+    return { n: m.length, prom: m.reduce((a, b) => a + b, 0) / m.length, min: Math.min(...m), max: Math.max(...m) };
+  }
+  const baseIns = r => String(r.base).startsWith("ins:") ? r.base.slice(4) : null;
+  // Lo que lleva la regla: lo medido si hay, si no lo que dice la regla.
+  function cantRegla(r) {
+    const b = baseIns(r);
+    const m = r.medir && b ? medido(b, r.ins) : null;
+    return m ? m.prom : numT(r.cant);
+  }
+
+  /* ---- el cálculo ---- */
+
+  const varDe = x => V.vars.find(v => v.id === x.var);
+  const insDeVar = v => I.ins.filter(x => x.var === v.id);
+  const esAuto = v => insDeVar(v).length > 0;
+  const costoIns = x => { if (numT(x.costo)) return numT(x.costo); const v = varDe(x); return v ? numT(v.costo) : 0; };
+
+  /* Lo que lleva una orden. Primero lo que va por unidades, líneas u órdenes
+     (las cajas); después lo que va por caja (el relleno). Con `porOrden` se
+     devuelven aparte las reglas "cada N órdenes", para repartirlas entre todas. */
+  function consumoOrden(ls, porOrden) {
+    const q = {};
+    I.ins.forEach(x => q[x.id] = 0);
+    const cl = ls.map(l => ({ l, c: claseDe(l) }));
+    I.reglas.forEach(r => {
+      if (q[r.ins] === undefined || baseIns(r)) return;
+      const mias = r.clase === "*" ? cl : cl.filter(x => x.c === r.clase);
+      if (!mias.length) return;
+      const cada = numT(r.cada) || 1;
+      if (r.base === "ordenes") {
+        if (porOrden) porOrden[r.id] = (porOrden[r.id] || 0) + 1;
+        else q[r.ins] += numT(r.cant) / cada;
+        return;
+      }
+      const b = r.base === "lineas" ? mias.length : mias.reduce((a, x) => a + (x.l.q > 0 ? x.l.q : 1), 0);
+      // Una caja no se comparte entre órdenes: se redondea orden por orden.
+      q[r.ins] += Math.ceil(b / cada) * numT(r.cant);
+    });
+    I.reglas.forEach(r => {
+      const b = baseIns(r);
+      if (q[r.ins] === undefined || !b || q[b] === undefined) return;
+      q[r.ins] += q[b] / (numT(r.cada) || 1) * cantRegla(r);
+    });
+    return q;
+  }
+
+  const vivas = o => o.lineas.filter(l => etapaLinea(l) !== null);
+  // Lo que todavía no llegó a la etapa de consumo: ahí se van a usar los insumos.
+  const lineasPorConsumir = o => o.fin || o.etapa >= I.llega ? []
+    : o.lineas.filter(l => { const e = etapaLinea(l); return e !== null && e < I.llega; });
+
+  function calcInsumos() {
+    const dem = {};
+    I.ins.forEach(x => dem[x.id] = 0);
+    const porOrden = {};
+    let ordenes = 0, sinClase = 0, lineas = 0;
+
+    Object.values(J.ordenes).forEach(o => {
+      const ls = lineasPorConsumir(o);
+      if (!ls.length) return;
+      ordenes++;
+      lineas += ls.length;
+      sinClase += ls.filter(l => claseDe(l) === "otros").length;
+      const q = consumoOrden(ls, porOrden);
+      Object.keys(q).forEach(k => dem[k] += q[k]);
+    });
+    // Lo que va "cada N órdenes" sí se reparte entre todas.
+    I.reglas.forEach(r => {
+      if (porOrden[r.id] && dem[r.ins] !== undefined)
+        dem[r.ins] += Math.ceil(porOrden[r.id] / (numT(r.cada) || 1)) * numT(r.cant);
+    });
+
+    const camino = {};
+    I.pedidos.forEach(p => camino[p.ins] = (camino[p.ins] || 0) + numT(p.cant));
+
+    const filas = I.ins.map(x => {
+      const stock = Number(x.stock) || 0, d = dem[x.id], min = numT(x.min), cam = camino[x.id] || 0;
+      const lote = numT(x.lote) || 1;
+      const falta = d + min - stock - cam;
+      // Lo que se hace en casa no tiene a quién pedírselo.
+      const sug = !x.propio && falta > 1e-9 ? Math.ceil(falta / lote - 1e-9) * lote : 0;
+      const nivel = x.propio ? "good" : stock < d ? "critical" : stock < d + min ? "warning" : "good";
+      return { x, stock, d, min, cam, sug, nivel, costo: costoIns(x) };
+    });
+    return { filas, ordenes, lineas, sinClase };
+  }
+
+  /* ---- consumo automático ---- */
+
+  const autoDia = fecha => I.auto[fecha] || { ord: 0, ins: {} };
+
+  /* Una SJ que llegó a la etapa de consumo entre dos cargas ya usó sus insumos:
+     se estiman con las reglas, se descuentan del stock y quedan anotados en el
+     día. Cada orden se cuenta una sola vez, aunque después vuelva para atrás. */
+  function consumir(o, antes, ts) {
+    if (o.cons || antes < 0 || antes >= I.llega || o.etapa < I.llega || o.ini >= I.llega) return false;
+    const q = consumoOrden(vivas(o).length ? vivas(o) : o.lineas);
+    const fecha = isoDia(new Date(ts));
+    const reg = I.auto[fecha] || (I.auto[fecha] = { ord: 0, ins: {} });
+    reg.ord++;
+    o.cons = { ts, q: {} };
+    Object.entries(q).forEach(([id, x]) => {
+      if (!(x > 0)) return;
+      const i = insDe(id);
+      if (!i) return;
+      // Lo hecho en casa no tiene stock: sólo se registra cuánto se usó.
+      if (!i.propio) i.stock = (Number(i.stock) || 0) - x;
+      const r = reg.ins[id] || (reg.ins[id] = { q: 0, c: costoIns(i) });
+      r.q += x;
+      o.cons.q[id] = x;
+    });
+    return true;
+  }
+
+  /* ---- pintar ---- */
+
+  const sugEdit = {};   // la cantidad a pedir, si alguien la cambió a mano
+  const cantIns = (x, q) => `${nf(q, q % 1 ? (q < 10 ? 2 : 1) : 0)} ${x.uni}`;
+
+  function textoPedido(prov, items) {
+    const tot = items.reduce((a, f) => a + f.q * f.costo, 0);
+    return `Pedido a ${prov} — ${fechaCorta}\n` +
+      items.map(f => `- ${f.x.nom}: ${cantIns(f.x, f.q)}`).join("\n") +
+      (tot ? `\nTotal estimado: ${plata(tot)}` : "");
+  }
+
+  async function copiar(txt) {
+    try { await navigator.clipboard.writeText(txt); return true; }
+    catch (e) {
+      // Sin permiso de portapapeles (archivo abierto local, navegador viejo).
+      const ta = el("textarea");
+      ta.value = txt;
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (e2) { ok = false; }
+      ta.remove();
+      return ok;
+    }
+  }
+
+  function pintarInsumos() {
+    const r = calcInsumos();
+    const sug = r.filas.filter(f => f.sug > 0);
+    const crit = r.filas.filter(f => f.nivel === "critical").length;
+    const cantSug = f => sugEdit[f.x.id] !== undefined ? sugEdit[f.x.id] : f.sug;
+    const total = sug.reduce((a, f) => a + cantSug(f) * f.costo, 0);
+
+    const badge = document.getElementById("insBadge");
+    badge.hidden = !sug.length;
+    badge.textContent = sug.length;
+
+    pintarTiles("tilesIns", [
+      { lab:"Para pedir",     val:ent(sug.length), sub:"insumos con sugerencia de pedido" },
+      { lab:"No alcanzan",    val:ent(crit),       sub:"el stock no cubre las SJ abiertas" },
+      { lab:"Costo estimado", val:plata(total, 0), sub:"de lo sugerido" },
+      { lab:"SJ por embalar", val:ent(r.ordenes),  sub:`${pl(r.lineas, "línea que va", "líneas que van")} a consumir` }
+    ]);
+
+    /* sugerencias, agrupadas por proveedor: es como se manda el pedido */
+    const cont = document.getElementById("insSug");
+    cont.innerHTML = "";
+    if (!sug.length) {
+      const c = el("div", "card sug-ok"), p = el("span", "pill");
+      p.dataset.s = "good";
+      p.append(el("i"), "todo cubierto");
+      c.append(p, el("span", "", "Nada para pedir: el stock y lo que ya viene alcanzan para las SJ abiertas y el mínimo."));
+      cont.appendChild(c);
+    }
+    const porProv = new Map();
+    sug.forEach(f => {
+      const p = f.x.prov || "Sin proveedor";
+      if (!porProv.has(p)) porProv.set(p, []);
+      porProv.get(p).push(f);
+    });
+    porProv.forEach((items, prov) => {
+      const card = el("div", "card sug");
+      const head = el("div", "card-head");
+      const plazo = Math.max(...items.map(f => numT(f.x.plazo)));
+      head.append(el("h3", "card-title", prov),
+        el("span", "cmp-sub", plazo ? `llegaría el ${fechaTxt(isoDia(habilMas(plazo, 12)))}` : ""));
+      const acc = el("div", "sug-acc");
+      const bCop = el("button", "btn-xs", "Copiar pedido");
+      const bReg = el("button", "btn-xs", "Registrar como pedido");
+      acc.append(bCop, bReg);
+      head.appendChild(acc);
+
+      const t = el("table", "izq");
+      t.innerHTML = `<thead><tr><th>Insumo</th><th class="num">Stock</th><th class="num">Piden las SJ</th>
+        <th class="num">Mínimo</th><th class="num">En camino</th><th class="num">Pedir</th><th class="num">Costo</th></tr></thead>`;
+      const tb = el("tbody");
+      const tdTot = el("td", "num");
+      const totalProv = () => items.reduce((a, f) => a + cantSug(f) * f.costo, 0);
+      items.forEach(f => {
+        const tr = el("tr");
+        const inp = el("input", "cell");
+        inp.type = "number"; inp.min = "0"; inp.step = "any"; inp.value = cantSug(f);
+        inp.setAttribute("aria-label", "Cantidad a pedir de " + f.x.nom);
+        const tdC = el("td", "num", f.costo ? plata(cantSug(f) * f.costo, 0) : "—");
+        inp.addEventListener("input", () => {
+          sugEdit[f.x.id] = inp.value === "" ? 0 : Math.max(0, Number(inp.value));
+          tdC.textContent = f.costo ? plata(cantSug(f) * f.costo, 0) : "—";
+          tdTot.textContent = plata(totalProv(), 0);
+        });
+        const tdI = el("td", "num");
+        tdI.appendChild(inp);
+        const tdN = el("td");
+        tdN.append(el("span", "", f.x.nom), el("span", "ord-sub", `lote de ${cantIns(f.x, numT(f.x.lote) || 1)}`));
+        tr.append(tdN, el("td", "num", cantIns(f.x, f.stock)), el("td", "num", cantIns(f.x, f.d)),
+          el("td", "num", cantIns(f.x, f.min)), el("td", "num", f.cam ? cantIns(f.x, f.cam) : "—"), tdI, tdC);
+        tb.appendChild(tr);
+      });
+      tdTot.textContent = plata(totalProv(), 0);
+      const tf = el("tfoot"), trf = el("tr"), tdl = el("td", "", "Total");
+      tdl.colSpan = 6;
+      trf.append(tdl, tdTot);
+      tf.appendChild(trf);
+      t.append(tb, tf);
+
+      bCop.addEventListener("click", async () => {
+        const ok = await copiar(textoPedido(prov, items.map(f => ({ ...f, q: cantSug(f) })).filter(f => f.q > 0)));
+        bCop.textContent = ok ? "Copiado ✓" : "No se pudo copiar";
+        setTimeout(() => bCop.textContent = "Copiar pedido", 2000);
+      });
+      bReg.addEventListener("click", () => {
+        const ts = Date.now();
+        items.forEach(f => {
+          const q = cantSug(f);
+          if (q > 0) I.pedidos.push({ id: nuevoIdCorto("p"), ins: f.x.id, cant: q, ts, prov });
+          delete sugEdit[f.x.id];
+        });
+        guardarIns(); pintarInsumos();
+      });
+
+      const wrap = el("div", "tbl-wrap");
+      wrap.appendChild(t);
+      card.append(head, wrap);
+      cont.appendChild(card);
+    });
+
+    /* stock */
+    const st = document.getElementById("insStock");
+    st.innerHTML = "";
+    if (!I.ins.length) st.appendChild(el("p", "empty", "No hay insumos. Se agregan en «Insumos y reglas»."));
+    else {
+      const t = el("table", "izq");
+      t.innerHTML = `<thead><tr><th>Insumo</th><th class="num">Stock</th><th class="num">Mínimo</th>
+        <th class="num">Piden las SJ</th><th class="num">En camino</th><th>Estado</th></tr></thead>`;
+      const tb = el("tbody");
+      r.filas.forEach(f => {
+        const tr = el("tr");
+        const celda = (campo, etiqueta) => {
+          const td = el("td", "num");
+          if (f.x.propio) { td.textContent = "—"; return td; }
+          const i = el("input", "cell");
+          i.type = "number"; i.step = "any"; i.value = Math.round((Number(f.x[campo]) || 0) * 100) / 100;
+          i.setAttribute("aria-label", etiqueta + " de " + f.x.nom);
+          i.addEventListener("change", () => {
+            f.x[campo] = i.value === "" ? 0 : Number(i.value);
+            guardarIns(); pintarInsumos(); pintarHoy();
+          });
+          td.append(i, " " + f.x.uni);
+          return td;
+        };
+        const tdE = el("td");
+        if (f.x.propio) tdE.appendChild(el("span", "ord-sub", "se hace en casa"));
+        else {
+          const p = el("span", "pill");
+          p.dataset.s = f.nivel;
+          p.append(el("i"), f.nivel === "critical"
+            ? (f.d ? `cubre ${Math.max(0, Math.round(f.stock / f.d * 100))}% de las SJ` : "sin stock")
+            : f.nivel === "warning" ? "bajo el mínimo" : "alcanza");
+          tdE.appendChild(p);
+          if (f.cam) tdE.appendChild(el("span", "ord-sub", "con pedido en camino"));
+        }
+        tr.append(el("td", "", f.x.nom), celda("stock", "Stock"), celda("min", "Mínimo"),
+          el("td", "num", cantIns(f.x, f.d)), el("td", "num", f.cam ? cantIns(f.x, f.cam) : "—"), tdE);
+        tb.appendChild(tr);
+      });
+      t.appendChild(tb);
+      st.appendChild(t);
+    }
+    document.getElementById("insNota").textContent = !Object.keys(J.ordenes).length
+      ? "Todavía no hay órdenes de JD: cargá el archivo para que la demanda salga de las SJ."
+      : `Demanda de ${ent(r.ordenes)} SJ que todavía no llegaron a ${nomEtapa(I.llega).toLowerCase()}.` +
+        (r.sinClase ? ` ${pl(r.sinClase, "línea no coincide", "líneas no coinciden")} con ninguna clase y cuenta${r.sinClase === 1 ? "" : "n"} como «Sin clasificar».` : "");
+
+    /* pedidos en camino */
+    const ped = document.getElementById("insPed");
+    ped.innerHTML = "";
+    if (!I.pedidos.length) ped.appendChild(el("p", "empty", "No hay pedidos en camino."));
+    else {
+      const t = el("table", "izq");
+      t.innerHTML = `<thead><tr><th>Proveedor</th><th>Insumo</th><th class="num">Cantidad</th><th>Pedido</th><th>Llega</th><th></th></tr></thead>`;
+      const tb = el("tbody");
+      I.pedidos.slice().sort((a, b) => a.ts - b.ts).forEach(p => {
+        const x = insDe(p.ins) || { nom: "(insumo borrado)", uni: "", plazo: 0 };
+        const tr = el("tr");
+        const acc = el("td", "cmp-acc");
+        const bOk = el("button", "btn-xs", "Recibido");
+        const bNo = el("button", "btn-xs", "Anular");
+        bOk.addEventListener("click", () => {
+          const i = insDe(p.ins);
+          if (i) i.stock = (Number(i.stock) || 0) + numT(p.cant);
+          I.pedidos = I.pedidos.filter(z => z.id !== p.id);
+          guardarIns(); pintarInsumos(); pintarHoy();
+        });
+        bNo.addEventListener("click", () => {
+          if (!confirm(`¿Anular el pedido de ${x.nom}?`)) return;
+          I.pedidos = I.pedidos.filter(z => z.id !== p.id);
+          guardarIns(); pintarInsumos(); pintarHoy();
+        });
+        acc.append(bOk, bNo);
+        const llega = llegada(p, x);
+        const tdL = el("td", "", fechaTxt(llega));
+        if (llega < hoyISO()) {
+          const pl2 = el("span", "pill");
+          pl2.dataset.s = "critical";
+          pl2.append(el("i"), "demorado");
+          tdL.append(" ", pl2);
+        }
+        tr.append(el("td", "", p.prov || "—"), el("td", "", x.nom), el("td", "num", cantIns(x, numT(p.cant))),
+          el("td", "", momento(p.ts)), tdL, acc);
+        tb.appendChild(tr);
+      });
+      t.appendChild(tb);
+      const w = el("div", "tbl-wrap");
+      w.appendChild(t);
+      ped.appendChild(w);
+    }
+  }
+
+  function llegada(p, x) {
+    const d = new Date(p.ts);
+    for (let c = 0; c < numT(x.plazo); ) { d.setDate(d.getDate() + 1); if (esHabil(d)) c++; }
+    return isoDia(d);
+  }
+
+  /* ---- configuración ---- */
+
+  // Una celda editable que guarda al salir del campo. `num` la hace numérica.
+  function celdaEd(obj, campo, etiqueta, alCambiar, num) {
+    const i = el("input", num ? "ed n" : "ed");
+    i.type = num ? "number" : "text";
+    if (num) { i.min = "0"; i.step = "any"; }
+    i.value = obj[campo] == null ? "" : obj[campo];
+    i.setAttribute("aria-label", etiqueta);
+    i.addEventListener("change", () => {
+      obj[campo] = num ? (i.value === "" ? 0 : Number(i.value)) : i.value.trim();
+      alCambiar();
+    });
+    const td = el("td", num ? "num" : "");
+    td.appendChild(i);
+    return td;
+  }
+  function celdaSel(obj, campo, opciones, etiqueta, alCambiar) {
+    const s = el("select");
+    s.setAttribute("aria-label", etiqueta);
+    opciones.forEach(([v, t]) => opcion(s, v, t));
+    s.value = obj[campo] == null ? "" : obj[campo];
+    s.addEventListener("change", () => { obj[campo] = s.value; alCambiar(); });
+    const td = el("td");
+    td.appendChild(s);
+    return td;
+  }
+  function botonQuitar(etiqueta, alQuitar) {
+    const td = el("td"), b = el("button", "adj-del", "×");
+    b.setAttribute("aria-label", etiqueta);
+    b.addEventListener("click", alQuitar);
+    td.appendChild(b);
+    return td;
+  }
+  const tablaCfg = (cab, filas) => {
+    const t = el("table", "izq");
+    t.innerHTML = `<thead><tr>${cab.map(h => `<th${h[1] ? ' class="num"' : ""}>${h[0]}</th>`).join("")}<th></th></tr></thead>`;
+    const tb = el("tbody");
+    filas.forEach(f => tb.appendChild(f));
+    t.appendChild(tb);
+    return t;
+  };
+
+  // Todo lo que depende de la lista de insumos, de una vez.
+  function cambiaronInsumos() {
+    guardarIns();
+    construirInsDef(); construirReglas(); armarSelectsMedicion();
+    pintarInsumos(); pintarCostos(); pintarMediciones(); pintarHoy();
+  }
+
+  function construirInsDef() {
+    const alCambiar = () => { guardarIns(); pintarInsumos(); };
+    const filas = I.ins.map(x => {
+      const tr = el("tr");
+      const tdC = celdaEd(x, "costo", "Costo de " + x.nom, () => { guardarIns(); pintarInsumos(); pintarCostos(); }, true);
+      let tdR = el("td");
+      if (x.tipo === "relleno") {
+        const o = { v: origenDe(x) };
+        tdR = celdaSel(o, "v", ORIGENES, "Origen de " + x.nom, () => {
+          x.propio = o.v === "casa";
+          x.reciclado = o.v !== "compra";
+          cambiaronInsumos();
+        });
+      }
+      tr.append(
+        celdaEd(x, "nom", "Nombre del insumo", cambiaronInsumos),
+        celdaSel(x, "tipo", Object.entries(TIPOS_INS), "Tipo de " + x.nom, cambiaronInsumos),
+        tdR,
+        celdaEd(x, "uni", "Unidad de " + x.nom, alCambiar),
+        celdaEd(x, "prov", "Proveedor de " + x.nom, alCambiar),
+        celdaEd(x, "plazo", "Plazo de " + x.nom, alCambiar, true),
+        celdaEd(x, "lote", "Lote de " + x.nom, alCambiar, true),
+        celdaSel(x, "var", [["", "(ninguna)"]].concat(V.vars.map(v => [v.id, v.nom])), "Variable de " + x.nom,
+          () => { cambiaronInsumos(); construirConsumos(); construirVarsDef(); }),
+        tdC,
+        botonQuitar("Quitar " + x.nom, () => {
+          if (!confirm(`¿Quitar «${x.nom}»? También se quitan sus reglas y pedidos en camino.`)) return;
+          I.ins = I.ins.filter(z => z !== x);
+          I.reglas = I.reglas.filter(r => r.ins !== x.id && baseIns(r) !== x.id);
+          I.pedidos = I.pedidos.filter(p => p.ins !== x.id);
+          cambiaronInsumos();
+        }));
+      return tr;
+    });
+    const cont = document.getElementById("insDef");
+    cont.innerHTML = "";
+    cont.appendChild(tablaCfg([["Insumo"], ["Tipo"], ["Origen"], ["Unidad"], ["Proveedor"], ["Plazo", 1], ["Lote", 1],
+      ["Se suma en"], [`Costo unit. (${V.moneda})`, 1]], filas));
+  }
+
+  function construirClases() {
+    // Cuántas líneas por consumir toma cada clase: así se ve enseguida si un patrón no agarra nada.
+    const cuenta = {};
+    Object.values(J.ordenes).forEach(o => lineasPorConsumir(o).forEach(l => {
+      const c = claseDe(l);
+      cuenta[c] = (cuenta[c] || 0) + 1;
+    }));
+    const alCambiar = () => { guardarIns(); construirClases(); pintarInsumos(); };
+    const filas = I.clases.map((c, i) => {
+      const tr = el("tr");
+      const td = celdaEd(c, "pat", "Patrones de " + c.nom, alCambiar);
+      td.firstChild.style.minWidth = "260px";
+      tr.append(celdaEd(c, "nom", "Nombre de la clase", () => { guardarIns(); construirClases(); construirReglas(); }),
+        td, el("td", "num", ent(cuenta[c.id] || 0)),
+        botonQuitar("Quitar la clase " + c.nom, () => {
+          if (I.reglas.some(r => r.clase === c.id) &&
+              !confirm(`«${c.nom}» tiene reglas. ¿Quitarla igual? Sus reglas se borran.`)) return;
+          I.clases.splice(i, 1);
+          I.reglas = I.reglas.filter(r => r.clase !== c.id);
+          guardarIns(); construirClases(); construirReglas(); pintarInsumos();
+        }));
+      return tr;
+    });
+    const sin = el("tr");
+    sin.append(el("td", "", "Sin clasificar"), el("td", "regla-txt", "Todo lo que no coincide con ninguna"),
+      el("td", "num", ent(cuenta.otros || 0)), el("td"));
+    filas.push(sin);
+    const cont = document.getElementById("insClases");
+    cont.innerHTML = "";
+    cont.appendChild(tablaCfg([["Clase"], ["Patrones"], ["Líneas en SJ", 1]], filas));
+  }
+
+  function leerRegla(r) {
+    const x = insDe(r.ins);
+    if (!x) return "";
+    const cada = numT(r.cada) || 1, b = baseIns(r);
+    const cant = cantRegla(r);
+    const cuanto = `${nf(cant, cant % 1 ? 2 : 0)} ${x.uni} de ${x.nom.toLowerCase()}`;
+    if (b) {
+      const c = insDe(b), m = r.medir ? medido(b, r.ins) : null;
+      return `${cuanto} por ${c ? c.nom.toLowerCase() : "caja"}` +
+        (m ? ` (promedio de ${pl(m.n, "medición", "mediciones")})` : r.medir ? " (sin mediciones todavía)" : "");
+    }
+    return `${nomClase(r.clase)}: ${cuanto} ` +
+      (cada === 1 ? `por ${BASE_UNA[r.base]}` : `cada ${nf(cada, cada % 1 ? 1 : 0)} ${BASES[r.base]}`);
+  }
+
+  function construirReglas() {
+    const alCambiar = () => { guardarIns(); construirReglas(); pintarInsumos(); };
+    const clases = [["*", "Cualquier artículo"]].concat(I.clases.map(c => [c.id, c.nom]), [["otros", "Sin clasificar"]]);
+    const insumos = I.ins.map(x => [x.id, x.nom]);
+    // El relleno se cuenta por caja: cada tipo de caja es una base posible.
+    const bases = Object.entries(BASES).concat(cajas().map(c => ["ins:" + c.id, c.nom.toLowerCase()]));
+    const filas = I.reglas.map(r => {
+      const tr = el("tr");
+      const porCaja = !!baseIns(r);
+      const tdClase = porCaja ? el("td", "regla-txt", "—") : celdaSel(r, "clase", clases, "Clase", alCambiar);
+      const tdMed = el("td");
+      if (porCaja) {
+        const lab = el("label", "regla-txt");
+        const ck = el("input");
+        ck.type = "checkbox"; ck.checked = !!r.medir;
+        ck.addEventListener("change", () => { r.medir = ck.checked; alCambiar(); });
+        lab.append(ck, " usar lo medido");
+        tdMed.appendChild(lab);
+      }
+      tr.append(tdClase, celdaEd(r, "cant", "Cantidad de insumo", alCambiar, true),
+        celdaSel(r, "ins", insumos, "Insumo", alCambiar), celdaEd(r, "cada", "Cada cuánto", alCambiar, true),
+        celdaSel(r, "base", bases, "Base", alCambiar), tdMed, el("td", "regla-txt", leerRegla(r)),
+        botonQuitar("Quitar regla", () => { I.reglas = I.reglas.filter(z => z !== r); alCambiar(); }));
+      return tr;
+    });
+    const cont = document.getElementById("insReglas");
+    cont.innerHTML = "";
+    cont.appendChild(filas.length
+      ? tablaCfg([["Clase"], ["Lleva", 1], ["De"], ["Cada", 1], ["Contando"], [""], ["Se lee"]], filas)
+      : el("p", "empty", "Sin reglas: las SJ no piden ningún insumo."));
+  }
+
+  function construirEtapaConsumo() {
+    const s = document.getElementById("insEtapa");
+    s.innerHTML = "";
+    J.etapas.forEach((e, i) => { if (i > 0) opcion(s, String(i), e.nom); });
+    s.value = String(Math.max(1, Math.min(I.llega, nEt() - 1)));
+  }
+
+  /* ---- medir relleno ---- */
+
+  function armarSelectsMedicion() {
+    const sc = document.getElementById("medCaja"), sr = document.getElementById("medRel");
+    const previo = [sc.value, sr.value];
+    sc.innerHTML = ""; sr.innerHTML = "";
+    cajas().forEach(x => opcion(sc, x.id, x.nom));
+    rellenos().forEach(x => opcion(sr, x.id, x.nom));
+    if (previo[0] && insDe(previo[0])) sc.value = previo[0];
+    if (previo[1] && insDe(previo[1])) sr.value = previo[1];
+  }
+
+  function pintarMediciones() {
+    const prom = document.getElementById("medProm");
+    prom.innerHTML = "";
+    const filas = [];
+    cajas().forEach(c => rellenos().forEach(r => {
+      const m = medido(c.id, r.id);
+      const regla = I.reglas.find(z => z.ins === r.id && baseIns(z) === c.id);
+      if (!m && !regla) return;
+      filas.push([esc(c.nom), esc(r.nom), m ? ent(m.n) : "0",
+        m ? esc(cantIns(r, m.prom)) : "—", m ? esc(`${nf(m.min, 2)} – ${nf(m.max, 2)}`) : "—",
+        regla ? esc(cantIns(r, cantRegla(regla))) + (m && regla.medir ? "" : " <span class='ord-sub'>de la regla</span>") : "—"]);
+    }));
+    prom.innerHTML = filas.length
+      ? tabla(["Caja", "Relleno", "Mediciones", "Promedio", "Rango", "Se usa"], filas)
+      : `<p class="empty">Todavía no hay mediciones ni reglas de relleno por caja.</p>`;
+
+    const lista = document.getElementById("medLista");
+    lista.innerHTML = "";
+    if (!I.medidas.length) { lista.appendChild(el("p", "empty", "Sin mediciones todavía.")); return; }
+    const t = el("table", "izq");
+    t.innerHTML = `<thead><tr><th>Cuándo</th><th>Caja</th><th>Relleno</th><th class="num">Kilos</th><th></th></tr></thead>`;
+    const tb = el("tbody");
+    I.medidas.slice().sort((a, b) => b.ts - a.ts).slice(0, 30).forEach(m => {
+      const tr = el("tr");
+      tr.append(el("td", "", momento(m.ts)), el("td", "", (insDe(m.caja) || {}).nom || "—"),
+        el("td", "", (insDe(m.rel) || {}).nom || "—"), el("td", "num", nf(numT(m.kg), 2)),
+        botonQuitar("Quitar medición", () => {
+          I.medidas = I.medidas.filter(z => z !== m);
+          guardarIns(); pintarMediciones(); construirReglas(); pintarInsumos(); pintarCostos();
+        }));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    lista.appendChild(t);
+  }
+
+  function armarMediciones() {
+    armarSelectsMedicion();
+    const kg = document.getElementById("medKg"), msg = document.getElementById("medMsg");
+    const anotar = () => {
+      const caja = document.getElementById("medCaja").value, rel = document.getElementById("medRel").value;
+      const v = Number(kg.value);
+      if (!caja || !rel || !(v > 0)) { kg.focus(); return; }
+      I.medidas.push({ id: nuevoIdCorto("m"), ts: Date.now(), caja, rel, kg: v });
+      if (!I.reglas.some(r => r.ins === rel && baseIns(r) === caja))
+        I.reglas.push({ id: nuevoIdCorto("r"), clase: "*", ins: rel, cant: v, cada: 1, base: "ins:" + caja, medir: true });
+      guardarIns();
+      const m = medido(caja, rel);
+      msg.textContent = `Anotado. Promedio de ${insDe(caja).nom.toLowerCase()}: ${cantIns(insDe(rel), m.prom)} (${pl(m.n, "medición", "mediciones")}).`;
+      kg.value = "";
+      kg.focus();   // la próxima caja se anota sin tocar nada más
+      pintarMediciones(); construirReglas(); pintarInsumos(); pintarCostos();
+    };
+    document.getElementById("medAdd").addEventListener("click", anotar);
+    kg.addEventListener("keydown", ev => { if (ev.key === "Enter") anotar(); });
+  }
+
+  /* ---- packing: pendiente ---- */
+
+  // Mientras no haya registro de packing, se muestra lo que se estimó por orden.
+  function pintarPacking() {
+    const hoy = hoyISO();
+    const ords = Object.values(J.ordenes).filter(o => o.cons && isoDia(new Date(o.cons.ts)) === hoy);
+    const cont = document.getElementById("packHoy");
+    document.getElementById("packHint").textContent = ords.length ? pl(ords.length, "SJ embalada hoy", "SJ embaladas hoy") : "";
+    cont.innerHTML = "";
+    if (!ords.length) {
+      cont.appendChild(el("p", "empty", "Hoy todavía no llegó ninguna SJ a embalado en las cargas de JD."));
+      return;
+    }
+    const cols = I.ins.filter(x => ords.some(o => o.cons.q[x.id] > 0));
+    const t = el("table", "izq");
+    t.innerHTML = `<thead><tr><th>Orden</th><th>Cliente</th>${cols.map(x => `<th class="num">${esc(x.nom)}</th>`).join("")}</tr></thead>`;
+    const tb = el("tbody");
+    ords.forEach(o => {
+      const tr = el("tr");
+      tr.append(el("td", "ord-n", (o.t ? o.t + " " : "") + o.o), el("td", "", o.cli || "—"));
+      cols.forEach(x => tr.appendChild(el("td", "num", o.cons.q[x.id] ? cantIns(x, o.cons.q[x.id]) : "—")));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    cont.appendChild(t);
+  }
+
+  function armarInsumos() {
+    construirEtapaConsumo();
+    document.getElementById("insEtapa").addEventListener("change", ev => {
+      I.llega = Number(ev.target.value);
+      guardarIns(); construirClases(); pintarInsumos();
+    });
+    const nuevo = document.getElementById("insNuevo");
+    document.getElementById("insAdd").addEventListener("click", () => {
+      const nom = nuevo.value.trim();
+      if (!nom) { nuevo.focus(); return; }
+      I.ins.push({ id: nuevoIdCorto("x"), nom, uni: "u", tipo: "otro", stock: 0, min: 0, lote: 1, prov: "", plazo: 0, var: "", costo: 0 });
+      nuevo.value = "";
+      cambiaronInsumos();
+    });
+    const clase = document.getElementById("insClaseNueva");
+    document.getElementById("insClaseAdd").addEventListener("click", () => {
+      const nom = clase.value.trim();
+      if (!nom) { clase.focus(); return; }
+      I.clases.push({ id: nuevoIdCorto("k"), nom, pat: "" });
+      clase.value = "";
+      guardarIns(); construirClases(); construirReglas();
+    });
+    document.getElementById("insReglaAdd").addEventListener("click", () => {
+      if (!I.ins.length) return;
+      I.reglas.push({ id: nuevoIdCorto("r"), clase: "*", ins: I.ins[0].id, cant: 1, cada: 1, base: "unidades" });
+      guardarIns(); construirReglas(); pintarInsumos();
+    });
+    armarMediciones();
+  }
+
+  /* ================= COSTOS Y CONSUMOS ================= */
+
+  /* Lo que cuesta mover la mercadería: cajas, relleno, horas hombre, energía,
+     o cualquier otra cosa que se pueda medir. Lo que sale de un insumo se
+     calcula solo con las SJ que llegan a embalado; el resto se carga en el cierre
+     del día. Acá se suma todo por mes, cruzado con lo que salió en JD. */
+
+  const KEY_VARS = "tablero-almacen-variables-v2";
+  const V = (() => {
+    const d = { vars: VARIABLES.map(x => ({ ...x })), ind: INDICADORES.map(x => ({ ...x })), moneda: MONEDA };
+    let g = null;
+    try { g = JSON.parse(localStorage.getItem(KEY_VARS) || "null"); } catch (e) { g = null; }
+    if (!g || typeof g !== "object") return d;
+    return { vars: Array.isArray(g.vars) ? g.vars : d.vars, ind: Array.isArray(g.ind) ? g.ind : d.ind,
+             moneda: g.moneda || d.moneda };
+  })();
+  const guardarVars = () => { try { localStorage.setItem(KEY_VARS, JSON.stringify(V)); } catch (e) {} };
+  const plata = (x, d) => `${V.moneda} ${nf(x, d === undefined ? (Math.abs(x) < 100 && x % 1 ? 2 : 0) : d)}`;
+
+  /* ---- el formulario del cierre de jornada ---- */
+
+  // Lo que una variable automática consumió ese día, según JD.
+  function autoDeVar(v, fecha) {
+    const reg = autoDia(fecha).ins;
+    return insDeVar(v).reduce((a, x) => {
+      const r = reg[x.id];
+      return r ? { q: a.q + r.q, costo: a.costo + r.q * r.c } : a;
+    }, { q: 0, costo: 0 });
+  }
+
+  function construirConsumos() {
+    // Lo que ya estaba tipeado sobrevive a que se agregue o renombre una variable.
+    const previos = {};
+    document.querySelectorAll("#consumos input").forEach(i => previos[i.dataset.v] = i.value);
+    const cont = document.getElementById("consumos");
+    cont.innerHTML = "";
+    if (!V.vars.length) cont.appendChild(el("p", "empty", "No hay variables definidas. Se agregan en Costos."));
+    V.vars.forEach(x => {
+      const f = el("div", "fld");
+      const lab = el("label", "", `${x.nom} (${x.uni})`);
+      const c = el("span", "cons-c");
+      c.id = "consc-" + x.id;
+      if (esAuto(x)) {
+        // Sale de JD: se muestra, no se tipea.
+        const a = el("span", "cons-auto");
+        a.id = "consa-" + x.id;
+        a.title = "Estimado de las SJ que llegaron a embalado ese día";
+        f.append(lab, a, c);
+      } else {
+        lab.htmlFor = "cons-" + x.id;
+        const inp = el("input");
+        inp.type = "number"; inp.min = "0"; inp.step = "any"; inp.inputMode = "decimal";
+        inp.id = "cons-" + x.id; inp.dataset.v = x.id;
+        if (previos[x.id] !== undefined) inp.value = previos[x.id];
+        inp.addEventListener("input", recalcConsumos);
+        f.append(lab, inp, c);
+      }
+      cont.appendChild(f);
+    });
+    recalcConsumos();
+  }
+
+  function recalcConsumos() {
+    const fecha = document.getElementById("fecha").value;
+    let tot = 0, alguno = false;
+    V.vars.forEach(x => {
+      const c = document.getElementById("consc-" + x.id);
+      if (esAuto(x)) {
+        const r = autoDeVar(x, fecha);
+        document.getElementById("consa-" + x.id).textContent = `${nf(r.q, r.q % 1 ? 1 : 0)} · de JD`;
+        tot += r.costo; alguno = alguno || r.q > 0;
+        c.textContent = r.costo ? plata(r.costo, 0) : "";
+        return;
+      }
+      const inp = document.getElementById("cons-" + x.id);
+      const q = inp.value === "" ? NaN : Number(inp.value);
+      if (Number.isFinite(q)) {
+        tot += q * numT(x.costo); alguno = true;
+        c.textContent = numT(x.costo) ? plata(q * numT(x.costo), 0) : "";
+      } else c.textContent = numT(x.costo) ? `${plata(numT(x.costo))}/${x.uni}` : "";
+    });
+    document.getElementById("consTotal").textContent = alguno ? plata(tot, 0) : "—";
+  }
+
+  function ponerConsumos(cons) {
+    V.vars.forEach(x => {
+      const inp = document.getElementById("cons-" + x.id);
+      if (inp) inp.value = cons[x.id] && cons[x.id].q != null ? cons[x.id].q : "";
+    });
+    recalcConsumos();
+  }
+
+  // Sólo lo tipeado. Cada consumo guarda el precio del día: si mañana aumenta, el mes pasado no cambia.
+  function leerConsumos() {
+    const r = {};
+    V.vars.forEach(x => {
+      const inp = document.getElementById("cons-" + x.id);
+      if (!inp || inp.value === "" || !Number.isFinite(Number(inp.value))) return;
+      r[x.id] = { q: Number(inp.value), c: numT(x.costo) };
+    });
+    return r;
+  }
+
+  /* ---- el mes ---- */
+
+  // Las órdenes enviadas en el mes (vistas llegar al fin, no las que aparecieron ya enviadas).
+  function salidasMes(mes) {
+    let ordenes = 0, lineas = 0;
+    Object.values(J.ordenes).forEach(o => {
+      const t = llegoA(o, nEt());
+      if (!t || isoDia(new Date(t)).slice(0, 7) !== mes) return;
+      ordenes++;
+      lineas += o.lineas.length;
+    });
+    return { ordenes, lineas };
+  }
+
+  function datosMes(mes) {
+    const jor = leerJornadas().filter(j => (j.fecha || "").slice(0, 7) === mes);
+    const porVar = {};
+    V.vars.forEach(x => porVar[x.id] = { q: 0, c: 0 });
+    const porDia = {}, porIns = {};
+    let pallets = 0, pedidos = 0, cajasUsadas = 0, embalaje = 0, reciclado = 0;
+    const sumar = (fecha, vid, q, c) => {
+      porVar[vid].q += q;
+      porVar[vid].c += q * c;
+      porDia[fecha] = (porDia[fecha] || 0) + q * c;
+    };
+
+    jor.forEach(j => {
+      if (!(j.fecha in porDia)) porDia[j.fecha] = 0;
+      Object.entries(j.consumos || {}).forEach(([id, r]) => {
+        const v = V.vars.find(x => x.id === id);
+        // Las automáticas salen de JD; si una jornada vieja las tenía tipeadas, no se cuentan dos veces.
+        if (!v || esAuto(v)) return;
+        sumar(j.fecha, id, numT(r.q), r.c != null ? numT(r.c) : numT(v.costo));
+      });
+      pallets += numT(j.campos && j.campos.desPal);
+      pedidos += numT(j.campos && j.campos.desTot);
+    });
+
+    const dias = {};
+    Object.entries(I.auto).forEach(([fecha, reg]) => {
+      if (fecha.slice(0, 7) !== mes) return;
+      if (!(fecha in porDia)) porDia[fecha] = 0;
+      dias[fecha] = {};
+      Object.entries(reg.ins).forEach(([iid, r]) => {
+        const x = insDe(iid);
+        if (!x) return;
+        porIns[iid] = (porIns[iid] || 0) + r.q;
+        dias[fecha][iid] = r.q;
+        if (x.tipo === "caja") cajasUsadas += r.q;
+        if (x.tipo === "caja" || x.tipo === "relleno") embalaje += r.q * r.c;
+        if (x.tipo === "relleno" && x.reciclado) reciclado += r.q;
+        const v = varDe(x);
+        if (v && porVar[v.id]) sumar(fecha, v.id, r.q, r.c);
+      });
+    });
+
+    const total = Object.values(porVar).reduce((a, r) => a + r.c, 0);
+    const s = salidasMes(mes);
+    return { jor, porVar, porIns, autoDias: dias, total, pallets, pedidos, cajas: cajasUsadas, embalaje, reciclado,
+             ordenes: s.ordenes, lineas: s.lineas,
+             dias: Object.keys(porDia).sort().map(f => ({ fecha: f, costo: porDia[f] })) };
+  }
+
+  // Con qué se puede armar un indicador.
+  function operandos() {
+    const o = [{ id:"total", nom:"Costo total", uni:V.moneda }, { id:"embalaje", nom:"Costo de cajas y relleno", uni:V.moneda },
+               { id:"reciclado", nom:"Relleno reciclado (kg)", uni:"kg" }];
+    V.vars.forEach(x => {
+      o.push({ id:`q:${x.id}`, nom:`${x.nom} (cantidad)`, uni:x.uni });
+      o.push({ id:`c:${x.id}`, nom:`${x.nom} (costo)`, uni:V.moneda });
+    });
+    return o.concat([
+      { id:"ordenes", nom:"Órdenes salidas (JD)",        uni:"orden" },
+      { id:"lineas",  nom:"Líneas salidas (JD)",         uni:"línea" },
+      { id:"cajas",   nom:"Cajas usadas (JD)",           uni:"caja" },
+      { id:"pedidos", nom:"Pedidos despachados (cierre)", uni:"pedido" },
+      { id:"pallets", nom:"Pallets despachados (cierre)", uni:"pallet" },
+      { id:"dias",    nom:"Días con datos",              uni:"día" }
+    ]);
+  }
+  function valorOp(id, d) {
+    if (id === "total") return d.total;
+    if (id === "embalaje") return d.embalaje;
+    if (id === "reciclado") return d.reciclado;
+    const [k, vid] = id.split(":");
+    if (vid !== undefined) { const r = d.porVar[vid]; return r ? (k === "q" ? r.q : r.c) : 0; }
+    return { ordenes:d.ordenes, lineas:d.lineas, cajas:d.cajas, pedidos:d.pedidos, pallets:d.pallets,
+             dias:d.dias.length }[id] || 0;
+  }
+
+  /* ---- pintar ---- */
+
+  const nombreMes = mes => new Date(mes + "-15T12:00").toLocaleDateString("es-AR", { month:"long", year:"numeric" });
+
+  function pintarCostos() {
+    const mes = document.getElementById("cosMes").value || hoyISO().slice(0, 7);
+    const d = datosMes(mes);
+    const filas = V.vars.map(x => ({ x, ...d.porVar[x.id] })).sort((a, b) => b.c - a.c);
+    const top = filas[0];
+
+    pintarTiles("tilesCostos", [
+      { lab:"Costo del mes",    val:plata(d.total, 0), sub:pl(d.dias.length, "día con datos", "días con datos") },
+      { lab:"Por orden salida", val:d.ordenes ? plata(d.total / d.ordenes, 0) : "—", sub:`${pl(d.ordenes, "orden salió", "órdenes salieron")} en JD` },
+      { lab:"Embalaje",         val:plata(d.embalaje, 0), sub:`cajas y relleno · ${pl(Math.round(d.cajas), "caja", "cajas")}` },
+      { lab:"El mayor gasto",   val:top && top.c ? top.x.nom : "—", sub:top && top.c && d.total ? `${Math.round(top.c / d.total * 100)}% del costo` : "sin consumos todavía" }
+    ]);
+
+    /* indicadores */
+    const ops = Object.fromEntries(operandos().map(o => [o.id, o]));
+    document.getElementById("cosInd").innerHTML = V.ind.length ? V.ind.map(i => {
+      const num = ops[i.num], den = ops[i.den];
+      if (!num || !den) return "";
+      const a = valorOp(i.num, d), b = valorOp(i.den, d);
+      const ok = b > 0;
+      const val = !ok ? "—" : num.uni === V.moneda ? plata(a / b) : nf(a / b, a / b < 10 ? 2 : 1);
+      const uni = num.uni === V.moneda ? `por ${den.uni}` : `${num.uni} por ${den.uni}`;
+      return `<div class="card kpi">
+        <div class="kpi-lab">${esc(i.nom)}</div>
+        <div class="kpi-q"><div class="kpi-val">${esc(val)}</div></div>
+        <div class="kpi-name">${esc(ok ? uni : "sin " + den.nom.toLowerCase() + " en el mes")}</div>
+      </div>`;
+    }).join("") : `<p class="empty">Sin indicadores. Se arman en «Variables e indicadores».</p>`;
+
+    /* en qué se va la plata */
+    const cont = document.getElementById("cosVars");
+    const conCosto = filas.filter(f => f.c > 0);
+    if (!conCosto.length) {
+      cont.innerHTML = `<p class="empty">Sin consumos en ${esc(nombreMes(mes))}. Salen solos de JD al embalar, y lo demás se carga en el cierre del día.</p>`;
+      document.getElementById("tblCosVars").innerHTML = "";
+    } else {
+      const max = conCosto[0].c;
+      cont.innerHTML = conCosto.map(f =>
+        `<div class="cause">
+          <div class="cause-lab">${esc(f.x.nom)}</div>
+          <div class="cause-track"><div class="cause-fill" style="width:${(f.c / max * 100).toFixed(1)}%"></div></div>
+          <div class="cause-val ancho">${esc(plata(f.c, 0))}</div>
+          <div class="cause-n">${Math.round(f.c / d.total * 100)}%</div>
+        </div>`).join("");
+      document.getElementById("tblCosVars").innerHTML = tabla(["Variable", "Cantidad", "Costo", "%", "Origen"],
+        filas.map(f => [esc(f.x.nom), esc(`${nf(f.q, f.q % 1 ? 1 : 0)} ${f.x.uni}`), esc(plata(f.c, 0)),
+          d.total ? Math.round(f.c / d.total * 100) + "%" : "—", esAuto(f.x) ? "JD" : "cierre"])
+          .concat([["Total", "", esc(plata(d.total, 0)), "100%", ""]]));
+    }
+
+    serie("svgCostoDia", "hostCostoDia", "tipCostoDia", "cosDiaNota",
+      d.dias, x => x.costo, V.moneda, 0,
+      prom => `Promedio: ${plata(prom, 0)} por día.`);
+
+    pintarRelleno(d, mes);
+  }
+
+  // Una serie diaria del mes, o un aviso si no hay datos.
+  function serie(svgId, hostId, tipId, notaId, puntos, valor, unidad, dec, notaTxt) {
+    const svg = document.getElementById(svgId), nota = document.getElementById(notaId);
+    if (!puntos.length) {
+      svg.innerHTML = "";
+      svg.style.display = "none";
+      nota.textContent = "Sin datos en el mes.";
+      return;
+    }
+    svg.style.display = "";
+    const datos = puntos.map(valor);
+    nota.textContent = notaTxt(datos.reduce((a, b) => a + b, 0) / datos.length);
+    lineChart({
+      svg, host: document.getElementById(hostId), tip: document.getElementById(tipId),
+      labels: puntos.map(x => fechaTxt(x.fecha).slice(0, 5)), data: datos,
+      unidad, decimales: dec, yMin: 0, yMax: topeRedondo(Math.max(...datos)), ticks: 4
+    });
+  }
+
+  /* ---- relleno ---- */
+
+  function pintarRelleno(d, mes) {
+    const rel = rellenos();
+    const kgDe = x => d.porIns[x.id] || 0;
+    const recicl = rel.filter(x => x.reciclado);
+    const kgRec = recicl.reduce((a, x) => a + kgDe(x), 0);
+    // Sólo se suman rellenos de la misma unidad que el reciclado (kilos con kilos).
+    const uni = recicl[0] ? recicl[0].uni : "kg";
+    const mismos = rel.filter(x => x.uni === uni);
+    const kgTot = mismos.reduce((a, x) => a + kgDe(x), 0);
+    // Lo que habría costado comprar ese relleno: al precio del relleno comprado más usado.
+    const ref = mismos.filter(x => !x.reciclado).sort((a, b) => kgDe(b) - kgDe(a) || costoIns(b) - costoIns(a))[0];
+    const ahorro = ref ? kgRec * costoIns(ref) : 0;
+
+    pintarTiles("tilesRell", [
+      { lab:"Relleno reciclado", val:`${nf(kgRec, kgRec < 100 ? 1 : 0)} ${uni}`, sub:`usados como relleno en ${nombreMes(mes)}` },
+      { lab:"Por caja",         val:d.cajas ? `${nf(kgTot / d.cajas, 2)} ${uni}` : "—", sub:`de relleno en promedio · ${pl(Math.round(d.cajas), "caja", "cajas")}` },
+      { lab:"Reciclado",        val:kgTot ? Math.round(kgRec / kgTot * 100) + "%" : "—", sub:"del relleno que se usó" },
+      { lab:"Ahorro estimado",  val:ref ? plata(ahorro, 0) : "—", sub:ref ? `vs. comprarlo como ${ref.nom.toLowerCase()}` : "falta un relleno comprado" }
+    ]);
+
+    const cont = document.getElementById("rellTipos");
+    const usados = rel.filter(x => kgDe(x) > 0).sort((a, b) => kgDe(b) - kgDe(a));
+    if (!usados.length) {
+      cont.innerHTML = `<p class="empty">Sin relleno usado en ${esc(nombreMes(mes))}. Se calcula solo cuando las SJ llegan a embalado.</p>`;
+      document.getElementById("tblRell").innerHTML = "";
+    } else {
+      const max = kgDe(usados[0]);
+      cont.innerHTML = usados.map(x =>
+        `<div class="cause">
+          <div class="cause-lab">${esc(x.nom)}${x.reciclado ? " ♻" : ""}</div>
+          <div class="cause-track"><div class="cause-fill" style="width:${(kgDe(x) / max * 100).toFixed(1)}%;background:var(${x.reciclado ? "--s3" : "--s1"})"></div></div>
+          <div class="cause-val ancho">${esc(cantIns(x, kgDe(x)))}</div>
+          <div class="cause-n">${kgTot && x.uni === uni ? Math.round(kgDe(x) / kgTot * 100) + "%" : ""}</div>
+        </div>`).join("");
+      document.getElementById("tblRell").innerHTML = tabla(["Relleno", "Usado", "Por caja", "Costo"],
+        usados.map(x => [esc(x.nom), esc(cantIns(x, kgDe(x))), d.cajas ? esc(cantIns(x, kgDe(x) / d.cajas)) : "—",
+          esc(plata(kgDe(x) * costoIns(x), 0))]));
+    }
+
+    const puntos = Object.keys(d.autoDias).sort().map(f => ({
+      fecha: f, kg: recicl.reduce((a, x) => a + (d.autoDias[f][x.id] || 0), 0) }));
+    serie("svgRellDia", "hostRellDia", "tipRellDia", "rellDiaNota", puntos, x => x.kg, uni, 1,
+      prom => `Promedio: ${nf(prom, 1)} ${uni} por día.`);
+
+    // Cuánto lleva cada caja: lo medido, o lo de la regla mientras no haya mediciones.
+    const filas = [];
+    cajas().forEach(c => rel.forEach(r => {
+      const regla = I.reglas.find(z => z.ins === r.id && baseIns(z) === c.id);
+      if (!regla) return;
+      const m = medido(c.id, r.id);
+      filas.push([esc(c.nom), esc(r.nom), esc(cantIns(r, cantRegla(regla))),
+        m && regla.medir ? `promedio de ${esc(pl(m.n, "medición", "mediciones"))}` : "valor de la regla, sin medir"]);
+    }));
+    document.getElementById("rellMatriz").innerHTML = filas.length
+      ? tabla(["Caja", "Relleno", "Lleva", "Sale de"], filas)
+      : `<p class="empty">No hay reglas de relleno por caja. Se arman en Insumos → Insumos y reglas.</p>`;
+  }
+
+  /* ---- configuración ---- */
+
+  function cambiaronVariables() {
+    guardarVars();
+    construirConsumos();
+    construirIndDef();
+    construirInsDef();
+    pintarCostos();
+    pintarInsumos();
+  }
+
+  function construirVarsDef() {
+    const filas = V.vars.map(x => {
+      const tr = el("tr");
+      const ins = insDeVar(x);
+      tr.append(
+        celdaEd(x, "nom", "Nombre de la variable", cambiaronVariables),
+        celdaEd(x, "uni", "Unidad de " + x.nom, cambiaronVariables),
+        celdaEd(x, "costo", "Costo unitario de " + x.nom, cambiaronVariables, true),
+        el("td", "regla-txt", ins.length ? `automático desde JD: ${pl(ins.length, "insumo", "insumos")}` : "se carga en el cierre del día"),
+        botonQuitar("Quitar " + x.nom, () => {
+          if (!confirm(`¿Quitar «${x.nom}»? Lo ya cargado queda guardado pero deja de sumarse.`)) return;
+          V.vars = V.vars.filter(z => z !== x);
+          construirVarsDef(); cambiaronVariables();
+        }));
+      return tr;
+    });
+    const cont = document.getElementById("cosDef");
+    cont.innerHTML = "";
+    cont.appendChild(tablaCfg([["Variable"], ["Unidad"], [`Costo unitario (${V.moneda})`, 1], ["Cómo se carga"]], filas));
+  }
+
+  function construirIndDef() {
+    const ops = operandos().map(o => [o.id, o.nom]);
+    const alCambiar = () => { guardarVars(); pintarCostos(); };
+    const filas = V.ind.map(i => {
+      const tr = el("tr");
+      tr.append(celdaEd(i, "nom", "Nombre del indicador", alCambiar),
+        celdaSel(i, "num", ops, "Numerador", alCambiar), el("td", "", "÷"),
+        celdaSel(i, "den", ops, "Denominador", alCambiar),
+        botonQuitar("Quitar " + i.nom, () => {
+          V.ind = V.ind.filter(z => z !== i);
+          guardarVars(); construirIndDef(); pintarCostos();
+        }));
+      return tr;
+    });
+    const cont = document.getElementById("cosIndDef");
+    cont.innerHTML = "";
+    cont.appendChild(filas.length ? tablaCfg([["Indicador"], ["Esto"], [""], ["Dividido"]], filas)
+      : el("p", "empty", "Sin indicadores."));
+  }
+
+  function armarCostos() {
+    const mes = document.getElementById("cosMes");
+    mes.value = hoyISO().slice(0, 7);
+    mes.addEventListener("change", pintarCostos);
+    const nom = document.getElementById("cosNuevaNom"), uni = document.getElementById("cosNuevaUni"),
+          cos = document.getElementById("cosNuevaCos");
+    const agregar = () => {
+      if (!nom.value.trim()) { nom.focus(); return; }
+      V.vars.push({ id: nuevoIdCorto("v"), nom: nom.value.trim(), uni: uni.value.trim() || "u", costo: numT(cos.value) });
+      nom.value = ""; uni.value = ""; cos.value = "";
+      construirVarsDef(); cambiaronVariables();
+      nom.focus();
+    };
+    document.getElementById("cosNuevaAdd").addEventListener("click", agregar);
+    [nom, uni, cos].forEach(i => i.addEventListener("keydown", ev => { if (ev.key === "Enter") agregar(); }));
+    document.getElementById("cosIndAdd").addEventListener("click", () => {
+      V.ind.push({ id: nuevoIdCorto("i"), nom: "Nuevo indicador", num: "total", den: "ordenes" });
+      guardarVars(); construirIndDef(); pintarCostos();
+    });
+  }
+
+  /* ================= HOY ================= */
+
+  /* La portada: lo del día sale solo de JD, y "Para atender" junta lo único
+     que pide acción, cada cosa con el link a donde se resuelve. */
+
+  /* Cuántas órdenes llegaron a la etapa k ese día; k = nEt() es el envío.
+     Sólo las vistas llegar entre dos cargas, no las que aparecieron ya ahí. */
+  const llegoA = (o, k) => {
+    const n = nEt();
+    if (k < n) return k > o.ini && o.hist[k] ? o.hist[k] : null;
+    return o.fin && o.motivo !== "cancelada" && o.ini < n && Object.keys(o.hist).length ? o.fin : null;
+  };
+  const llegaron = (k, fecha) => Object.values(J.ordenes)
+    .filter(o => { const t = llegoA(o, k); return t && isoDia(new Date(t)) === fecha; }).length;
+
+  // Lo que el cierre del día ya puede traer de JD.
+  function autoCampos(fecha) {
+    if (!J.cargas.some(c => isoDia(new Date(c.ts)) === fecha)) return {};
+    return { picLin: llegaron(I.llega - 1, fecha), pakPed: llegaron(I.llega, fecha), desTot: llegaron(nEt(), fecha) };
+  }
+
+  function alerta(estado, txt, detalle, href, alIr) {
+    const a = el("a", "card alerta");
+    a.href = href;
+    const p = el("span", "pill");
+    if (estado) p.dataset.s = estado;
+    p.append(el("i"), { critical:"urgente", warning:"revisar", good:"ok" }[estado] || "pendiente");
+    const t = el("span", "alerta-t", txt);
+    if (detalle) t.appendChild(el("small", "", detalle));
+    a.append(p, t, el("span", "alerta-ir", "→"));
+    if (alIr) a.addEventListener("click", alIr);
+    return a;
+  }
+
+  function pintarHoy() {
+    const hoy = hoyISO(), n = nEt(), ult = J.cargas[0];
+    const viejo = ult ? Date.now() - ult.ts : Infinity;
+    document.getElementById("hoyJD").textContent = ult
+      ? `JD actualizado ${esHoy(ult.ts) ? "hoy" : "el"} ${momento(ult.ts)} · hace ${hace(viejo)}`
+      : "Todavía no se cargó ningún archivo de JD.";
+
+    const reg = autoDia(hoy);
+    const cajasHoy = cajas().reduce((a, x) => a + (reg.ins[x.id] ? reg.ins[x.id].q : 0), 0);
+    const etq = k => `${J.etapas[k].nom.toLowerCase()} (${J.etapas[k].cod})`;
+    pintarTiles("tilesDia", [
+      { lab:"Pickeados", val:ult ? ent(llegaron(I.llega - 1, hoy)) : "—", sub:`SJ que llegaron a ${etq(I.llega - 1)}` },
+      { lab:"Embalados", val:ult ? ent(llegaron(I.llega, hoy)) : "—",     sub:`SJ que llegaron a ${etq(I.llega)}` },
+      { lab:"Enviados",  val:ult ? ent(llegaron(n, hoy)) : "—",           sub:`SJ que llegaron a ${J.fin}` },
+      { lab:"Cajas",       val:ult ? ent(cajasHoy) : "—",                     sub:"usadas hoy, estimadas" }
+    ]);
+
+    /* para atender */
+    const al = document.getElementById("hoyAlertas");
+    al.innerHTML = "";
+    if (!ult) al.appendChild(alerta("critical", "Todavía no se cargó el archivo de JD",
+      "Todo lo de hoy sale de ahí: bajalo de JD y soltalo en cualquier página.", "#carga/jd"));
+    else if (viejo > 3 * 3600000) al.appendChild(alerta("warning", `El archivo de JD es de hace ${hace(viejo)}`,
+      "Cargá uno nuevo para que las órdenes y el stock estén al día.", "#carga/jd"));
+
+    const ords = Object.values(J.ordenes);
+    const atr = ords.filter(atrasada).length;
+    if (atr) al.appendChild(alerta("critical", pl(atr, "SJ atrasada", "SJ atrasadas"), "Con la fecha comprometida vencida.",
+      "#ordenes/recorrido", () => { jdeFiltro = "atrasadas"; jdeAbierta = null; }));
+    const sinSt = ords.filter(sinStock).length;
+    if (sinSt) al.appendChild(alerta("warning", pl(sinSt, "SJ sin stock", "SJ sin stock"),
+      `En ${codigos()[0]}: hay que pedir lo que falta antes del despiece.`, "#ordenes/recorrido",
+      () => { jdeFiltro = "sinstock"; jdeAbierta = null; }));
+    const vencen = ords.filter(o => !o.fin && o.fecha === hoy).length;
+    if (vencen) al.appendChild(alerta("warning", pl(vencen, "SJ vence hoy", "SJ vencen hoy"), "", "#ordenes/recorrido",
+      () => { jdeFiltro = "abiertas"; jdeAbierta = null; }));
+
+    const ci = calcInsumos();
+    const pedir = ci.filas.filter(f => f.sug > 0);
+    if (pedir.length) al.appendChild(alerta("critical", pl(pedir.length, "insumo para pedir", "insumos para pedir"),
+      pedir.map(f => f.x.nom).join(", "), "#insumos/pedir"));
+    const demorados = I.pedidos.filter(p => { const x = insDe(p.ins); return x && llegada(p, x) < hoy; }).length;
+    if (demorados) al.appendChild(alerta("warning", pl(demorados, "pedido demorado", "pedidos demorados"),
+      "Ya debería haber llegado.", "#insumos/pedir"));
+
+    if (!leerJornadas().some(j => j.fecha === hoy)) al.appendChild(alerta("", "Falta el cierre del día",
+      "Lo que sale de JD ya viene cargado: queda revisar y completar horas y energía.", "#carga/cierre"));
+    if (!I.medidas.length && rellenos().length) al.appendChild(alerta("", "Todavía no se pesó el relleno de ninguna caja",
+      "Mientras tanto se usa el valor de las reglas. Con unas pocas mediciones alcanza.", "#carga/relleno"));
+    if (!al.children.length) al.appendChild(alerta("good", "Nada pendiente", "", "#ordenes"));
+
+    /* embalaje del día: cajas y relleno por tipo */
+    const torta = (svgId, lgId, lista, unidad) => {
+      let items = lista.map(x => ({ nom: x.nom, val: Math.round((reg.ins[x.id] ? reg.ins[x.id].q : 0) * 10) / 10 }))
+        .filter(x => x.val > 0).sort((p, q) => q.val - p.val);
+      // Cinco colores alcanzan para leerla: lo más chico va junto en "Otras".
+      if (items.length > SLOTS.length)
+        items = items.slice(0, SLOTS.length - 1).concat([{ nom: "Otras",
+          val: Math.round(items.slice(SLOTS.length - 1).reduce((t, x) => t + x.val, 0) * 10) / 10 }]);
+      const svg = document.getElementById(svgId);
+      if (!items.length) {
+        svg.innerHTML = "";
+        svg.style.display = "none";
+        document.getElementById(lgId).innerHTML = `<p class="empty">Hoy todavía no se embaló ninguna SJ.</p>`;
+        return;
+      }
+      svg.style.display = "";
+      donut(svgId, lgId, items, SLOTS, unidad);
+    };
+    torta("svgCajas", "lgCajas", cajas(), "CAJAS");
+    const rel = rellenos(), uni = rel[0] ? rel[0].uni.toUpperCase() : "KG";
+    torta("svgRelleno", "lgRelleno", rel.filter(x => x.uni.toUpperCase() === uni), uni);
+  }
+
+  /* ================= COPIA DE SEGURIDAD ================= */
+
+  /* Todo vive en el localStorage de este navegador. La copia baja todas las
+     claves del tablero en un archivo, y restaurarla las reemplaza: es la forma
+     de pasar lo cargado a otro equipo mientras no haya servidor. */
+  const PREFIJO = "tablero-almacen";
+
+  document.getElementById("bkBajar").addEventListener("click", () => {
+    const datos = {};
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith(PREFIJO)) datos[k] = localStorage.getItem(k);
+      }
+    } catch (e) {}
+    const blob = new Blob([JSON.stringify({ app: PREFIJO, fecha: new Date().toISOString(), datos })],
+      { type: "application/json" });
+    const a = el("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `almacen-copia-${hoyISO()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    document.getElementById("bkMsg").textContent = "Copia descargada.";
+  });
+
+  const bkFile = document.getElementById("bkFile");
+  document.getElementById("bkSubir").addEventListener("click", () => bkFile.click());
+  bkFile.addEventListener("change", async () => {
+    const f = bkFile.files[0];
+    bkFile.value = "";
+    if (!f) return;
+    const msg = document.getElementById("bkMsg");
+    let g = null;
+    try { g = JSON.parse(await f.text()); } catch (e) { g = null; }
+    if (!g || g.app !== PREFIJO || !g.datos || typeof g.datos !== "object") {
+      msg.textContent = "Ese archivo no es una copia de este tablero.";
+      return;
+    }
+    const cuando = g.fecha ? new Date(g.fecha).toLocaleString("es-AR") : "fecha desconocida";
+    if (!confirm(`Esto reemplaza todo lo cargado en este equipo por la copia del ${cuando}. ¿Seguir?`)) return;
+    try {
+      Object.keys(localStorage).filter(k => k.startsWith(PREFIJO)).forEach(k => localStorage.removeItem(k));
+      Object.entries(g.datos).forEach(([k, v]) => { if (k.startsWith(PREFIJO)) localStorage.setItem(k, v); });
+    } catch (e) {
+      msg.textContent = "No se pudo restaurar: el navegador no dejó guardar.";
+      return;
+    }
+    location.reload();
+  });
+
+  /* ---- arranque de los módulos de logística ---- */
+
+  construirConsumos();
+  cargarJornada();
+  armarJDE();
+  construirEstados();
+  armarInsumos();
+  construirInsDef();
+  construirClases();
+  construirReglas();
+  armarCostos();
+  construirVarsDef();
+  construirIndDef();
+  pintarJDE();
+  pintarInsumos();
+  pintarCostos();
+  // Lo guardado con las etapas viejas se reubica una vez, con todo ya armado.
+  if (J.migrar) { delete J.migrar; reestructurar(); }
 
   /* ================= PINTAR GRÁFICOS ================= */
 
@@ -2149,15 +5104,7 @@
     ["svgPickCal","svgPickVel"].forEach(id => document.getElementById(id)
       .setAttribute("viewBox", chico ? "0 0 380 215" : "0 0 380 190"));
 
-    donut("svgPallets", "lgPallets", [
-      { nom:"Exportación", val:DIA.pallets.exportacion },
-      { nom:"Nacional",    val:DIA.pallets.nacional }
-    ], ["--s1","--s2"], "PALLETS");
-
-    donut("svgBoxes", "lgBoxes", [
-      { nom:"Exportación", val:DIA.boxes.exportacion },
-      { nom:"Nacional",    val:DIA.boxes.nacional }
-    ], ["--s1","--s2"], "BULTOS");
+    pintarHoy();
 
     donut("svgTorta", "lgTorta",
       PASILLOS.map(p => ({ nom: "Pasillo " + p.cod, val: p.err })), SLOTS, "ERRORES");
@@ -2168,8 +5115,7 @@
       tip: document.getElementById("tipPrecision"),
       labels: MESES, data: PRECISION, unidad: "% precisión", decimales: 1,
       yMin: 76, yMax: 92, ticks: 4,
-      meta: { valor: 90, label: "Meta trimestre 90%" },
-      hito: { idx: HITO_DUENO, label: chico ? "Dueño x pasillo" : "Dueño por pasillo" }
+      meta: { valor: 90, label: "Meta trimestre 90%" }
     });
     lineChart({
       svg: document.getElementById("svgDespacho"),
@@ -2197,6 +5143,7 @@
     document.querySelectorAll("#pipe .pipe-bar").forEach((el, i) => {
       if (ETAPAS[i]) el.style.background = v(ETAPAS[i].color);
     });
+    pintarCostos();
   }
 
   /* ================= EXPORTAR PDF ================= */
@@ -2219,29 +5166,47 @@
 
   /* ================= NAVEGACIÓN ================= */
 
-  const VISTAS = { diaria:"Reporte diario", flujo:"Flujo y carga de trabajo",
-                   mensual:"Reporte mensual", carga:"Carga del día" };
+  const VISTAS = { diaria:"Hoy", ordenes:"Órdenes JD Edwards", flujo:"Flujo y carga de trabajo",
+                   insumos:"Insumos", costos:"Costos y consumos",
+                   mensual:"Reporte mensual", carga:"Cargar datos" };
 
-  function mostrar(vista, scroll) {
+  /* Las rutas son #página o #página/subpágina, así cualquier pantalla se puede
+     dejar como acceso directo. Volver a una página abre la última subpágina
+     que se miró en ella. */
+  const ultimaSub = {};
+
+  function mostrar(ruta, scroll) {
+    let [vista, sub] = String(ruta || "").split("/");
     if (!VISTAS[vista]) vista = "diaria";
-    document.querySelectorAll(".tab").forEach(o =>
-      o.setAttribute("aria-selected", String(o.dataset.view === vista)));
-    Object.keys(VISTAS).forEach(k =>
-      document.getElementById("view-" + k).hidden = (k !== vista));
-    // Exportar sólo tiene sentido sobre un tablero, no sobre el formulario.
+    const vistaEl = document.getElementById("view-" + vista);
+    const subs = [...vistaEl.querySelectorAll(":scope > .sub")];
+    if (subs.length) {
+      if (!subs.some(x => x.dataset.sub === sub)) sub = ultimaSub[vista] || subs[0].dataset.sub;
+      ultimaSub[vista] = sub;
+      subs.forEach(x => x.hidden = x.dataset.sub !== sub);
+      vistaEl.querySelectorAll(".subtabs a").forEach(a => {
+        if (a.dataset.sub === sub) a.setAttribute("aria-current", "page");
+        else a.removeAttribute("aria-current");
+      });
+    }
+    document.querySelectorAll(".tab").forEach(o => {
+      if (o.dataset.view === vista) o.setAttribute("aria-current", "page");
+      else o.removeAttribute("aria-current");
+    });
+    Object.keys(VISTAS).forEach(k => document.getElementById("view-" + k).hidden = (k !== vista));
+    // Exportar sólo tiene sentido sobre un tablero, no sobre los formularios.
     document.getElementById("btnExport").hidden = (vista === "carga");
     document.getElementById("phVista").textContent = VISTAS[vista];
-    // El atraso se mide contra el reloj: al abrir la pestaña hay que recalcularlo.
+    // El atraso y los "hace cuánto" se miden contra el reloj: al abrir se recalculan.
+    if (vista === "diaria") pintarHoy();
     if (vista === "flujo") pintarFlujo();
+    if (vista === "ordenes") pintarJDE();
+    if (vista === "insumos") pintarInsumos();
+    if (vista === "costos") pintarCostos();
+    if (vista === "carga") { pintarMediciones(); pintarPacking(); }
     if (scroll) window.scrollTo(0, 0);
   }
 
-  document.querySelectorAll(".tab").forEach(t => {
-    t.addEventListener("click", () => {
-      location.hash = t.dataset.view;
-      mostrar(t.dataset.view, true);
-    });
-  });
   window.addEventListener("hashchange", () => mostrar(location.hash.slice(1), true));
   mostrar(location.hash.slice(1), false);
 
